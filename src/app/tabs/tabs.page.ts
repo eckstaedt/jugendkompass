@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AudioService } from '../services/audio.service';
 
 @Component({
   selector: 'app-tabs',
@@ -7,6 +8,20 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
 
-  constructor() {}
+  playing = false;
+  title = '';
+
+  constructor(
+    private audioService: AudioService
+  ) {
+    this.audioService.onChange().subscribe((res: any) => {
+      this.playing = res.playing;
+      this.title = res.title;
+    });
+  }
+
+  play() {
+    this.audioService.play();
+  }
 
 }

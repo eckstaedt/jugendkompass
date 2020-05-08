@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
-import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-post-list',
@@ -12,30 +11,27 @@ export class PostListPage implements OnInit {
   posts = [];
   page = 1;
   count = null;
+  items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   constructor(
-    private wp: WpService,
-    private loadingController: LoadingController
+    private wp: WpService
   ) { }
 
   ngOnInit() {
     this.loadPosts();
   }
 
-  async loadPosts() {
-    const loading = await this.loadingController.create({
-      message: 'Loading Data...'
-    });
-    await loading.present();
-
+  loadPosts(event?: any) {
     this.wp.getPosts().subscribe(res => {
       this.count = this.wp.totalPosts;
       this.posts = res;
-      loading.dismiss();
+      if (event) {
+        event.target.complete();
+      }
     });
   }
 
-  loadMore(event) {
+  loadMore(event: any) {
     this.page++;
 
     this.wp.getPosts(this.page).subscribe(res => {

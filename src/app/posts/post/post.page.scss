@@ -4,6 +4,12 @@
         border-radius: 7%;
     }
 
+    .playButton {
+        --padding-start: .7rem;
+        --padding-end: .7rem;
+        margin-left: 1rem;
+    }
+
     .title {
         padding: 0 1rem;
     }

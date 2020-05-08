@@ -1,10 +1,17 @@
 <ion-tabs>
-
-  <ion-tab-bar slot="bottom">
+  <ion-toolbar *ngIf="title !== ''">
+    <ion-buttons slot=start>
+      <ion-button expand="full" fill="clear" (click)="play()">
+        <ion-icon *ngIf="!playing" name="play"></ion-icon>
+        <ion-icon *ngIf="playing" name="pause"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-label>{{ title }}</ion-label>
+  </ion-toolbar>
+  <ion-tab-bar color="primary" slot="bottom">
     <ion-tab-button tab="posts">
       <ion-icon name="list"></ion-icon>
       <ion-label>Berichte</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
-
 </ion-tabs>

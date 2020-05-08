@@ -1,20 +1,46 @@
-<ion-header>
+<ion-header translucent="true">
   <ion-toolbar>
     <ion-title>Berichte</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
-    <img [src]="post.media_url">
-    <ion-card-header>
-      <ion-card-title [innerHTML]="post.title.rendered"></ion-card-title>
-      <ion-card-subtitle>{{ post.date_gmt | date }}</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <div [innerHTML]="post.excerpt.rendered"></div>
-    </ion-card-content>
-  </ion-card>
+<ion-content>
+  <ion-header collapse="condense">              
+    <ion-toolbar>      
+      <ion-title size="large">Berichte</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="posts.length">
+    <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
+      <img [src]="post.media_url">
+      <ion-card-header>
+        <ion-card-title [innerHTML]="post.title.rendered"></ion-card-title>
+        <ion-card-subtitle>{{ post.date_gmt | date: 'dd.MM.yyyy' }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div [innerHTML]="post.excerpt.rendered"></div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!posts.length">
+    <ion-card *ngFor="let i of items">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
  
   <ion-infinite-scroll *ngIf="posts.length > 10" threshold="100px" (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content loadingText="Loading more posts...">

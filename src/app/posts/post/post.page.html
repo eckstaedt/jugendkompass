@@ -1,7 +1,15 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text="" defaultHref="/tabs/posts"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="openOriginal()">
+        <ion-icon name="earth"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="post && post?.pdf !== ''" (click)="download()">
+        <ion-icon name="download"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -9,15 +17,12 @@
 <ion-content class="content">
   <div *ngIf="post">
     <img [src]="post.media_url" [style.width]="'100%'">
+    <div style="text-align: center;">
+      <ion-button (click)="play()" class="playButton" shape="round">
+        <ion-icon name="play"></ion-icon>
+      </ion-button>
+    </div>
     <h3 class="title">{{ post?.title.rendered }}</h3>
     <div class="text" [innerHTML]="post.content.rendered"></div>
   </div>
 </ion-content>
- 
-<ion-footer color="secondary">
-  <ion-toolbar>
-    <ion-button expand="full" fill="clear" (click)="openOriginal()">
-      Original öffnen
-    </ion-button>
-  </ion-toolbar>
-</ion-footer>
