@@ -46,4 +46,12 @@ export class WpService {
       })
     );
   }
+
+  getPageContent(id: string) {
+    return this.http.get(`${this.url}pages/${id}?_embed`).pipe(
+      map((page: any) => {
+        return page;
+      })
+    );
+  }
 }

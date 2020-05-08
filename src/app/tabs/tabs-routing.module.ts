@@ -16,6 +16,22 @@ const routes: Routes = [
         loadChildren: () => import('./../posts/post/post.module').then( m => m.PostPageModule)
       },
       {
+        path: 'settings',
+        loadChildren: () => import('./../settings/settings/settings.module').then( m => m.SettingsPageModule)
+      },
+      {
+        path: 'settings/imprint',
+        loadChildren: () => import('./../settings/imprint/imprint.module').then( m => m.ImprintPageModule)
+      },
+      {
+        path: 'settings/dataprotection',
+        loadChildren: () => import('./../settings/dataprot/dataprot.module').then( m => m.DataprotPageModule)
+      },
+      {
+        path: 'dates',
+        loadChildren: () => import('./../dates/dates/dates.module').then( m => m.DatesPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/posts',
         pathMatch: 'full'
