@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/tabs/posts"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content class="content">
+  <div *ngIf="post">
+    <img [src]="post.media_url" [style.width]="'100%'">
+    <h3 class="title">{{ post?.title.rendered }}</h3>
+    <div class="text" [innerHTML]="post.content.rendered"></div>
+  </div>
+</ion-content>
+ 
+<ion-footer color="secondary">
+  <ion-toolbar>
+    <ion-button expand="full" fill="clear" (click)="openOriginal()">
+      Original öffnen
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

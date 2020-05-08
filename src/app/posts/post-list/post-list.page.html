@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Berichte</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
+    <img [src]="post.media_url">
+    <ion-card-header>
+      <ion-card-title [innerHTML]="post.title.rendered"></ion-card-title>
+      <ion-card-subtitle>{{ post.date_gmt | date }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div [innerHTML]="post.excerpt.rendered"></div>
+    </ion-card-content>
+  </ion-card>
+ 
+  <ion-infinite-scroll *ngIf="posts.length > 10" threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingText="Loading more posts...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+ 
+</ion-content>
