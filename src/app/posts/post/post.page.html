@@ -18,7 +18,7 @@
   <div *ngIf="post">
     <img [src]="post.media_url" [style.width]="'100%'">
     <div style="text-align: center;">
-      <ion-button (click)="play()" class="playButton" shape="round">
+      <ion-button *ngIf="post && post?.audio !== ''" (click)="play()" class="playButton" shape="round">
         <ion-icon name="play"></ion-icon>
       </ion-button>
     </div>
