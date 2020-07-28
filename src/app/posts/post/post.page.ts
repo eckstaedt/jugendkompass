@@ -25,6 +25,11 @@ export class PostPage implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.wp.getPostContent(id).subscribe(res => {
       this.post = res;
+      if (this.post.content.rendered.search('PDF Download</a>') !== -1) {
+        this.post.content.rendered = this.post.content.rendered.slice(this.post.content.rendered.search('PDF Download</a>') + 16);
+      } else if (this.post.content.rendered.search('Audio Download</a>') !== -1) {
+        this.post.content.rendered = this.post.content.rendered.slice(this.post.content.rendered.search('Audio Download</a>') + 18);
+      }
 
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
