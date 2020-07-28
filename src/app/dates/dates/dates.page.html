@@ -14,7 +14,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list>
-    <ion-item lines="full" *ngFor="let d of dates">
+    <ion-item button detail="false" (click)="presentCalActionSheet(d)" lines="full" *ngFor="let d of dates">
       <ion-label>
         <h2>{{ d.name }}</h2>
         <h3>{{ d.date | date: 'dd.MM.yyyy' }}</h3>

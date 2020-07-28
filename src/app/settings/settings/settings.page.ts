@@ -12,4 +12,8 @@ export class SettingsPage implements OnInit {
   ngOnInit() {
   }
 
+  openMail() {
+    window.open('mailto:nikolauswall@gmail.com', '_blank');
+  }
+
 }
