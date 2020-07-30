@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class WpService {
 
-  url = `http://stephanus-zeitschrift.de/wp-json/wp/v2/`;
+  url = `https://cors-anywhere.herokuapp.com/http://stephanus-zeitschrift.de/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
