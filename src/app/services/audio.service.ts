@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Howl, Howler} from 'howler';
+import {Howl} from 'howler';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,9 +22,22 @@ export class AudioService {
 
   loadNewAudio(audioUrl: string, title: string) {
     this.sound = new Howl({
+      html5: true,
       src: [audioUrl]
     });
     this.title = title;
+  }
+
+  getDuration(): number {
+    return this.sound.duration();
+  }
+
+  getSeek(): number {
+    return this.sound.seek();
+  }
+
+  setSeek(atPos: number) {
+    this.sound.seek(atPos);
   }
 
   play() {

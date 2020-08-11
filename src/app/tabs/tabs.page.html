@@ -6,7 +6,23 @@
         <ion-icon *ngIf="playing" name="pause"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-label>{{ title }}</ion-label>
+    <div style="height: 5.5rem;">
+      <ion-label class="songLabel">{{ title }}</ion-label>
+      <ion-range
+        class="songRange"
+        #range
+        [(ngModel)]="progress"
+        max="100"
+        (ionFocus)="onRangeFocus()"
+        (touchstart)="onRangeFocus()"
+        (touchend)="seek()"
+        (mousedown)="onRangeFocus()"
+        (mousup)="seek()"
+      >
+        <ion-label slot="start">{{ curTime }}</ion-label>
+        <ion-label slot="end">{{ duration }}</ion-label>
+      </ion-range>
+    </div>
   </ion-toolbar>
   <ion-tab-bar color="primary" slot="bottom">
     <ion-tab-button tab="posts">
