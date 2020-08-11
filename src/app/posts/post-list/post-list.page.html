@@ -1,19 +1,31 @@
 <ion-header translucent="true">
   <ion-toolbar>
-    <ion-title>Berichte</ion-title>
+    <ion-title>Artikel</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-header collapse="condense">              
     <ion-toolbar>      
-      <ion-title size="large">Berichte</ion-title>
+      <ion-title size="large">Artikel</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-searchbar animated placeholder="Suche..."></ion-searchbar>
+  <div class="topBar">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="onSearch($event)" class="searchBar" [disabled]="!allPosts.length" animated placeholder="Artikel suchen..."></ion-searchbar>
+    <ion-button [disabled]="!allPosts.length" (click)="onFilter()" class="filterBtn" shape="round" fill="none">
+      <ion-icon [color]="currentRubrik === 'all' ? '' : 'primary'" name="funnel"></ion-icon>
+    </ion-button>
+    <ion-item style="display: none;">
+      <ion-label>Rubrik</ion-label>
+      <ion-select (ionChange)="filterRubrik()" [(ngModel)]="currentRubrik" cancelText="Abbrechen" okText="Ok" #select>
+        <ion-select-option value="all">Alle</ion-select-option>
+        <ion-select-option *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
   <div *ngIf="posts.length">
     <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
       <img [src]="post.media_url">
@@ -28,7 +40,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="!posts.length">
+  <div *ngIf="!posts.length && !allPosts.length">
     <ion-card *ngFor="let i of items">
       <ion-card-header>
         <ion-card-title>
@@ -43,8 +55,21 @@
       </ion-card-content>
     </ion-card>
   </div>
+
+  <div class="noResultContainer" *ngIf="!posts.length && allPosts.length">
+    <ion-grid>
+      <ion-row class="noItemsIcon">
+        <ion-col>
+          <ion-icon color="medium" name="alert-circle-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row class="noItemsLabel">
+        <ion-label color="medium">Keine Artikel gefunden</ion-label>
+      </ion-row>
+    </ion-grid>
+  </div>
  
-  <ion-infinite-scroll *ngIf="count && count > 10" threshold="100px" (ionInfinite)="loadMore($event)">
+  <ion-infinite-scroll *ngIf="count && count > 10 && !allPosts.length" threshold="100px" (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content loadingText="Weitere Artikel werden geladen...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

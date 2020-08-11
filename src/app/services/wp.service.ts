@@ -14,6 +14,27 @@ export class WpService {
 
   constructor(private http: HttpClient) { }
 
+  // TODO
+  getAllPosts() {
+    const options = {
+      observe: 'response' as 'body',
+      params: {
+        per_page: '100'
+      }
+    };
+
+    return this.http.get<any[]>(`${this.url}posts?_embed`, options).pipe(
+      map((resp: any) => {
+        const data = resp.body;
+
+        for (const post of data) {
+          post.media_url = post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url;
+        }
+        return data;
+      })
+    );
+  }
+
   getPosts(page = 1): Observable<any[]> {
     const options = {
       observe: 'response' as 'body',
