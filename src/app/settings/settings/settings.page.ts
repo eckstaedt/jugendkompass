@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
 
-  constructor() { }
+  private darkMode = false;
+
+  constructor(
+    private storage: Storage
+  ) { }
 
   ngOnInit() {
+    this.storage.get('darkMode').then((res: boolean) => {
+      this.darkMode = res;
+    }).catch(() => {
+      this.darkMode = false;
+    });
+  }
+
+  toggleMode() {
+    this.storage.set('darkMode', this.darkMode);
+    document.body.classList.toggle('dark', this.darkMode);
   }
 
   openMail() {

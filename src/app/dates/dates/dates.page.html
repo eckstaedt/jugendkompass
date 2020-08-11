@@ -10,15 +10,32 @@
       <ion-title size="large">Termine</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-list>
-    <ion-item button detail="false" (click)="presentCalActionSheet(d)" lines="full" *ngFor="let d of dates">
-      <ion-label>
-        <h2>{{ d.name }}</h2>
-        <h3>{{ d.date | date: 'dd.MM.yyyy' }}</h3>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <div style="height: 100%;" *ngIf="dates | async as datesLoaded">
+    <ion-list>
+      <ion-item button detail="false" (click)="presentCalActionSheet(d)" *ngFor="let d of datesLoaded">
+        <ion-label *ngIf="d.oneDay">
+          <h2 *ngIf="!d.location">{{ d.name }}</h2>
+          <h2 *ngIf="d.location">{{ d.name }} | {{d.location}}</h2>
+          <h3>{{ d.start.seconds * 1000 | date: 'dd.MM.yyyy' }}</h3>
+        </ion-label>
+        <ion-label *ngIf="!d.oneDay">
+          <h2 *ngIf="!d.location">{{ d.name }}</h2>
+          <h2 *ngIf="d.location">{{ d.name }} | {{d.location}}</h2>
+          <h3>{{ d.start.seconds * 1000 | date: 'dd.MM.yyyy' }} - {{ d.end.seconds * 1000 | date: 'dd.MM.yyyy' }}</h3>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <div class="noResultContainer" *ngIf="!datesLoaded.length">
+      <ion-grid>
+        <ion-row class="noItemsIcon">
+          <ion-col>
+            <ion-icon color="medium" name="alert-circle-outline"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <ion-row class="noItemsLabel">
+          <ion-label color="medium">Aktuell stehen keine Termine an</ion-label>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
 </ion-content>
