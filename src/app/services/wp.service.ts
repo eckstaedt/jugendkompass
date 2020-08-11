@@ -26,7 +26,7 @@ export class WpService {
     return this.http.get<any[]>(`${this.url}posts?_embed`, options).pipe(
       map((resp: any) => {
         this.pages = resp.headers.get('x-wp-totalpages');
-        this.totalPosts = resp.headers.get('x-wp-total');
+        this.totalPosts = parseInt(resp.headers.get('x-wp-total'), 10);
 
         const data = resp.body;
 

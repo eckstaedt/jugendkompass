@@ -13,10 +13,12 @@
   <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <ion-searchbar animated placeholder="Suche..."></ion-searchbar>
   <div *ngIf="posts.length">
     <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
       <img [src]="post.media_url">
       <ion-card-header>
+        <p [class]="post.rubrik + ' rubrik'" *ngIf="post.rubrik">{{ post.rubrikName }}</p>
         <ion-card-title [innerHTML]="post.title.rendered"></ion-card-title>
         <ion-card-subtitle>{{ post.date_gmt | date: 'dd.MM.yyyy' }}</ion-card-subtitle>
       </ion-card-header>
@@ -42,8 +44,8 @@
     </ion-card>
   </div>
  
-  <ion-infinite-scroll *ngIf="posts.length > 10" threshold="100px" (ionInfinite)="loadMore($event)">
-    <ion-infinite-scroll-content loadingText="Loading more posts...">
+  <ion-infinite-scroll *ngIf="count && count > 10" threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingText="Weitere Artikel werden geladen...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
  

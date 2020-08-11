@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
+import { Rubrik } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-post-list',
@@ -24,7 +25,12 @@ export class PostListPage implements OnInit {
   loadPosts(event?: any) {
     this.wp.getPosts().subscribe(res => {
       this.count = this.wp.totalPosts;
-      this.posts = res;
+      this.posts = res.map((post: any) => {
+        return {
+          ...post,
+          rubrikName: post.rubrik ? Rubrik[post.rubrik] : ''
+        };
+      });
       if (event) {
         event.target.complete();
       }
@@ -39,7 +45,7 @@ export class PostListPage implements OnInit {
       event.target.complete();
 
       // Disable infinite loading when maximum reached
-      if (this.page === this.wp.pages) {
+      if (this.page.toString() === this.wp.pages) {
         event.target.disabled = true;
       }
     });
