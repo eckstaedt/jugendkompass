@@ -1,0 +1,40 @@
+<ion-content fullscreen class="ion-padding" scroll-y="false">
+  <ion-slides pager="true">
+    <ion-slide>
+      <ion-icon class="icon" name="home-outline"></ion-icon>
+      <h2>Herzlich Willkommen</h2>
+      <p>Schön das du es zu unserer Stephanus - Weg der Nachfolge App geschafft hast.</p>
+    </ion-slide>
+    <ion-slide>
+      <ion-icon class="icon" name="newspaper-outline"></ion-icon>
+      <h2>Bleib auf dem Laufenden</h2>
+      <p>Sobald eine neue Ausgabe der Zeitschrift herausgegeben wird, erfährst du hier davon und kannst eine Auswahl an Artikeln direkt in der App lesen.</p>
+    </ion-slide>
+    <ion-slide>
+      <ion-icon class="icon" name="calendar-outline"></ion-icon>
+      <h2>Verpasse keine Termine mehr</h2>
+      <p>Alle für die Öffentlichkeit relevanten Termine und Veranstaltungen werden in der App angezeigt.</p>
+    </ion-slide>
+    <ion-slide>
+      <ion-icon class="icon" name="brush-outline"></ion-icon>
+      <h2>Wähle ein Theme aus</h2>
+
+      <ion-radio-group (ionFocus)="onThemeChange()" [(ngModel)]="mode">
+        <ion-item lines="none">
+          <ion-label>Hell</ion-label>
+          <ion-radio slot="start" value="bright"></ion-radio>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Dunkel</ion-label>
+          <ion-radio slot="start" value="dark"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-slide>
+    <ion-slide>
+      <ion-icon class="icon" name="mail-unread-outline"></ion-icon>
+      <h2>Push</h2>
+      <p>Damit du nicht jeden Tag nach Updates schauen musst erlaube Push Benachrichtigungen um sofort informiert zu werden wenn neue Artikel zur Verfügung stehen.</p>
+      <ion-button (click)="toHome()" fill="clear">Los geht´s <ion-icon name="arrow-forward"></ion-icon></ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

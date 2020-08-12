@@ -1,0 +1,13 @@
+ion-slides {
+    height: 100%;
+
+    ion-slide {
+        display: block;
+        margin-top: 6rem;
+
+        .icon {
+            font-size: 17rem;
+            color: var(--ion-color-primary);
+        }
+    }
+}

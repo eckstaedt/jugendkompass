@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-post',
@@ -18,7 +20,9 @@ export class PostPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private wp: WpService,
-    private audioService: AudioService
+    private audioService: AudioService,
+    private photoViewer: PhotoViewer,
+    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -33,6 +37,16 @@ export class PostPage implements OnInit {
 
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
+      }
+
+      if (this.platform.is('capacitor')) {
+        setTimeout(() => {
+          for (const image of Array.from(document.getElementsByTagName('img'))) {
+            image.onclick = () => {
+              this.photoViewer.show(image.src);
+            };
+          }
+        }, 100);
       }
     });
   }
