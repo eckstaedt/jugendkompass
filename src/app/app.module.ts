@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
   ],
   providers: [
     PhotoViewer,
+    Deeplinks,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

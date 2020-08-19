@@ -6,5 +6,13 @@
     <param name="ios-package" value="PhotoViewer"/>
   </feature>
 
+  <feature name="IonicDeeplinkPlugin">
+    <param name="ios-package" value="IonicDeeplinkPlugin" onload="true"/>
+  </feature>
+
+  <feature name="OneSignalPush">
+    <param name="ios-package" value="OneSignalPush"/>
+  </feature>
+
   
 </widget>
