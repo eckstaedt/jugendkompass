@@ -25,6 +25,15 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+body {
+    background: gainsboro;
+}
+
+ion-app {
+    max-width: 50rem;
+    margin: auto;
+}
+
 .wp-caption {
     img {
         height: 100%;
