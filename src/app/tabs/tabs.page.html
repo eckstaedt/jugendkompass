@@ -7,6 +7,9 @@
       </ion-button>
     </ion-buttons>
     <div style="height: 5.5rem;">
+      <ion-button fill="clear" class="close" size="small" (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
       <ion-label class="songLabel">{{ title }}</ion-label>
       <ion-range
         class="songRange"

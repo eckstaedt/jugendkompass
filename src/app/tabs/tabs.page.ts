@@ -41,6 +41,12 @@ export class TabsPage {
     this.audioService.play();
   }
 
+  close() {
+    this.audioService.stop();
+    this.playing = false;
+    this.title = '';
+  }
+
   updateProgress() {
     if (!this.focus) {
       if (!isNaN(this.audioService.getSeek())) {

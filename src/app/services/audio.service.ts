@@ -40,6 +40,10 @@ export class AudioService {
     this.sound.seek(atPos);
   }
 
+  stop() {
+    this.sound.stop();
+  }
+
   play() {
     if (this.playing) {
       this.sound.stop();
