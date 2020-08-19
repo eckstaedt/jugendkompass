@@ -46,7 +46,7 @@ export class AudioService {
 
   play() {
     if (this.playing) {
-      this.sound.stop();
+      this.sound.pause();
       this.playing = false;
       this.observer.next({
         title: this.title,
