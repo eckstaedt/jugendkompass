@@ -1,8 +1,8 @@
 {
-  "name": "stephanus-wdn",
+  "name": "jugend-speyer",
   "version": "1.0.2",
-  "author": "CDH-Stephanus",
-  "homepage": "https://cdh-stephanus.org/",
+  "author": "FECG Jugend Speyer",
+  "homepage": "https://jugend-speyer.org/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -69,5 +69,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Jugend Blog"
 }
