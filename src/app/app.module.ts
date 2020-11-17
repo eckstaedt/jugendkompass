@@ -12,9 +12,9 @@ import { AppComponent } from './app.component';
 import { NgAddToCalendarModule } from '@trademe/ng-add-to-calendar';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
+// import { AngularFireModule } from '@angular/fire';
+// import { AngularFirestoreModule } from '@angular/fire/firestore';
+// import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
@@ -29,8 +29,8 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
     AppRoutingModule,
     HttpClientModule,
     NgAddToCalendarModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    // AngularFireModule.initializeApp(environment.firebase),
+    // AngularFirestoreModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
