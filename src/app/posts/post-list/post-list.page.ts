@@ -145,7 +145,8 @@ export class PostListPage implements OnInit {
         }
         return {
           ...post,
-          media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
+          media_url: post._embedded['wp:featuredmedia'] ?
+            post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
           // tslint:disable-next-line: object-literal-shorthand
           rubrik: rubrik,
           // tslint:disable-next-line: object-literal-shorthand
@@ -176,7 +177,8 @@ export class PostListPage implements OnInit {
           }
           return {
             ...post,
-            media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
+            media_url: post._embedded['wp:featuredmedia'] ?
+              post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
             // tslint:disable-next-line: object-literal-shorthand
             rubrik: rubrik,
             // tslint:disable-next-line: object-literal-shorthand
@@ -202,7 +204,8 @@ export class PostListPage implements OnInit {
       this.posts = [...this.posts, ...res.map((post: any) => {
         return {
           ...post,
-          media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url
+          media_url: post._embedded['wp:featuredmedia'] ?
+            post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined
         };
       })];
       event.target.complete();

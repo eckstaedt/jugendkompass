@@ -44,7 +44,7 @@
   </div>
   <div *ngIf="posts.length">
     <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts">
-      <img [src]="post.media_url">
+      <img *ngIf="post.media_url" [src]="post.media_url">
       <ion-card-header>
         <p [style.color]="post.rubrik.description ? post.rubrik.description : ''" *ngIf="post.rubrik">{{ post.rubrik.name }}</p>
         <ion-card-title [innerHTML]="post.title.rendered"></ion-card-title>

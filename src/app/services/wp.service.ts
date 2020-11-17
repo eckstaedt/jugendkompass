@@ -9,7 +9,7 @@ const { Http } = Plugins;
 })
 export class WpService {
 
-  url = `https://stephanus-zeitschrift.de/wp-json/wp/v2/`;
+  url = `https://cors-anywhere.herokuapp.com/http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
@@ -47,7 +47,7 @@ export class WpService {
   getCategories() {
     return Http.request({
       method: 'GET',
-      url: `${this.url}categories?_embed&per_page=100`
+      url: `${this.url}categories`
     });
   }
 }
