@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "stephanus",
+  "appId": "io.stephanus.wdn",
+  "appName": "Stephanus - WdN",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

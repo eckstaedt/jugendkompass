@@ -27,6 +27,14 @@ img {
     }
 }
 
+.categoryBar {
+    padding: 0 1rem;
+
+    ion-select {
+        padding-left: 0;
+    }
+}
+
 .noResultContainer {
     height: 100%;
 

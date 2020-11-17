@@ -26,7 +26,7 @@ export class ImprintPage implements OnInit {
     });
     await loading.present();
 
-    this.wp.getPageContent('24').subscribe((imprint: any) => {
+    this.wp.getPageContent('24').then((imprint: any) => {
       this.imprint = imprint;
       loading.dismiss();
     });

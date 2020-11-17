@@ -8,7 +8,7 @@ import { Storage } from '@ionic/storage';
 })
 export class SettingsPage implements OnInit {
 
-  private darkMode = false;
+  public darkMode = false;
 
   constructor(
     private storage: Storage
@@ -28,7 +28,7 @@ export class SettingsPage implements OnInit {
   }
 
   openMail() {
-    window.open('mailto:nikolauswall@gmail.com', '_blank');
+    window.open('mailto:entwickler@stephanus-zeitschrift.de', '_blank');
   }
 
 }

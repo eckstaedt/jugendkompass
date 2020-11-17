@@ -16,6 +16,10 @@ $RECYCLE.BIN/
 *.log
 log.txt
 npm-debug.log*
+keystore_wdn
+private_key.pepk
+CertificateSigningRequest.certSigningRequest
+Certificates.p12
 
 /.idea
 /.ionic

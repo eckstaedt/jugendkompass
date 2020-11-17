@@ -11,9 +11,11 @@ export class FirebaseService {
   constructor(
     private db: AngularFirestore
   ) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
     this.datesCollection = this.db.collection<CalendarDate>(
       'dates',
-      (ref: any) => ref.where('end', '>=', new Date()).orderBy('end')
+      (ref: any) => ref.where('end', '>=', yesterday).orderBy('end')
     );
   }
 

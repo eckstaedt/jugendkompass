@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import '@capacitor-community/http';
+
+import { Plugins } from '@capacitor/core';
+const { Http } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -12,67 +13,41 @@ export class WpService {
   totalPosts = null;
   pages: any;
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   // TODO
   getAllPosts() {
-    const options = {
-      observe: 'response' as 'body',
-      params: {
-        per_page: '100'
-      }
-    };
-
-    return this.http.get<any[]>(`${this.url}posts?_embed`, options).pipe(
-      map((resp: any) => {
-        const data = resp.body;
-
-        for (const post of data) {
-          post.media_url = post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url;
-        }
-        return data;
-      })
-    );
+    return Http.request({
+      method: 'GET',
+      url: `${this.url}posts?_embed&per_page=100`
+    });
   }
 
-  getPosts(page = 1): Observable<any[]> {
-    const options = {
-      observe: 'response' as 'body',
-      params: {
-        per_page: '10',
-        page: '' + page
-      }
-    };
-
-    return this.http.get<any[]>(`${this.url}posts?_embed`, options).pipe(
-      map((resp: any) => {
-        this.pages = resp.headers.get('x-wp-totalpages');
-        this.totalPosts = parseInt(resp.headers.get('x-wp-total'), 10);
-
-        const data = resp.body;
-
-        for (const post of data) {
-          post.media_url = post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url;
-        }
-        return data;
-      })
-    );
+  getPosts(page = 1) {
+    return Http.request({
+      method: 'GET',
+      url: `${this.url}posts?_embed&per_page=10&page=${'' + page}`
+    });
   }
 
   getPostContent(id: string) {
-    return this.http.get(`${this.url}posts/${id}?_embed`).pipe(
-      map((post: any) => {
-        post.media_url = post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url;
-        return post;
-      })
-    );
+    return Http.request({
+      method: 'GET',
+      url: `${this.url}posts/${id}?_embed`
+    });
   }
 
   getPageContent(id: string) {
-    return this.http.get(`${this.url}pages/${id}?_embed`).pipe(
-      map((page: any) => {
-        return page;
-      })
-    );
+    return Http.request({
+      method: 'GET',
+      url: `${this.url}pages/${id}?_embed`
+    });
+  }
+
+  getCategories() {
+    return Http.request({
+      method: 'GET',
+      url: `${this.url}categories?_embed&per_page=100`
+    });
   }
 }

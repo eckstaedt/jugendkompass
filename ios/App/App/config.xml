@@ -10,9 +10,5 @@
     <param name="ios-package" value="IonicDeeplinkPlugin" onload="true"/>
   </feature>
 
-  <feature name="OneSignalPush">
-    <param name="ios-package" value="OneSignalPush"/>
-  </feature>
-
   
 </widget>

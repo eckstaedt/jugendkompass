@@ -26,7 +26,9 @@ export class TabsPage {
       if (this.playing) {
         this.updateProgress();
       }
-      this.title = res.title;
+      if (res.title) {
+        this.title = res.title;
+      }
     });
   }
 

@@ -1,12 +1,13 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: 'AIzaSyAW_NLjGrwzOswbvQ3qZsw9J7UbescFQTQ',
-    authDomain: 'stephanus-1597139302717.firebaseapp.com',
-    databaseURL: 'https://stephanus-1597139302717.firebaseio.com',
-    projectId: 'stephanus-1597139302717',
-    storageBucket: 'stephanus-1597139302717.appspot.com',
-    messagingSenderId: '969258819698',
-    appId: '1:969258819698:web:3df9379a0dfc97c5de62eb'
+    apiKey: 'AIzaSyAUdCjmf5bTQ-b2AGcZncyc-rXC3LfaVkI',
+    authDomain: 'stephanus-weg-der-nachfolge.firebaseapp.com',
+    databaseURL: 'https://stephanus-weg-der-nachfolge.firebaseio.com',
+    projectId: 'stephanus-weg-der-nachfolge',
+    storageBucket: 'stephanus-weg-der-nachfolge.appspot.com',
+    messagingSenderId: '49994087507',
+    appId: '1:49994087507:web:47b5eb36c38967a212daa6',
+    measurementId: 'G-Z8CKQC05M5'
   }
 };

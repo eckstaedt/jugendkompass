@@ -7,5 +7,6 @@ export enum Rubrik {
     WzF = 'Wort zum Fest',
     ZN = 'Zum Nachdenken',
     CF = 'Christliche Familie',
-    HzD = 'Hilfe zum Dienst'
+    HzD = 'Hilfe zum Dienst',
+    BE = 'Buchempfehlungen'
 }

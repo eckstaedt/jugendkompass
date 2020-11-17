@@ -1,12 +1,14 @@
 {
-  "name": "stephanus",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "name": "stephanus-wdn",
+  "version": "1.0.2",
+  "author": "CDH-Stephanus",
+  "homepage": "https://cdh-stephanus.org/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "openIos": "ng build --prod && npx cap copy && npx cap sync && npx cap open ios",
+    "openAnd": "ng build --prod && npx cap copy && npx cap sync && npx cap open android",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -19,6 +21,9 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "@capacitor-community/fcm": "^1.0.8",
+    "@capacitor-community/http": "^0.2.1",
+    "@capacitor/android": "^2.1.0",
     "@capacitor/core": "2.1.0",
     "@capacitor/ios": "^2.1.0",
     "@ionic-native/core": "^5.0.7",
@@ -36,7 +41,6 @@
     "howler": "^2.1.3",
     "ionic-plugin-deeplinks": "^1.0.20",
     "moment": "^2.27.0",
-    "onesignal-cordova-plugin": "^2.11.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

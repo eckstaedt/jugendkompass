@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { Platform } from '@ionic/angular';
+import { Platform, ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-post',
@@ -22,45 +22,65 @@ export class PostPage implements OnInit {
     private wp: WpService,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
-    private platform: Platform
+    private platform: Platform,
+    private actionSheetController: ActionSheetController
   ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.wp.getPostContent(id).subscribe(res => {
-      this.post = res;
-      if (this.post.content.rendered.search('Audio Download</a>') !== -1) {
-        this.post.content.rendered = this.post.content.rendered.slice(this.post.content.rendered.search('Audio Download</a>') + 18);
-      } else if (this.post.content.rendered.search('PDF Download</a>') !== -1) {
-        this.post.content.rendered = this.post.content.rendered.slice(this.post.content.rendered.search('PDF Download</a>') + 16);
-      }
+    this.wp.getPostContent(id).then((res: any) => {
+      this.post = {
+        ...res.data,
+        media_url: res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url
+      };
 
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
       }
 
       if (this.platform.is('capacitor')) {
-        setTimeout(() => {
-          for (const image of Array.from(document.getElementsByTagName('img'))) {
-            image.onclick = () => {
-              this.photoViewer.show(image.src);
-            };
-          }
-        }, 100);
+
       }
+      setTimeout(() => {
+        for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
+          (image as any).onclick = () => {
+            this.photoViewer.show((image as any).src);
+          };
+        }
+      }, 100);
     });
   }
 
-  openOriginal() {
-    // Add InAppBrowser for app if want
-    window.open(this.post.link, '_blank');
-  }
+  async openMenu() {
+    const actionButtons: any[] = [{
+      text: 'Artikel im Browser aufrufen',
+      handler: () => {
+        window.open(this.post.link, '_blank');
+      }
+    }];
 
-  download() {
-    window.open(this.post.pdf, '_blank');
+    if (this.post.pdf) {
+      actionButtons.push({
+        text: 'Artikel als PDF anzeigen',
+        handler: () => {
+          window.open(this.post.pdf, '_blank');
+        }
+      });
+    }
+
+    actionButtons.push({
+      role: 'destructive',
+      text: 'Abbrechen'
+    });
+
+    const sheet = await this.actionSheetController.create({
+      buttons: actionButtons
+    });
+
+    await sheet.present();
   }
 
   play() {
-    this.audioService.play();
+    this.audioService.playNew();
   }
 }

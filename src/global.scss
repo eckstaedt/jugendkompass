@@ -25,18 +25,27 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-body {
-    background: gainsboro;
+// ion-app {
+//     max-width: 50rem;
+//     margin: auto;
+// }
+
+.powerpress_player {
+    display: none;
 }
 
-ion-app {
-    max-width: 50rem;
-    margin: auto;
+.powerpress_links {
+    display: none;
+}
+
+.emd_dl_grey_light {
+    display: none;
 }
 
 .wp-caption {
     img {
         height: 100%;
+        width: 100%;
     }
 
     .wp-caption-text {
@@ -46,44 +55,15 @@ ion-app {
     }
 }
 
+.text {
+    img {
+        height: 100%;
+        width: 100%;
+    }
+}
+
 body.dark {
     ion-card {
         background: #1f2229;
     }
-}
-
-.Hw {
-    color: #c0927d;
-}
-
-.Th {
-    color: #deb804;
-}
-
-.Ge {
-    color: #e4601f;
-}
-
-.BB {
-    color: #d78817;
-}
-
-.Js {
-    color: #40b87b;
-}
-
-.ZN {
-    color: #006b71;
-}
-
-.CF {
-    color: #6d1a58;
-}
-
-.HzD {
-    color: #008158;
-}
-
-.WzF {
-    color: #bf4c4b;
 }

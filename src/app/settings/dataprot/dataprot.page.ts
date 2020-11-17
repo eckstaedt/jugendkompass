@@ -26,7 +26,7 @@ export class DataprotPage implements OnInit {
     });
     await loading.present();
 
-    this.wp.getPageContent('4').subscribe((dataProt: any) => {
+    this.wp.getPageContent('4').then((dataProt: any) => {
       this.dataProt = dataProt;
       loading.dismiss();
     });

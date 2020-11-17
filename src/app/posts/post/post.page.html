@@ -4,17 +4,14 @@
       <ion-back-button text="" defaultHref="/tabs/posts"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="openOriginal()">
-        <ion-icon name="earth"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="post && post?.pdf !== ''" (click)="download()">
-        <ion-icon src="../../../assets/icons/pdf.svg"></ion-icon>
+      <ion-button (click)="openMenu()">
+        <ion-icon name="ellipsis-horizontal"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
  
-<ion-content class="content">
+<ion-content class="content postContent">
   <div *ngIf="post">
     <img [src]="post.media_url" [style.width]="'100%'">
     <div style="text-align: center;">

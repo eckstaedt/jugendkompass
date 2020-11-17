@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
 import { Rubrik } from 'src/app/utils/constants';
 import { IonSelect } from '@ionic/angular';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-post-list',
@@ -21,14 +22,42 @@ export class PostListPage implements OnInit {
   items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   searchTerm = '';
   currentRubrik = 'all';
+  categories: any[] = []; // TODO give interface
+  currentCategory: any = 'all';
 
   constructor(
-    private wp: WpService
+    private wp: WpService,
+    private utils: Utils
   ) { }
 
   ngOnInit() {
+    this.loadData();
+  }
+
+  async loadData() {
+    await this.getCategories();
     this.loadPosts();
     this.getAllPosts();
+  }
+
+  async getCategories() {
+    return new Promise((resolve: any, reject: any) => {
+      this.categories = [];
+      this.wp.getCategories().then((categories: any) => {
+        if (categories.data) {
+          this.categories = categories.data
+            .filter((cat: any) => cat.parent === 19 && cat.count !== 0)
+            .sort((a: any, b: any) => b.id - a.id);
+          this.rubriken = categories.data
+            .filter((cat: any) => cat.parent === 42 && cat.count !== 0)
+            .sort((a: any, b: any) => a.name - b.name);
+        }
+        resolve();
+      }).catch(() => {
+        this.utils.showToast('Fehler beim Laden der Kategorien');
+        reject();
+      });
+    });
   }
 
   onSearch(event: any) {
@@ -44,14 +73,51 @@ export class PostListPage implements OnInit {
     this.posts = this.filter();
   }
 
+  filterCategory() {
+    this.searchTerm = '';
+    let posts: any[] = [];
+    if (this.currentCategory === 'all') {
+      posts = this.allPosts;
+    } else {
+      posts = this.allPosts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+    }
+    if (this.currentRubrik !== 'all') {
+      posts = posts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+    }
+    this.posts = posts;
+    this.filteredPosts = this.posts;
+  }
+
+  filterRubrik() {
+    this.searchTerm = '';
+    let posts: any[] = [];
+    if (this.currentRubrik === 'all') {
+      posts = this.allPosts;
+    } else {
+      posts = this.allPosts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+    }
+    if (this.currentCategory !== 'all') {
+      posts = posts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+    }
+    this.posts = posts;
+    this.filteredPosts = this.posts;
+  }
+
   filter() {
     if (this.searchTerm === '') {
       return this.filteredPosts;
     } else {
       return this.filteredPosts.filter((post: any) => {
-        if (post.rubrikName && post.title.rendered && this.searchTerm) {
+        if (post.rubrik) {
           if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.rubrikName.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+            post.rubrik.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+            return true;
+          }
+          return false;
+        } else {
+          if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
             return true;
           }
           return false;
@@ -64,52 +130,64 @@ export class PostListPage implements OnInit {
     this.select.open();
   }
 
-  filterRubrik() {
-    if (this.currentRubrik === 'all') {
-      this.searchTerm = '';
-      this.posts = this.allPosts;
-      this.filteredPosts = this.allPosts;
-    } else {
-      this.searchTerm = '';
-      this.posts = this.allPosts.filter((post: any) => post.rubrik === this.currentRubrik);
-      this.filteredPosts = this.posts;
-    }
-  }
-
   getAllPosts() {
-    this.wp.getAllPosts().subscribe(res => {
-      this.allPosts = res.map((post: any) => {
+    this.wp.getAllPosts().then((res: any) => {
+      this.allPosts = res.data.map((post: any) => {
+        let rubrik: any;
+        let category: any;
+        for (const cat of post.categories) {
+          if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
+            rubrik = this.rubriken.find((rub: any) => rub.id === cat);
+          }
+          if (Boolean(this.categories.find((aus: any) => aus.id === cat))) {
+            category = this.categories.find((aus: any) => aus.id === cat);
+          }
+        }
         return {
           ...post,
-          rubrikName: post.rubrik ? Rubrik[post.rubrik] : ''
+          media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
+          // tslint:disable-next-line: object-literal-shorthand
+          rubrik: rubrik,
+          // tslint:disable-next-line: object-literal-shorthand
+          category: category
         };
       });
       this.posts = this.allPosts;
       this.filteredPosts = this.allPosts;
-      const rubriken: Set<string> = new Set(this.allPosts.filter(((post: any) => post.rubrik)).map((post: any) => post.rubrik));
-      this.rubriken = Array.from(rubriken.values()).map((r: string) => {
-        return {
-          id: r,
-          name: Rubrik[r]
-        };
-      }).sort((a: any, b: any) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
     });
   }
 
   loadPosts(event?: any) {
-    this.wp.getPosts().subscribe(res => {
+    // this.pages = resp.headers.get('x-wp-totalpages');
+    // this.totalPosts = parseInt(resp.headers.get('x-wp-total'), 10);
+    this.wp.getPosts().then((res: any) => {
       if (!this.allPosts) {
-        this.count = this.wp.totalPosts;
-        this.posts = res.map((post: any) => {
+        this.count = parseInt(res.headers.get('x-wp-total'), 10);
+        this.posts = res.data.map((post: any) => {
+          let rubrik: any;
+          let category: any;
+          for (const cat of post.categories) {
+            if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
+              rubrik = this.rubriken.find((rub: any) => rub.id === cat);
+            }
+            if (Boolean(this.categories.find((aus: any) => aus.id === cat))) {
+              category = this.categories.find((aus: any) => aus.id === cat);
+            }
+          }
           return {
             ...post,
-            rubrikName: post.rubrik ? Rubrik[post.rubrik] : ''
+            media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url,
+            // tslint:disable-next-line: object-literal-shorthand
+            rubrik: rubrik,
+            // tslint:disable-next-line: object-literal-shorthand
+            category: category
           };
         });
       }
       if (event) {
         event.target.complete();
         this.currentRubrik = 'all';
+        this.currentCategory = 'all';
         this.allPosts = [];
         this.filteredPosts = [];
         this.getAllPosts();
@@ -124,7 +202,7 @@ export class PostListPage implements OnInit {
       this.posts = [...this.posts, ...res.map((post: any) => {
         return {
           ...post,
-          rubrikName: post.rubrik ? Rubrik[post.rubrik] : ''
+          media_url: post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url
         };
       })];
       event.target.complete();
