@@ -3,7 +3,7 @@ import { NgAddToCalendarService } from '@trademe/ng-add-to-calendar';
 import * as moment from 'moment';
 import { ActionSheetController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FirebaseService } from 'src/app/services/firebase.service';
+// import { FirebaseService } from 'src/app/services/firebase.service';
 import { Observable } from 'rxjs';
 import { CalendarDate } from 'src/app/utils/interfaces';
 
@@ -19,12 +19,12 @@ export class DatesPage implements OnInit {
   constructor(
     private actionSheetController: ActionSheetController,
     private addToCalendarService: NgAddToCalendarService,
-    private sanitizer: DomSanitizer,
-    private firebaseService: FirebaseService
+    private sanitizer: DomSanitizer
+    // private firebaseService: FirebaseService
   ) { }
 
   ngOnInit() {
-    this.dates = this.firebaseService.getDates().valueChanges();
+    // this.dates = this.firebaseService.getDates().valueChanges();
   }
 
   refresh(event: any) {
