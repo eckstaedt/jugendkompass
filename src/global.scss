@@ -67,3 +67,7 @@ body.dark {
         background: #1f2229;
     }
 }
+
+.password-alert .alert-message {
+    color: var(--ion-color-danger);
+}

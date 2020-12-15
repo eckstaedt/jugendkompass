@@ -3,6 +3,7 @@ import { WpService } from 'src/app/services/wp.service';
 import { Rubrik } from 'src/app/utils/constants';
 import { IonSelect } from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-post-list',
@@ -27,11 +28,16 @@ export class PostListPage implements OnInit {
 
   constructor(
     private wp: WpService,
-    private utils: Utils
+    private utils: Utils,
+    private appComponent: AppComponent
   ) { }
 
   ngOnInit() {
-    this.loadData();
+    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
+      if (loggedIn) {
+        this.loadData();
+      }
+    });
   }
 
   async loadData() {

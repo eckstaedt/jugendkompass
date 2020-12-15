@@ -4,6 +4,7 @@ import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Platform, ActionSheetController } from '@ionic/angular';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-post',
@@ -23,10 +24,19 @@ export class PostPage implements OnInit {
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
     private platform: Platform,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private appComponent: AppComponent
   ) { }
 
   ngOnInit() {
+    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
+      if (loggedIn) {
+        this.loadData();
+      }
+    });
+  }
+
+  loadData() {
     const id = this.route.snapshot.paramMap.get('id');
     this.wp.getPostContent(id).then((res: any) => {
       this.post = {
