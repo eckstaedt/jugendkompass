@@ -9,7 +9,7 @@ const { Http } = Plugins;
 })
 export class WpService {
 
-  url = `https://cors-anywhere.herokuapp.com/http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  url = `https://cors.bridged.cc/http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
