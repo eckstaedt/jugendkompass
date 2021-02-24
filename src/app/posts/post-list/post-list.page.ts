@@ -4,6 +4,7 @@ import { Rubrik } from 'src/app/utils/constants';
 import { IonSelect } from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-post-list',
@@ -25,11 +26,13 @@ export class PostListPage implements OnInit {
   currentRubrik = 'all';
   categories: any[] = []; // TODO give interface
   currentCategory: any = 'all';
+  readArticles: any[] = [];
 
   constructor(
     private wp: WpService,
     private utils: Utils,
-    private appComponent: AppComponent
+    private appComponent: AppComponent,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -137,10 +140,16 @@ export class PostListPage implements OnInit {
   }
 
   getAllPosts() {
+    // get local storage for already read articles
+    this.storage.get('readArticles').then((res: any) => {
+      if(res) this.readArticles = JSON.parse(res);
+    });
     this.wp.getAllPosts().then((res: any) => {
       this.allPosts = res.data.map((post: any) => {
         let rubrik: any;
         let category: any;
+        let articleWasRead: boolean;
+        if (this.readArticles) articleWasRead = this.readArticles.includes(post.id);
         for (const cat of post.categories) {
           if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
             rubrik = this.rubriken.find((rub: any) => rub.id === cat);
@@ -156,7 +165,8 @@ export class PostListPage implements OnInit {
           // tslint:disable-next-line: object-literal-shorthand
           rubrik: rubrik,
           // tslint:disable-next-line: object-literal-shorthand
-          category: category
+          category: category,
+          articleWasRead: articleWasRead
         };
       });
       this.posts = this.allPosts;
@@ -188,7 +198,7 @@ export class PostListPage implements OnInit {
             // tslint:disable-next-line: object-literal-shorthand
             rubrik: rubrik,
             // tslint:disable-next-line: object-literal-shorthand
-            category: category
+            category: category,
           };
         });
       }
@@ -222,5 +232,12 @@ export class PostListPage implements OnInit {
       }
     });
   }
-
+  // set local storage when a post is clicked
+  setAsRead(post: any) {
+    if(!this.readArticles.includes(post.id)) {
+      post.articleWasRead = true;
+      this.readArticles.push(post.id);
+      this.storage.set('readArticles', JSON.stringify(this.readArticles));
+    }
+  }
 }
