@@ -234,8 +234,10 @@ export class PostListPage implements OnInit {
   }
   // set local storage when a post is clicked
   setAsRead(post: any) {
-    post.articleWasRead = true;
-    if(!this.readArticles.includes(post.id)) this.readArticles.push(post.id);
-    this.storage.set('readArticles', JSON.stringify(this.readArticles));
+    if(!this.readArticles.includes(post.id)) {
+      post.articleWasRead = true;
+      this.readArticles.push(post.id);
+      this.storage.set('readArticles', JSON.stringify(this.readArticles));
+    }
   }
 }
