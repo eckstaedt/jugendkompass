@@ -25,6 +25,7 @@ export class PostListPage implements OnInit {
   currentRubrik = 'all';
   categories: any[] = []; // TODO give interface
   currentCategory: any = 'all'; //test
+  asdf: any;
 
   constructor(
     private wp: WpService,
