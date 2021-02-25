@@ -27,6 +27,10 @@ const routes: Routes = [
         path: 'settings/dataprotection',
         loadChildren: () => import('./../settings/dataprot/dataprot.module').then( m => m.DataprotPageModule)
       },
+      {
+        path: 'favorites',
+        loadChildren: () => import('../posts/favorites/favorites.module').then( m => m.FavoritesPageModule)
+      },
       // {
       //   path: 'dates',
       //   loadChildren: () => import('./../dates/dates/dates.module').then( m => m.DatesPageModule)

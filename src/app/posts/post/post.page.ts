@@ -5,6 +5,7 @@ import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Platform, ActionSheetController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-post',
@@ -17,6 +18,9 @@ export class PostPage implements OnInit {
   public sound: any;
   public soundReady = false;
   public playing = false;
+  favoritePostIds = [];
+  favoritePosts = [];
+  defaultHref = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +29,8 @@ export class PostPage implements OnInit {
     private photoViewer: PhotoViewer,
     private platform: Platform,
     private actionSheetController: ActionSheetController,
-    private appComponent: AppComponent
+    private appComponent: AppComponent,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -37,12 +42,21 @@ export class PostPage implements OnInit {
   }
 
   loadData() {
+    this.storage.get('favoritePostIds').then((res: any) => {
+      if(res) this.favoritePostIds = JSON.parse(res);
+    });
+    this.storage.get('favoritePosts').then((res: any) => {
+      if(res) this.favoritePosts = JSON.parse(res);
+    });
     const id = this.route.snapshot.paramMap.get('id');
     this.wp.getPostContent(id).then((res: any) => {
+      let isFavorite: boolean = false;
+      if(this.favoritePostIds) isFavorite = this.favoritePostIds.includes(+id);
       this.post = {
         ...res.data,
         media_url: res.data._embedded['wp:featuredmedia'] ?
-          res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined
+          res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
+        isFavorite: isFavorite
       };
 
       if (this.post.audio) {
@@ -93,5 +107,23 @@ export class PostPage implements OnInit {
 
   play() {
     this.audioService.playNew();
+  }
+
+  setPostFavorite() {
+    if(!this.favoritePostIds.includes(this.post.id)){
+      this.post.isFavorite = true;
+      this.favoritePostIds.push(this.post.id);
+      this.storage.set('favoritePostIds', JSON.stringify(this.favoritePostIds));
+      this.favoritePosts.push(this.post);
+      console.log(this.favoritePosts);
+      this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
+    } else {
+      this.post.isFavorite = false;
+      this.favoritePostIds = this.favoritePostIds.filter(postId => postId != this.post.id);
+      this.storage.set('favoritePostIds', JSON.stringify(this.favoritePostIds));
+      this.favoritePosts = this.favoritePosts.filter(post => post.id != this.post.id);
+      console.log(this.favoritePosts);
+      this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
+    }
   }
 }
