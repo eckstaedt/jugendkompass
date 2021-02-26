@@ -42,16 +42,13 @@ export class PostPage implements OnInit {
   }
 
   loadData() {
-    this.storage.get('favoritePostIds').then((res: any) => {
-      if(res) this.favoritePostIds = JSON.parse(res);
-    });
     this.storage.get('favoritePosts').then((res: any) => {
       if(res) this.favoritePosts = JSON.parse(res);
     });
     const id = this.route.snapshot.paramMap.get('id');
     this.wp.getPostContent(id).then((res: any) => {
       let isFavorite: boolean = false;
-      if(this.favoritePostIds) isFavorite = this.favoritePostIds.includes(+id);
+      if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
       this.post = {
         ...res.data,
         media_url: res.data._embedded['wp:featuredmedia'] ?
@@ -110,17 +107,17 @@ export class PostPage implements OnInit {
   }
 
   setPostFavorite() {
-    if(!this.favoritePostIds.includes(this.post.id)){
+    if(!this.favoritePosts.find(post => post.id == this.post.id)){
+      //this.favoritesPage.loadData();
+      console.log('post hinzugefügt');
       this.post.isFavorite = true;
-      this.favoritePostIds.push(this.post.id);
-      this.storage.set('favoritePostIds', JSON.stringify(this.favoritePostIds));
       this.favoritePosts.push(this.post);
       console.log(this.favoritePosts);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {
+      //this.favoritesPage.loadData();
+      console.log('post gelöscht');
       this.post.isFavorite = false;
-      this.favoritePostIds = this.favoritePostIds.filter(postId => postId != this.post.id);
-      this.storage.set('favoritePostIds', JSON.stringify(this.favoritePostIds));
       this.favoritePosts = this.favoritePosts.filter(post => post.id != this.post.id);
       console.log(this.favoritePosts);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));

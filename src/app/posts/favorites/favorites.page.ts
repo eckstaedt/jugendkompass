@@ -39,11 +39,22 @@ export class FavoritesPage implements OnInit {
   loadData(event?: any) {
     this.storage.get('favoritePosts').then((res: any) => {
       this.posts = JSON.parse(res);
+      this.posts = this.sortByMostRecent(this.posts);
       this.allPosts = this.posts;
       this.filteredPosts = this.posts;
+      
+      if(event) event.target.complete();
     });
+  }
 
-    if(event) event.target.complete();
+  ionViewWillEnter(){
+    this.loadData();
+  }
+
+  sortByMostRecent(posts: any[]){
+    return posts.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
   }
 
   onSearch(event: any) {
