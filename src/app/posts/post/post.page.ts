@@ -80,7 +80,8 @@ export class PostPage implements OnInit {
           ...res.data,
           media_url: res.data._embedded['wp:featuredmedia'] ?
             res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
-          isFavorite: isFavorite
+          isFavorite: isFavorite,
+          views: res.data.views ? parseInt(res.data.views, 10) + 1 : 1
         };
   
         if (this.post.audio) {

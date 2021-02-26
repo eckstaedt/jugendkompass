@@ -24,6 +24,7 @@
         <ion-icon name="play"></ion-icon>
       </ion-button>
     </div>
+    <div class="text">Aufrufe: {{post.views}}</div>
     <h3 class="title">{{ post?.title.rendered }}</h3>
     <div class="text" [innerHTML]="post.content.rendered"></div>
   </div>
