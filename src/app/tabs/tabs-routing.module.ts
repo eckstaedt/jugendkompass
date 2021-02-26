@@ -29,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: 'favorites',
-        loadChildren: () => import('../posts/favorites/favorites.module').then( m => m.FavoritesPageModule)
+        loadChildren: () => import('../favorites/favorites.module').then( m => m.FavoritesPageModule)
       },
       // {
       //   path: 'dates',

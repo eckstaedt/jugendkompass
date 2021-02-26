@@ -38,7 +38,7 @@
     <ion-select [disabled]="!allPosts.length" (ionChange)="filterCategory()" [(ngModel)]="currentCategory">
       <ion-select-option value="all">Alle Ausgaben</ion-select-option>
       <ion-select-option [value]="cat.id" *ngFor="let cat of categories">{{ cat.name }}</ion-select-option>
-    </ion-select>
+    </ion-select> 
   </div>
 
   <div *ngIf="posts.length">
@@ -56,7 +56,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="!posts.length && !allPosts.length">
+  <div *ngIf="!posts.length && !allPosts.length && favoritePosts.length">
     <ion-card *ngFor="let i of items">
       <ion-card-header>
         <ion-card-title>
@@ -72,10 +72,10 @@
     </ion-card>
   </div>
 
-  <div class="noResultContainer" *ngIf="!posts.length && allPosts.length">
+  <div class="noResultContainer" *ngIf="(!posts.length && allPosts.length) || !favoritePosts.length">
     <ion-grid>
       <ion-row class="noItemsIcon">
-        <ion-col>
+        <ion-col >
           <ion-icon color="medium" name="alert-circle-outline"></ion-icon>
         </ion-col>
       </ion-row>

@@ -18,7 +18,6 @@ export class PostPage implements OnInit {
   public sound: any;
   public soundReady = false;
   public playing = false;
-  favoritePostIds = [];
   favoritePosts = [];
   defaultHref = '';
 
@@ -41,20 +40,25 @@ export class PostPage implements OnInit {
     });
   }
 
-  loadData() {
-    this.storage.get('favoritePosts').then((res: any) => {
+  async loadData() {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    //this.favoritePosts = JSON.parse(await this.storage.get('favoritePosts'));
+    await this.storage.get('favoritePosts').then((res: any) => {
       if(res) this.favoritePosts = JSON.parse(res);
     });
-    const id = this.route.snapshot.paramMap.get('id');
-    this.wp.getPostContent(id).then((res: any) => {
-      let isFavorite: boolean = false;
-      if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
+    let isFavorite: boolean = false;
+    if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
+    
+    // if local stored favorite-post, get post information from local storage
+    if (isFavorite) {
+      const localPost = this.favoritePosts.find(post => post.id == id); 
       this.post = {
-        ...res.data,
-        media_url: res.data._embedded['wp:featuredmedia'] ?
-          res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
+        ...localPost,
+        //media_url: localPost.data._embedded['wp:featuredmedia'] ? 
+        //  localPost.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
         isFavorite: isFavorite
-      };
+      }
 
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
@@ -70,7 +74,31 @@ export class PostPage implements OnInit {
           };
         }
       }, 100);
-    });
+    }else {
+      this.wp.getPostContent(id).then((res: any) => {
+        this.post = {
+          ...res.data,
+          media_url: res.data._embedded['wp:featuredmedia'] ?
+            res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
+          isFavorite: isFavorite
+        };
+  
+        if (this.post.audio) {
+          this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
+        }
+  
+        if (this.platform.is('capacitor')) {
+  
+        }
+        setTimeout(() => {
+          for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
+            (image as any).onclick = () => {
+              this.photoViewer.show((image as any).src);
+            };
+          }
+        }, 100);
+      });
+    }
   }
 
   async openMenu() {
@@ -107,19 +135,13 @@ export class PostPage implements OnInit {
   }
 
   setPostFavorite() {
-    if(!this.favoritePosts.find(post => post.id == this.post.id)){
-      //this.favoritesPage.loadData();
-      console.log('post hinzugefügt');
+    if(!this.post.isFavorite){
       this.post.isFavorite = true;
       this.favoritePosts.push(this.post);
-      console.log(this.favoritePosts);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {
-      //this.favoritesPage.loadData();
-      console.log('post gelöscht');
       this.post.isFavorite = false;
       this.favoritePosts = this.favoritePosts.filter(post => post.id != this.post.id);
-      console.log(this.favoritePosts);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     }
   }

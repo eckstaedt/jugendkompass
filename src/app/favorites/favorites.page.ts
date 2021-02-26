@@ -15,6 +15,7 @@ export class FavoritesPage implements OnInit {
   posts = [];
   allPosts = [];
   filteredPosts = [];
+  favoritePosts = [];
   searchTerm = '';
   rubriken = [];
   currentRubrik = 'all';
@@ -38,11 +39,13 @@ export class FavoritesPage implements OnInit {
 
   loadData(event?: any) {
     this.storage.get('favoritePosts').then((res: any) => {
-      this.posts = JSON.parse(res);
-      this.posts = this.sortByMostRecent(this.posts);
-      this.allPosts = this.posts;
-      this.filteredPosts = this.posts;
-      
+      if(res) {
+        this.posts = JSON.parse(res);
+        this.posts = this.sortByMostRecent(this.posts);
+        this.allPosts = this.posts;
+        this.filteredPosts = this.posts;
+        this.favoritePosts = this.posts;
+      }
       if(event) event.target.complete();
     });
   }

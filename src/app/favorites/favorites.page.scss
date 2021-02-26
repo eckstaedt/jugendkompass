@@ -1,0 +1,55 @@
+.topBar {
+    display: flex;
+    padding: 0 1rem;
+
+    .searchBar {
+        padding-left: 0;
+        float: left;
+    }
+    
+    .filterBtn {
+        --padding-start: 0;
+        --padding-end: 0;
+        display: flex;
+        margin: auto;
+    }
+}
+
+.categoryBar {
+    padding: 0 1rem;
+
+    ion-select {
+        padding-left: 0;
+    }
+}
+
+.noResultContainer {
+    height: 100%;
+
+    ion-grid {
+        height: 100%;
+
+        .noItemsIcon {
+            font-size: 5rem;
+            height: 48%;
+            text-align: center;
+
+            ion-icon {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+            }
+        }
+    
+        .noItemsLabel {
+            height: 52%;
+            text-align: center;
+            font-size: 1rem;
+
+            ion-label {
+                width: 100%;
+            }
+        }
+    }
+}
