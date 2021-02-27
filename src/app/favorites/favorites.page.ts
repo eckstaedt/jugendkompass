@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSelect } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AppComponent } from 'src/app/app.component';
+import { Post } from '../utils/interfaces';
 
 @Component({
   selector: 'app-favorites',
@@ -12,10 +13,10 @@ export class FavoritesPage implements OnInit {
 
   @ViewChild('select', { static: false }) select: IonSelect;
 
-  posts = [];
-  allPosts = [];
-  filteredPosts = [];
-  favoritePosts = [];
+  posts: Post[] = [];
+  allPosts: Post[] = [];
+  filteredPosts: Post[] = [];
+  favoritePosts: Post[] = [];
   searchTerm = '';
   rubriken = [];
   currentRubrik = 'all';

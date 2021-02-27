@@ -7,10 +7,7 @@ import { Platform, ActionSheetController, IonButton, IonIcon, IonBackButton } fr
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { HttpClient, HttpHeaderResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { viewClassName } from '@angular/compiler';
-
-
+import { Post } from 'src/app/utils/interfaces';
 @Component({
   selector: 'app-post',
   templateUrl: './post.page.html',
@@ -20,11 +17,11 @@ export class PostPage implements OnInit {
 
   @ViewChild('backButton', {static: false}) backButton: IonBackButton
 
-  public post: any;
+  public post: Post;
   public sound: any;
   public soundReady = false;
   public playing = false;
-  favoritePosts = [];
+  favoritePosts: Post[] = [];
   defaultHref = '';
 
   constructor(
@@ -55,16 +52,13 @@ export class PostPage implements OnInit {
       if(res) this.favoritePosts = JSON.parse(res);
     });
     let isFavorite: boolean = false;
-    if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
+    if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id.toString() == id)? true : false;
     
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
-      const localPost = this.favoritePosts.find(post => post.id == id); 
-      this.post = {
-        ...localPost,
-        isFavorite: isFavorite,
-        base64Img: localPost.base64Img ? localPost.base64Img : null
-      }
+      const localPost: Post = this.favoritePosts.find(post => post.id.toString() == id); 
+      this.post = {...localPost};
+
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
       }
@@ -74,9 +68,6 @@ export class PostPage implements OnInit {
       }
       setTimeout(() => {
         for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
-          // (image as any).onclick = () => {
-          //   this.photoViewer.show((image as any).src);
-          // };
           (image as any).onclick = () => {
             this.photoViewer.show(this.post.base64Img);
           };
@@ -164,7 +155,7 @@ export class PostPage implements OnInit {
     } else {
       this.post.isFavorite = false;
       this.favoritePosts = this.favoritePosts.filter(post => post.id != this.post.id);
-      this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
+      if(this.favoritePosts) this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     }
   }
 }
