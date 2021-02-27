@@ -26,7 +26,6 @@ export class PostPage implements OnInit {
   public playing = false;
   favoritePosts = [];
   defaultHref = '';
-  imageToShow: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,9 +55,7 @@ export class PostPage implements OnInit {
       if(res) this.favoritePosts = JSON.parse(res);
     });
     let isFavorite: boolean = false;
-    if(this.favoritePosts) {
-      isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
-    }
+    if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
     
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
