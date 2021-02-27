@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { Platform, ActionSheetController } from '@ionic/angular';
+import { Platform, ActionSheetController, IonButton, IonIcon, IonBackButton } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
+import { HttpClient, HttpHeaderResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { viewClassName } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-post',
@@ -14,22 +18,27 @@ import { Storage } from '@ionic/storage';
 })
 export class PostPage implements OnInit {
 
+  @ViewChild('backButton', {static: false}) backButton: IonBackButton
+
   public post: any;
   public sound: any;
   public soundReady = false;
   public playing = false;
   favoritePosts = [];
   defaultHref = '';
+  imageToShow: any;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private wp: WpService,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
     private platform: Platform,
     private actionSheetController: ActionSheetController,
     private appComponent: AppComponent,
-    private storage: Storage
+    private storage: Storage,
+    private httpClient: HttpClient
   ) { }
 
   ngOnInit() {
@@ -41,25 +50,24 @@ export class PostPage implements OnInit {
   }
 
   async loadData() {
-    const id = this.route.snapshot.paramMap.get('id');
-
-    //this.favoritePosts = JSON.parse(await this.storage.get('favoritePosts'));
+    this.backButton.defaultHref = this.router['routerState'].snapshot.url.search('favorites') ? 'tabs/favorites' : 'tabs/posts';
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.storage.get('favoritePosts').then((res: any) => {
       if(res) this.favoritePosts = JSON.parse(res);
     });
     let isFavorite: boolean = false;
-    if(this.favoritePosts) isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
+    if(this.favoritePosts) {
+      isFavorite = this.favoritePosts.find(post => post.id == id)? true : false;
+    }
     
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
       const localPost = this.favoritePosts.find(post => post.id == id); 
       this.post = {
         ...localPost,
-        //media_url: localPost.data._embedded['wp:featuredmedia'] ? 
-        //  localPost.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
-        isFavorite: isFavorite
+        isFavorite: isFavorite,
+        base64Img: localPost.base64Img ? localPost.base64Img : null
       }
-
       if (this.post.audio) {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
       }
@@ -69,9 +77,11 @@ export class PostPage implements OnInit {
       }
       setTimeout(() => {
         for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
-
+          // (image as any).onclick = () => {
+          //   this.photoViewer.show((image as any).src);
+          // };
           (image as any).onclick = () => {
-            this.photoViewer.show((image as any).src);
+            this.photoViewer.show(this.post.base64Img);
           };
         }
       }, 100);
@@ -101,6 +111,18 @@ export class PostPage implements OnInit {
         }, 100);
       });
     }
+  }
+
+  getBase64ImgFromUrl(imageURL: any) {
+    this.httpClient.get(imageURL, {responseType: 'blob'}).subscribe(data => {
+      if(data){
+        let reader = new FileReader();
+        reader.readAsDataURL(data);
+        reader.addEventListener("load", () => {
+          return reader.result;
+        }, false);
+      } 
+    }).unsubscribe();
   }
 
   async openMenu() {
@@ -139,6 +161,7 @@ export class PostPage implements OnInit {
   setPostFavorite() {
     if(!this.post.isFavorite){
       this.post.isFavorite = true;
+      if(this.post.media_url) this.post.base64Img = this.getBase64ImgFromUrl(this.post.media_url);
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {
