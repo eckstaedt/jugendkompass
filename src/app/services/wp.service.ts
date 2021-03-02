@@ -54,7 +54,7 @@ export class WpService {
 
   getBase64ImgFromUrl(imageUrl): Promise<string> {
     return new Promise(resolve => {
-      this.httpClient.get(imageUrl, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
+      this.httpClient.get(`https://cors.bridged.cc/${imageUrl}`, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
         if(blob){
           let reader = new FileReader();
           reader.readAsDataURL(blob);
