@@ -6,7 +6,6 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Platform, ActionSheetController, IonButton, IonIcon, IonBackButton } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
-import { HttpClient, HttpHeaderResponse } from '@angular/common/http';
 import { Post } from 'src/app/utils/interfaces';
 @Component({
   selector: 'app-post',
@@ -33,8 +32,7 @@ export class PostPage implements OnInit {
     private platform: Platform,
     private actionSheetController: ActionSheetController,
     private appComponent: AppComponent,
-    private storage: Storage,
-    private httpClient: HttpClient
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -69,7 +67,7 @@ export class PostPage implements OnInit {
       setTimeout(() => {
         for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
           (image as any).onclick = () => {
-            this.photoViewer.show(this.post.base64Img);
+            this.photoViewer.show((image as any).src);
           };
         }
       }, 100);
@@ -99,18 +97,6 @@ export class PostPage implements OnInit {
         }, 100);
       });
     }
-  }
-
-  getBase64ImgFromUrl(imageURL: any) {
-    this.httpClient.get(imageURL, {responseType: 'blob'}).subscribe(data => {
-      if(data){
-        let reader = new FileReader();
-        reader.readAsDataURL(data);
-        reader.addEventListener("load", () => {
-          return reader.result;
-        }, false);
-      } 
-    }).unsubscribe();
   }
 
   async openMenu() {
@@ -146,10 +132,10 @@ export class PostPage implements OnInit {
     this.audioService.playNew();
   }
 
-  setPostFavorite() {
+  async setPostFavorite() {
     if(!this.post.isFavorite){
       this.post.isFavorite = true;
-      if(this.post.media_url) this.post.base64Img = this.getBase64ImgFromUrl(this.post.media_url);
+      if(this.post.media_url) await this.wp.getBase64ImgFromUrl(this.post.media_url).then(res => this.post.base64Img = res); 
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {

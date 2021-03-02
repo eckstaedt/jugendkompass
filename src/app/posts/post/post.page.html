@@ -18,7 +18,7 @@
  
 <ion-content class="content postContent">
   <div *ngIf="post">
-    <img *ngIf="post.media_url" [src]="post.media_url ? post.media_url : post.base64Img" [style.width]="'100%'">
+    <img *ngIf="post.media_url || post.base64Img" [src]="post.base64Img ? post.base64Img : post.media_url" [style.width]="'100%'">
     <div style="text-align: center;">
       <ion-button *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" class="playButton" shape="round">
         <ion-icon name="play"></ion-icon>
