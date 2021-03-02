@@ -10,7 +10,7 @@ const { Http } = Plugins;
 })
 export class WpService {
 
-  url = `https://cors.bridged.cc/http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  url = `http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
@@ -54,7 +54,7 @@ export class WpService {
 
   getBase64ImgFromUrl(imageUrl): Promise<string> {
     return new Promise(resolve => {
-      this.httpClient.get(`https://cors.bridged.cc/${imageUrl}`, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
+      this.httpClient.get(imageUrl, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
         if(blob){
           let reader = new FileReader();
           reader.readAsDataURL(blob);
