@@ -10,7 +10,7 @@ const { Http } = Plugins;
 })
 export class WpService {
 
-  url = `http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  url = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
