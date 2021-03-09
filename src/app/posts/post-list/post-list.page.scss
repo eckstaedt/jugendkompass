@@ -1,38 +1,14 @@
+ion-grid {
+    padding: 0;
+    height: 7rem;
+
+    ion-col {
+        padding: 0;
+    }
+}
+
 img {
-    width: 100%;
-    max-width: 40rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.rubrik {
-    margin: 0;
-}
-
-.topBar {
-    display: flex;
-    padding: 0 1rem;
-
-    .searchBar {
-        padding-left: 0;
-        float: left;
-    }
-    
-    .filterBtn {
-        --padding-start: 0;
-        --padding-end: 0;
-        display: flex;
-        margin: auto;
-    }
-}
-
-.categoryBar {
-    padding: 0 1rem;
-
-    ion-select {
-        padding-left: 0;
-    }
+    height: 100%;
 }
 
 .noResultContainer {
