@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   observer: any;
   observable: any;
+  verifyKeyUrl = `https://us-central1-cloud-functions-467d8.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
 
   constructor(
     private platform: Platform,
@@ -22,7 +24,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private storage: Storage,
     private deeplinks: Deeplinks,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private httpClient: HttpClient
   ) {
     this.initializeApp();
   }
@@ -67,14 +70,19 @@ export class AppComponent {
       buttons: [{
         text: 'Okay',
         handler: (event: any) => {
-          if (event.password === 'JugendSpeyer2020') {
-            this.observer.next(true);
-            this.observer.complete();
-            this.storage.set('isLoggedIn', true);
-          } else {
-            alert.message = 'Bitte gebe das richtige Passwort ein.'
-            return false;
-          }
+          this.httpClient.get(`${this.verifyKeyUrl}/${event.password}`).toPromise()
+          .then(res => {
+            if (res) {
+              this.observer.next(true);
+              this.observer.complete();
+              this.storage.set('isLoggedIn', true);
+              alert.dismiss();
+            }
+          })
+          .catch(() => {
+            alert.message = 'Bitte gebe das richtige Passwort ein.';
+          });
+          return false;
         }
       }]
     });
