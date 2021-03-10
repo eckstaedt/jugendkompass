@@ -1,4 +1,4 @@
-# jugend-speyer
+# jugendkompass
 
 How to:
 1. Install VS Code or other Environment (https://code.visualstudio.com/Download)
