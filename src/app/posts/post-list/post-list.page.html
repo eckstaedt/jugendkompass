@@ -1,47 +1,14 @@
-<ion-header translucent="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-title>Jugendkompass</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-header collapse="condense">              
-    <ion-toolbar>      
-      <ion-title size="large">Jugendkompass</ion-title>
-    </ion-toolbar>
-  </ion-header>
   <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div class="topBar">
-    <ion-searchbar
-      type="search"
-      inputmode="search"
-      enterkeyhint="search"
-      [(ngModel)]="searchTerm"
-      (ionInput)="onSearch($event)"
-      class="searchBar"
-      [disabled]="!allPosts.length"
-      animated
-      placeholder="Artikel suchen...">
-    </ion-searchbar>
-    <ion-button [disabled]="!allPosts.length" (click)="onFilter()" class="filterBtn" shape="round" fill="none">
-      <ion-icon [color]="currentRubrik === 'all' ? '' : 'primary'" name="funnel"></ion-icon>
-    </ion-button>
-    <ion-item style="display: none;">
-      <ion-label>Rubrik</ion-label>
-      <ion-select (ionChange)="filterRubrik()" [(ngModel)]="currentRubrik" cancelText="Abbrechen" okText="Ok" #select>
-        <ion-select-option value="all">Alle</ion-select-option>
-        <ion-select-option *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
-  <div class="categoryBar" *ngIf="categories.length">
-    <ion-select [disabled]="!allPosts.length" (ionChange)="filterCategory()" [(ngModel)]="currentCategory">
-      <ion-select-option value="all">Alle Ausgaben</ion-select-option>
-      <ion-select-option [value]="cat.id" *ngFor="let cat of categories">{{ cat.name }}</ion-select-option>
-    </ion-select>
-  </div>
+
   <div *ngIf="posts.length">
     <ion-card [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts" (click)="setAsRead(post)" [color]="post.articleWasRead ? 'light' : ''">
       <ion-grid>

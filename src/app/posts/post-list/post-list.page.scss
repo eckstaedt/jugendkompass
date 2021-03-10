@@ -1,14 +1,24 @@
-ion-grid {
-    padding: 0;
-    height: 7rem;
+ion-card {
+    --background: var(--ion-color-light);
+    box-shadow: none;
 
-    ion-col {
+    ion-grid {
         padding: 0;
+        height: 7rem;
+    
+        ion-col {
+            padding: 0;
+        }
+
+        img {
+            height: 100%;
+            object-fit: cover;
+        }
     }
 }
 
-img {
-    height: 100%;
+ion-toolbar {
+    --border-style: none;
 }
 
 .noResultContainer {
