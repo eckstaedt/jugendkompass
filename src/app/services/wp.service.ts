@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import '@capacitor-community/http';
 
@@ -9,11 +10,11 @@ const { Http } = Plugins;
 })
 export class WpService {
 
-  url = `https://cors.bridged.cc/http://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  url = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   totalPosts = null;
   pages: any;
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   // TODO
   getAllPosts() {
@@ -49,5 +50,19 @@ export class WpService {
       method: 'GET',
       url: `${this.url}categories`
     });
+  }
+
+  getBase64ImgFromUrl(imageUrl): Promise<string> {
+    return new Promise(resolve => {
+      this.httpClient.get(imageUrl, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
+        if(blob){
+          let reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.addEventListener("load", () => {
+            resolve(reader.result.toString());
+          }, false);
+        } 
+      });
+    }); 
   }
 }

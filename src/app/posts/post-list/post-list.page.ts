@@ -5,6 +5,7 @@ import { IonSelect } from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
+import { Post } from 'src/app/utils/interfaces';
 
 @Component({
   selector: 'app-post-list',
@@ -15,9 +16,9 @@ export class PostListPage implements OnInit {
 
   @ViewChild('select', { static: false }) select: IonSelect;
 
-  posts = [];
-  allPosts = [];
-  filteredPosts = [];
+  posts: Post[] = [];
+  allPosts: Post[] = [];
+  filteredPosts: Post[] = [];
   rubriken = [];
   page = 1;
   count = null;
