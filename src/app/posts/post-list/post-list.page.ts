@@ -25,7 +25,7 @@ export class PostListPage implements OnInit {
   items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   searchTerm = '';
   currentRubrik = 'all';
-  categories: any[] = []; // TODO give interface
+  ausgaben: any[] = []; // TODO give interface
   currentCategory: any = 'all';
   readArticles: any[] = [];
 
@@ -52,14 +52,16 @@ export class PostListPage implements OnInit {
 
   async getCategories() {
     return new Promise((resolve: any, reject: any) => {
-      this.categories = [];
+      this.ausgaben = [];
       this.wp.getCategories().then((categories: any) => {
         if (categories.data) {
-          this.categories = categories.data
-            .filter((cat: any) => cat.parent === 19 && cat.count !== 0)
+          const ausgabenCategory = categories.data.find((cat: any) => cat.name === 'Ausgaben');
+          const rubrikenCategory = categories.data.find((cat: any) => cat.name === 'Rubriken');
+          this.ausgaben = categories.data
+            .filter((cat: any) => cat.parent === ausgabenCategory.id && cat.count !== 0)
             .sort((a: any, b: any) => b.id - a.id);
           this.rubriken = categories.data
-            .filter((cat: any) => cat.parent === 42 && cat.count !== 0)
+            .filter((cat: any) => cat.parent === rubrikenCategory.id && cat.count !== 0)
             .sort((a: any, b: any) => a.name - b.name);
         }
         resolve();
@@ -148,15 +150,15 @@ export class PostListPage implements OnInit {
     this.wp.getAllPosts().then((res: any) => {
       this.allPosts = res.data.map((post: any) => {
         let rubrik: any;
-        let category: any;
+        let ausgabe: any;
         let articleWasRead: boolean;
         if (this.readArticles) articleWasRead = this.readArticles.includes(post.id);
         for (const cat of post.categories) {
           if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
             rubrik = this.rubriken.find((rub: any) => rub.id === cat);
           }
-          if (Boolean(this.categories.find((aus: any) => aus.id === cat))) {
-            category = this.categories.find((aus: any) => aus.id === cat);
+          if (Boolean(this.ausgaben.find((aus: any) => aus.id === cat))) {
+            ausgabe = this.ausgaben.find((aus: any) => aus.id === cat);
           }
         }
         return {
@@ -166,7 +168,7 @@ export class PostListPage implements OnInit {
           // tslint:disable-next-line: object-literal-shorthand
           rubrik: rubrik,
           // tslint:disable-next-line: object-literal-shorthand
-          category: category,
+          ausgabe: ausgabe,
           articleWasRead: articleWasRead
         };
       });
@@ -183,13 +185,13 @@ export class PostListPage implements OnInit {
         this.count = parseInt(res.headers.get('x-wp-total'), 10);
         this.posts = res.data.map((post: any) => {
           let rubrik: any;
-          let category: any;
+          let ausgabe: any;
           for (const cat of post.categories) {
             if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
               rubrik = this.rubriken.find((rub: any) => rub.id === cat);
             }
-            if (Boolean(this.categories.find((aus: any) => aus.id === cat))) {
-              category = this.categories.find((aus: any) => aus.id === cat);
+            if (Boolean(this.ausgaben.find((aus: any) => aus.id === cat))) {
+              ausgabe = this.ausgaben.find((aus: any) => aus.id === cat);
             }
           }
           return {
@@ -199,7 +201,7 @@ export class PostListPage implements OnInit {
             // tslint:disable-next-line: object-literal-shorthand
             rubrik: rubrik,
             // tslint:disable-next-line: object-literal-shorthand
-            category: category,
+            ausgabe: ausgabe,
           };
         });
       }

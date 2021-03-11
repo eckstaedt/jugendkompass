@@ -48,7 +48,7 @@ export class WpService {
   getCategories() {
     return Http.request({
       method: 'GET',
-      url: `${this.url}categories`
+      url: `${this.url}categories?_embed&per_page=100`
     });
   }
 

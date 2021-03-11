@@ -19,8 +19,10 @@
           <ion-col class="cardColumn" size="8">
             <div class="postHeader">
               <ion-card-header>
-                <p class="subTitle" *ngIf="!post.category">{{ post.date_gmt | date: 'dd.MM.yyyy' }}</p>
-                <p class="subTitle" *ngIf="post.category">{{ post.category.name }}</p>
+                <p class="subTitle" *ngIf="!post.ausgabe">{{ post.date_gmt | date: 'dd.MM.yyyy' }}</p>
+                <p class="subTitle" *ngIf="post.ausgabe && !post.rubrik">{{ post.ausgabe.name }}</p>
+                <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">{{ post.rubrik.name }}</p>
+                <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">{{ post.ausgabe.name}} | {{post.rubrik.name }}</p>
                 <p class="title" [innerHTML]="post.title.rendered"></p>
               </ion-card-header>
             </div>

@@ -19,7 +19,7 @@
 <ion-content class="content postContent">
   <div *ngIf="post">
     <img *ngIf="post.media_url || post.base64Img" [src]="post.isFavorite ? post.base64Img : post.media_url" [style.width]="'100%'">
-    <div class="horizontalLine"></div>
+    <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
     <ion-fab-button style="margin: auto;" *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" size="small">
       <ion-icon size="medium" name="play-outline"></ion-icon>
     </ion-fab-button>
