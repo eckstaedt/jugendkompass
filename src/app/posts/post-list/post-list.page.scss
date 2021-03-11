@@ -1,6 +1,8 @@
 ion-card {
     --background: var(--ion-color-light);
     box-shadow: none;
+    margin: .4rem .5rem;
+    height: 7rem;
 
     &.read {
         opacity: .7;
@@ -17,25 +19,59 @@ ion-card {
     ion-grid {
         padding: 0;
         height: 7rem;
+
+        p {
+            margin: 0;
+        }
+
+        .cardColumn {
+            height: 7rem;
+        }
     
         ion-col {
             padding: 0;
         }
 
-        ion-card-header {
-            padding: .5rem;
-
-            .title {
-                font-size: 1rem;
-                margin: 0;
-                color: var(--ion-color-dark);
-            }
+        .postHeader {
+            height: 5rem;
+            ion-card-header {
+                padding: .5rem;
     
-            .subTitle {
-                font-size: .7rem;
-                margin: 0;
-                padding-bottom: .2rem;
-                color: var(--ion-color-primary);
+                .title {
+                    font-size: 1rem;
+                    margin: 0;
+                    color: var(--ion-color-dark);
+                }
+        
+                .subTitle {
+                    font-size: .8rem;
+                    margin: 0;
+                    padding-bottom: .2rem;
+                    color: var(--ion-color-primary);
+                }
+            }
+        }
+
+        .postFooter {
+            height: 2rem;
+            padding-top: .5rem;
+
+            ion-col {
+                display: flex;
+                font-size: .8rem;
+
+                &:first-of-type {
+                    padding-left: 1rem;
+                }
+
+                &:nth-of-type(2) {
+                    padding-left: 1rem;
+                }
+
+                ion-icon {
+                    height: 0.9375rem;
+                    padding-right: .2rem;
+                }
             }
         }
 

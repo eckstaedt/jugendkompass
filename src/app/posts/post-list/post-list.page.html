@@ -13,15 +13,30 @@
     <ion-card [class]="post.articleWasRead ? 'read' : ''" [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts" (click)="setAsRead(post)">
       <ion-grid>
         <ion-row>
-          <ion-col size="4">
+          <ion-col class="cardColumn" size="4">
             <img *ngIf="post.media_url" [src]="post.media_url">
           </ion-col>
-          <ion-col size="8">
-            <ion-card-header>
-              <p class="subTitle" *ngIf="!post.category">{{ post.date_gmt | date: 'dd.MM.yyyy' }}</p>
-              <p class="subTitle" *ngIf="post.category">{{ post.category.name }}</p>
-              <p class="title" [innerHTML]="post.title.rendered"></p>
-            </ion-card-header>
+          <ion-col class="cardColumn" size="8">
+            <div class="postHeader">
+              <ion-card-header>
+                <p class="subTitle" *ngIf="!post.category">{{ post.date_gmt | date: 'dd.MM.yyyy' }}</p>
+                <p class="subTitle" *ngIf="post.category">{{ post.category.name }}</p>
+                <p class="title" [innerHTML]="post.title.rendered"></p>
+              </ion-card-header>
+            </div>
+            <div class="postFooter">
+              <ion-row>
+                <ion-col size="4">
+                  <ion-icon name="book-outline"></ion-icon> 5 min
+                </ion-col>
+                <ion-col size="4">
+                  <ion-icon name="eye-outline"></ion-icon> 124
+                </ion-col>
+               <ion-col size="4">
+                  <ion-icon name="volume-high-outline"></ion-icon> 5:52 min
+                </ion-col>
+              </ion-row>
+            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
