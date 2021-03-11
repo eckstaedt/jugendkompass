@@ -1,5 +1,5 @@
 ion-toolbar {
-    border-top: 1px solid var(--ion-color-primary);
+    border-top: 0.55px solid var(--ion-tab-bar-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.2))));
 }
 
 .songLabel {

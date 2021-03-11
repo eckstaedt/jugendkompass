@@ -30,9 +30,9 @@
                   <ion-icon name="book-outline"></ion-icon> 5 min
                 </ion-col>
                 <ion-col size="4">
-                  <ion-icon name="eye-outline"></ion-icon> 124
+                  <ion-icon name="eye-outline"></ion-icon> {{post.views}}
                 </ion-col>
-               <ion-col size="4">
+               <ion-col *ngIf="post.audio" size="4">
                   <ion-icon name="volume-high-outline"></ion-icon> 5:52 min
                 </ion-col>
               </ion-row>
