@@ -2,12 +2,41 @@ ion-card {
     --background: var(--ion-color-light);
     box-shadow: none;
 
+    &.read {
+        opacity: .7;
+
+        img {
+            filter: grayscale(100%);
+        }
+
+        .subTitle {
+            color: var(--ion-color-dark) !important;
+        }
+    }
+
     ion-grid {
         padding: 0;
         height: 7rem;
     
         ion-col {
             padding: 0;
+        }
+
+        ion-card-header {
+            padding: .5rem;
+
+            .title {
+                font-size: 1rem;
+                margin: 0;
+                color: var(--ion-color-dark);
+            }
+    
+            .subTitle {
+                font-size: .7rem;
+                margin: 0;
+                padding-bottom: .2rem;
+                color: var(--ion-color-primary);
+            }
         }
 
         img {
