@@ -1,3 +1,13 @@
+ion-toolbar {
+    --padding-top: .5rem;
+    --padding-start: .5rem;
+    --padding-end: .5rem;
+
+    img {
+        height: 2rem;
+    }
+}
+
 ion-thumbnail {
     height: 7rem;
     width: 100%;
