@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
 import { Rubrik } from 'src/app/utils/constants';
-import { IonSelect } from '@ionic/angular';
+import { IonSelect, DomController, IonContent, IonSearchbar } from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
@@ -15,6 +15,8 @@ import { Post } from 'src/app/utils/interfaces';
 export class PostListPage implements OnInit {
 
   @ViewChild('select', { static: false }) select: IonSelect;
+  @ViewChild('content', { static: false }) content: IonContent;
+  @ViewChild('searchbar', { static: false }) searchbar: any;
 
   posts: Post[] = [];
   allPosts: Post[] = [];
@@ -26,14 +28,15 @@ export class PostListPage implements OnInit {
   searchTerm = '';
   currentRubrik = 'all';
   ausgaben: any[] = []; // TODO give interface
-  currentCategory: any = 'all';
+  currentAusgabe: any = 'all';
   readArticles: any[] = [];
 
   constructor(
     private wp: WpService,
     private utils: Utils,
     private appComponent: AppComponent,
-    private storage: Storage
+    private storage: Storage,
+    private domCtrl: DomController,
   ) { }
 
   ngOnInit() {
@@ -41,6 +44,9 @@ export class PostListPage implements OnInit {
       if (loggedIn) {
         this.loadData();
       }
+    });
+    this.domCtrl.read(() => {
+      this.content.scrollToPoint(0, 60);
     });
   }
 
@@ -85,16 +91,16 @@ export class PostListPage implements OnInit {
     this.posts = this.filter();
   }
 
-  filterCategory() {
+  filterAusgabe() {
     this.searchTerm = '';
     let posts: any[] = [];
-    if (this.currentCategory === 'all') {
+    if (this.currentAusgabe === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+      posts = this.allPosts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
     }
     if (this.currentRubrik !== 'all') {
-      posts = posts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+      posts = posts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -108,8 +114,8 @@ export class PostListPage implements OnInit {
     } else {
       posts = this.allPosts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
     }
-    if (this.currentCategory !== 'all') {
-      posts = posts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+    if (this.currentAusgabe !== 'all') {
+      posts = posts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -120,20 +126,13 @@ export class PostListPage implements OnInit {
       return this.filteredPosts;
     } else {
       return this.filteredPosts.filter((post: any) => {
-        if (post.rubrik) {
-          if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.rubrik.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
-            return true;
-          }
-          return false;
-        } else {
-          if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
-            return true;
-          }
-          return false;
+        if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+        post.rubrik && post.rubrik.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+        post.ausgabe && post.ausgabe.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+        post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+          return true;
         }
+        return false;
       });
     }
   }
@@ -208,7 +207,7 @@ export class PostListPage implements OnInit {
       if (event) {
         event.target.complete();
         this.currentRubrik = 'all';
-        this.currentCategory = 'all';
+        this.currentAusgabe = 'all';
         this.allPosts = [];
         this.filteredPosts = [];
         this.getAllPosts();

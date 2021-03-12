@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header #header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text="" defaultHref="/tabs/posts" #backButton></ion-back-button>
@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
  
-<ion-content class="content postContent">
+<ion-content fullscreen="true" scrollEvents="true" appHideHeader [header]="header" [isList]="false" class="content postContent">
   <div *ngIf="post">
     <img *ngIf="post.media_url || post.base64Img" [src]="post.isFavorite ? post.base64Img : post.media_url" [style.width]="'100%'">
     <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
@@ -26,8 +26,6 @@
     <h3 class="title">{{ post?.title.rendered }}</h3>
     <div class="text" [innerHTML]="post.content.rendered"></div>
   </div> 
-
- 
 
   <div *ngIf="!post">
     <h3 class="title">

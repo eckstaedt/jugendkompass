@@ -1,16 +1,34 @@
-<ion-header class="ion-no-border">
+<ion-header #header class="ion-no-border">
   <ion-toolbar>
     <ion-title>Jugendkompass</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="filter()" [disabled]="!posts.length">
+        <ion-icon name="funnel"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen="true" #content scrollEvents="true" appHideHeader [header]="header" [isList]="true">
   <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <ion-searchbar
+    #searchbar
+    type="search"
+    inputmode="search"
+    enterkeyhint="search"
+    [(ngModel)]="searchTerm"
+    (ionInput)="onSearch($event)"
+    [disabled]="!allPosts.length"
+    animated
+    placeholder="Artikel suchen..."
+  >
+  </ion-searchbar>
+
   <div *ngIf="posts.length">
-    <ion-card [class]="post.articleWasRead ? 'read' : ''" [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts" (click)="setAsRead(post)">
+    <ion-card [ngClass]="post.articleWasRead ? 'read' : ''" [routerLink]="['/', 'tabs', 'posts', post.id]" *ngFor="let post of posts" (click)="setAsRead(post)">
       <ion-grid>
         <ion-row>
           <ion-col class="cardColumn" size="4">

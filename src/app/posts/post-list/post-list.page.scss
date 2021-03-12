@@ -3,6 +3,10 @@ ion-thumbnail {
     width: 100%;
 }
 
+.hideSearchbar {
+    display: none;
+}
+
 ion-card {
     --background: var(--ion-color-light);
     box-shadow: none;
