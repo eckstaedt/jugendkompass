@@ -70,3 +70,22 @@ export interface Post {
         'wp:term': any[],
     };
 }
+
+export interface Category {
+    count: number;
+    description: string;
+    id: number;
+    link: string;
+    meta: any[];
+    name: string;
+    parent: number;
+    slug: string;
+    taxonomy: string;
+    _embedded: any;
+    _links: any;
+}
+
+export interface CategoryData {
+    rubrik: Category | undefined;
+    ausgabe: Category | undefined;
+}

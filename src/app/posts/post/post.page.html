@@ -1,4 +1,4 @@
-<ion-header #header>
+<ion-header #header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button text="" defaultHref="/tabs/posts" #backButton></ion-back-button>
@@ -18,19 +18,54 @@
  
 <ion-content fullscreen="true" scrollEvents="true" appHideHeader [header]="header" [isList]="false">
   <div *ngIf="post">
-    <img *ngIf="post.media_url || post.base64Img" [src]="post.isFavorite ? post.base64Img : post.media_url" [style.width]="'100%'">
-    <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
-    <ion-fab-button style="margin: auto;" *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" size="small">
-      <ion-icon size="medium" name="play-outline"></ion-icon>
-    </ion-fab-button> -->
-    <h3 class="title">{{ post?.title.rendered }}</h3>
+    <ion-card>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="8">
+            <p class="title">{{ post.title.rendered }}</p>
+            <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">
+              <a (click)="openFilteredList(post.ausgabe)">{{ post.ausgabe.name }}</a>
+            </p>
+            <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
+              <a (click)="openFilteredList(post.rubrik)">{{ post.rubrik.name }}</a>
+            </p>
+            <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
+              <a (click)="openFilteredList(post.ausgabe)">{{ post.ausgabe.name }}</a> |
+              <a (click)="openFilteredList(post.rubrik)">{{post.rubrik.name }}</a>
+            </p>
+            <!-- <div class="postFooter">
+              <ion-row>
+                <ion-col size="4">
+                  <ion-icon name="book-outline"></ion-icon> 5 min
+                </ion-col>
+                <ion-col size="3">
+                  <ion-icon name="eye-outline"></ion-icon> {{post.views}}
+                </ion-col>
+               <ion-col *ngIf="post.audio" size="4">
+                  <ion-icon name="volume-high-outline"></ion-icon> 5:52 min
+                </ion-col>
+              </ion-row>
+            </div> -->
+          </ion-col>
+          <ion-col size="4">
+            <img
+              *ngIf="post.media_url || post.base64Img"
+              [src]="post.isFavorite ? post.base64Img : post.media_url"
+              [style.width]="'100%'"
+            >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
     <div class="text" [innerHTML]="post.content.rendered"></div>
-  </div> 
+  </div>
+
+        <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
+      <ion-fab-button style="margin: auto;" *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" size="small">
+        <ion-icon size="medium" name="play-outline"></ion-icon>
+      </ion-fab-button> -->
 
   <div *ngIf="!post">
-    <h3 class="title">
-      <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-    </h3>
     <div class="text" >
       <p>
         <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>

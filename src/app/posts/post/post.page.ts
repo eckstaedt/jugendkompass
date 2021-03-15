@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Platform, ActionSheetController, IonButton, IonIcon, IonBackButton } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
-import { Post } from 'src/app/utils/interfaces';
+import { Post, CategoryData, Category } from 'src/app/utils/interfaces';
+import { Utils } from 'src/app/utils/utils';
+import { RouterService } from 'src/app/services/router.service';
 @Component({
   selector: 'app-post',
   templateUrl: './post.page.html',
@@ -29,10 +31,11 @@ export class PostPage implements OnInit {
     private wp: WpService,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
-    private platform: Platform,
     private actionSheetController: ActionSheetController,
     private appComponent: AppComponent,
-    private storage: Storage
+    private storage: Storage,
+    private utils: Utils,
+    private routerService: RouterService,
   ) { }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class PostPage implements OnInit {
   }
 
   async loadData() {
+    await this.wp.getCategories();
     this.backButton.defaultHref = this.router['routerState'].snapshot.url.search('favorites') ? 'tabs/favorites' : 'tabs/posts';
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.storage.get('favoritePosts').then((res: any) => {
@@ -61,9 +65,6 @@ export class PostPage implements OnInit {
         this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
       }
 
-      if (this.platform.is('capacitor')) {
-
-      }
       setTimeout(() => {
         for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
           (image as any).onclick = () => {
@@ -71,23 +72,27 @@ export class PostPage implements OnInit {
           };
         }
       }, 100);
-    }else {
+    } else {
       this.wp.getPostContent(id).then((res: any) => {
+        const categoryData: CategoryData = this.utils.getCategoryData(
+          res.data,
+          this.wp.getRubriken(),
+          this.wp.getAusgaben()
+        );
         this.post = {
           ...res.data,
           media_url: res.data._embedded['wp:featuredmedia'] ?
             res.data._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
           isFavorite: isFavorite,
+          rubrik: categoryData.rubrik,
+          ausgabe: categoryData.ausgabe,
           views: res.data.views ? parseInt(res.data.views, 10) + 1 : 1
         };
   
         if (this.post.audio) {
           this.audioService.loadNewAudio(this.post.audio, this.post.title.rendered);
         }
-  
-        if (this.platform.is('capacitor')) {
-  
-        }
+
         setTimeout(() => {
           for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
             (image as any).onclick = () => {
@@ -143,5 +148,10 @@ export class PostPage implements OnInit {
       this.favoritePosts = this.favoritePosts.filter(post => post.id != this.post.id);
       if(this.favoritePosts) this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     }
+  }
+
+  openFilteredList(category: Category): void {
+    this.routerService.setData(category);
+    this.router.navigateByUrl('tabs/posts');
   }
 }

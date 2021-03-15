@@ -5,7 +5,8 @@ import { IonSelect, DomController, IonContent, IonSearchbar } from '@ionic/angul
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
-import { Post } from 'src/app/utils/interfaces';
+import { Post, Category, CategoryData } from 'src/app/utils/interfaces';
+import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-post-list',
@@ -26,10 +27,10 @@ export class PostListPage implements OnInit {
   count = null;
   items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   searchTerm = '';
-  currentRubrik = 'all';
-  ausgaben: any[] = []; // TODO give interface
-  currentAusgabe: any = 'all';
-  readArticles: any[] = [];
+  currentRubrik: string = 'all';
+  ausgaben: Category[] = [];
+  currentAusgabe: string = 'all';
+  readArticles: Category[] = [];
 
   constructor(
     private wp: WpService,
@@ -37,7 +38,8 @@ export class PostListPage implements OnInit {
     private appComponent: AppComponent,
     private storage: Storage,
     private domCtrl: DomController,
-  ) { }
+    private routerService: RouterService,
+  ) {}
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
@@ -50,32 +52,26 @@ export class PostListPage implements OnInit {
     });
   }
 
-  async loadData() {
-    await this.getCategories();
-    this.loadPosts();
-    this.getAllPosts();
+  ionViewDidEnter() {
+    const filterData: Category | undefined = this.routerService.getData();
+
+    if (filterData) {
+      if (this.ausgaben.find((aus: Category) => aus.id === filterData.id)) {
+        this.currentAusgabe = filterData.id.toString();
+        this.filterAusgabe();
+      } else {
+        this.currentRubrik = filterData.id.toString();
+        this.filterRubrik();
+      }
+    }
   }
 
-  async getCategories() {
-    return new Promise((resolve: any, reject: any) => {
-      this.ausgaben = [];
-      this.wp.getCategories().then((categories: any) => {
-        if (categories.data) {
-          const ausgabenCategory = categories.data.find((cat: any) => cat.name === 'Ausgaben');
-          const rubrikenCategory = categories.data.find((cat: any) => cat.name === 'Rubriken');
-          this.ausgaben = categories.data
-            .filter((cat: any) => cat.parent === ausgabenCategory.id && cat.count !== 0)
-            .sort((a: any, b: any) => b.id - a.id);
-          this.rubriken = categories.data
-            .filter((cat: any) => cat.parent === rubrikenCategory.id && cat.count !== 0)
-            .sort((a: any, b: any) => a.name - b.name);
-        }
-        resolve();
-      }).catch(() => {
-        this.utils.showToast('Fehler beim Laden der Kategorien');
-        reject();
-      });
-    });
+  async loadData() {
+    await this.wp.getCategories();
+    this.ausgaben = this.wp.getAusgaben();
+    this.rubriken = this.wp.getRubriken();
+    this.loadPosts();
+    this.getAllPosts();
   }
 
   onSearch(event: any) {
@@ -97,10 +93,14 @@ export class PostListPage implements OnInit {
     if (this.currentAusgabe === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
+      posts = this.allPosts.filter((post: any) =>
+        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      );
     }
     if (this.currentRubrik !== 'all') {
-      posts = posts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
+      posts = posts.filter((post: any) =>
+        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      );
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -112,10 +112,14 @@ export class PostListPage implements OnInit {
     if (this.currentRubrik === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+      posts = this.allPosts.filter((post: any) =>
+        post.rubrik && post.rubrik.id.toString() === this.currentRubrik
+      );
     }
     if (this.currentAusgabe !== 'all') {
-      posts = posts.filter((post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe);
+      posts = posts.filter((post: any) =>
+        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      );
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -147,30 +151,7 @@ export class PostListPage implements OnInit {
       if(res) this.readArticles = JSON.parse(res);
     });
     this.wp.getAllPosts().then((res: any) => {
-      this.allPosts = res.data.map((post: any) => {
-        let rubrik: any;
-        let ausgabe: any;
-        let articleWasRead: boolean;
-        if (this.readArticles) articleWasRead = this.readArticles.includes(post.id);
-        for (const cat of post.categories) {
-          if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
-            rubrik = this.rubriken.find((rub: any) => rub.id === cat);
-          }
-          if (Boolean(this.ausgaben.find((aus: any) => aus.id === cat))) {
-            ausgabe = this.ausgaben.find((aus: any) => aus.id === cat);
-          }
-        }
-        return {
-          ...post,
-          media_url: post._embedded['wp:featuredmedia'] ?
-            post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
-          // tslint:disable-next-line: object-literal-shorthand
-          rubrik: rubrik,
-          // tslint:disable-next-line: object-literal-shorthand
-          ausgabe: ausgabe,
-          articleWasRead: articleWasRead
-        };
-      });
+      this.allPosts = this.getEditedPosts(res.data);
       this.posts = this.allPosts;
       this.filteredPosts = this.allPosts;
     });
@@ -182,27 +163,7 @@ export class PostListPage implements OnInit {
     this.wp.getPosts().then((res: any) => {
       if (!this.allPosts) {
         this.count = parseInt(res.headers.get('x-wp-total'), 10);
-        this.posts = res.data.map((post: any) => {
-          let rubrik: any;
-          let ausgabe: any;
-          for (const cat of post.categories) {
-            if (Boolean(this.rubriken.find((rub: any) => rub.id === cat))) {
-              rubrik = this.rubriken.find((rub: any) => rub.id === cat);
-            }
-            if (Boolean(this.ausgaben.find((aus: any) => aus.id === cat))) {
-              ausgabe = this.ausgaben.find((aus: any) => aus.id === cat);
-            }
-          }
-          return {
-            ...post,
-            media_url: post._embedded['wp:featuredmedia'] ?
-              post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
-            // tslint:disable-next-line: object-literal-shorthand
-            rubrik: rubrik,
-            // tslint:disable-next-line: object-literal-shorthand
-            ausgabe: ausgabe,
-          };
-        });
+        this.posts = this.getEditedPosts(res.data);
       }
       if (event) {
         event.target.complete();
@@ -212,6 +173,28 @@ export class PostListPage implements OnInit {
         this.filteredPosts = [];
         this.getAllPosts();
       }
+    });
+  }
+
+  getEditedPosts(posts: Post[]): Post[] {
+    return posts.map((post: any) => {
+      const categroyData: CategoryData = this.utils.getCategoryData(
+        post,
+        this.rubriken,
+        this.ausgaben
+      );
+      let articleWasRead: boolean;
+      if (this.readArticles) {
+        articleWasRead = this.readArticles.includes(post.id);
+      }
+      return {
+        ...post,
+        media_url: post._embedded['wp:featuredmedia'] ?
+          post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
+        rubrik: categroyData.rubrik,
+        ausgabe: categroyData.ausgabe,
+        articleWasRead: articleWasRead
+      };
     });
   }
 
