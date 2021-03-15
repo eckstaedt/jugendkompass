@@ -25,10 +25,18 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-// ion-app {
-//     max-width: 50rem;
-//     margin: auto;
-// }
+ion-app {
+    max-width: 50rem;
+    margin: auto;
+}
+
+body.dark {
+    ion-toolbar {
+        img {
+            content:url("assets/logo-light.png") !important;
+        }
+    }
+}
 
 .powerpress_player {
     display: none;

@@ -49,6 +49,11 @@ export class AppComponent {
       this.setupDeepLinks();
       this.storage.get('darkMode').then((darkMode: boolean) => {
         document.body.classList.toggle('dark', darkMode);
+        if (darkMode) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
       });
     });
   }
