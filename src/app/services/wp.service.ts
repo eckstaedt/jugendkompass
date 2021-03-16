@@ -1,11 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import '@capacitor-community/http';
 
-import { Plugins } from '@capacitor/core';
+import { Http } from '@capacitor-community/http';
 import { Utils } from '../utils/utils';
 import { Category } from '../utils/interfaces';
-const { Http } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +17,6 @@ export class WpService {
   rubriken: Category[] = [];
 
   constructor(
-    private httpClient: HttpClient,
     private utils: Utils,
   ) { }
 
@@ -88,17 +85,17 @@ export class WpService {
     return this.rubriken;
   }
 
-  getBase64ImgFromUrl(imageUrl): Promise<string> {
-    return new Promise(resolve => {
-      this.httpClient.get(imageUrl, {responseType: 'blob'}).toPromise().then((blob: Blob) => {
-        if(blob){
-          let reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.addEventListener("load", () => {
-            resolve(reader.result.toString());
-          }, false);
-        } 
+  async getBase64ImgFromUrl(imageUrl): Promise<any> {
+    return new Promise(async resolve => {
+      const res = await Http.downloadFile({
+        url: imageUrl,
+        filePath: imageUrl,
       });
-    }); 
+      let reader = new FileReader();
+      reader.readAsDataURL(res.blob);
+      reader.addEventListener("load", () => {
+        resolve(reader.result.toString());
+      }, false);
+    });
   }
 }

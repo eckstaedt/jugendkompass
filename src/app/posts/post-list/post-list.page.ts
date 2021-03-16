@@ -201,8 +201,8 @@ export class PostListPage implements OnInit {
   loadMore(event: any) {
     this.page++;
 
-    this.wp.getPosts(this.page).subscribe(res => {
-      this.posts = [...this.posts, ...res.map((post: any) => {
+    this.wp.getPosts(this.page).then((res: any) => {
+      this.posts = [...this.posts, ...res.data.map((post: any) => {
         return {
           ...post,
           media_url: post._embedded['wp:featuredmedia'] ?

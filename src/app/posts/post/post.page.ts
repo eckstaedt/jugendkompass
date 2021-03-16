@@ -140,7 +140,9 @@ export class PostPage implements OnInit {
   async setPostFavorite() {
     if(!this.post.isFavorite){
       this.post.isFavorite = true;
-      if(this.post.media_url) await this.wp.getBase64ImgFromUrl(this.post.media_url).then(res => this.post.base64Img = res); 
+      if (this.post.media_url) {
+        await this.wp.getBase64ImgFromUrl(this.post.media_url).then(res => this.post.base64Img = res);
+      }
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {

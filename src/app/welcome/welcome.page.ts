@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 const fcm = new FCM();
-import { Plugins } from '@capacitor/core';
-
-const { PushNotifications } = Plugins;
+import { PushNotifications } from '@capacitor/push-notifications';
 
 @Component({
   selector: 'app-welcome',
@@ -25,7 +23,7 @@ export class WelcomePage implements OnInit {
   }
 
   toHome() {
-    PushNotifications.requestPermission().then((res: any) => {
+    PushNotifications.requestPermissions().then((res: any) => {
       if (res.granted) {
         PushNotifications.register().then(() => {
           fcm
