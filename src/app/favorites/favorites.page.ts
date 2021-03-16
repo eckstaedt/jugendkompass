@@ -11,7 +11,7 @@ import { Post } from '../utils/interfaces';
 })
 export class FavoritesPage implements OnInit {
 
-  @ViewChild('select', { static: false }) select: IonSelect;
+  @ViewChild('select') select: IonSelect;
 
   posts: Post[] = [];
   allPosts: Post[] = [];

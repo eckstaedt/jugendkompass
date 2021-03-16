@@ -15,9 +15,9 @@ import { RouterService } from 'src/app/services/router.service';
 })
 export class PostListPage implements OnInit {
 
-  @ViewChild('select', { static: false }) select: IonSelect;
-  @ViewChild('content', { static: false }) content: IonContent;
-  @ViewChild('searchbar', { static: false }) searchbar: any;
+  @ViewChild('select') select: IonSelect;
+  @ViewChild('content') content: IonContent;
+  @ViewChild('searchbar') searchbar: any;
 
   posts: Post[] = [];
   allPosts: Post[] = [];

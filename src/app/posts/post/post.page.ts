@@ -16,7 +16,7 @@ import { RouterService } from 'src/app/services/router.service';
 })
 export class PostPage implements OnInit {
 
-  @ViewChild('backButton', {static: false}) backButton: IonBackButton
+  @ViewChild('backButton') backButton: IonBackButton
 
   public post: Post;
   public sound: any;

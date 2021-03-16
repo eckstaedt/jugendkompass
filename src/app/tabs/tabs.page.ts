@@ -9,7 +9,7 @@ import { IonRange } from '@ionic/angular';
 })
 export class TabsPage {
 
-  @ViewChild('range', { static: false }) range: IonRange;
+  @ViewChild('range') range: IonRange;
 
   playing = false;
   title = '';

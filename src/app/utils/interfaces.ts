@@ -42,7 +42,8 @@ export interface Post {
     modified_gmt?: string;
     pdf?: string;
     ping_status?: string;
-    rubrik?: any;
+    rubrik?: Category;
+    ausgabe?: Category;
     slug?: string;
     status?: string;
     sticky?: boolean;
