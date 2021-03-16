@@ -1,7 +1,7 @@
 <ion-header #header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="" defaultHref="/tabs/posts" #backButton></ion-back-button>
+      <ion-back-button text="" [defaultHref]="defaultHref" #backButton></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="setPostFavorite()" [disabled]="!post?.id">
@@ -36,6 +36,7 @@
           </ion-col>
           <ion-col size="4">
             <img
+              id="headerImage"
               *ngIf="post.media_url || post.base64Img"
               [src]="post.isFavorite ? post.base64Img : post.media_url"
               [style.width]="'100%'"
@@ -44,7 +45,7 @@
         </ion-row>
       </ion-grid>
     </ion-card>
-    <div class="text" [innerHTML]="post.content.rendered"></div>
+    <div class="text postContent" [innerHTML]="post.content.rendered"></div>
   </div>
 
         <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>

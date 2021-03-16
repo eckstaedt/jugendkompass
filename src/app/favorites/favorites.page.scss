@@ -1,26 +1,109 @@
-.topBar {
-    display: flex;
-    padding: 0 1rem;
+ion-toolbar {
+    --padding-top: .5rem;
+    --padding-start: .5rem;
+    --padding-end: .5rem;
 
-    .searchBar {
-        padding-left: 0;
-        float: left;
-    }
-    
-    .filterBtn {
-        --padding-start: 0;
-        --padding-end: 0;
-        display: flex;
-        margin: auto;
+    img {
+        height: 2rem;
+        content:url("../../assets/logo.png");
     }
 }
 
-.categoryBar {
-    padding: 0 1rem;
+ion-thumbnail {
+    height: 7rem;
+    width: 100%;
+}
 
-    ion-select {
-        padding-left: 0;
+.hideSearchbar {
+    display: none;
+}
+
+ion-card {
+    --background: var(--ion-color-light);
+    box-shadow: none;
+    margin: .4rem .5rem;
+    height: 7rem;
+
+    &.read {
+        opacity: .7;
+
+        img {
+            filter: grayscale(100%);
+        }
+
+        .subTitle {
+            color: var(--ion-color-dark) !important;
+        }
     }
+
+    ion-grid {
+        padding: 0;
+        height: 7rem;
+
+        p {
+            margin: 0;
+        }
+
+        .cardColumn {
+            height: 7rem;
+        }
+    
+        ion-col {
+            padding: 0;
+        }
+
+        .postHeader {
+            height: 5rem;
+            ion-card-header {
+                padding: .5rem;
+    
+                .title {
+                    font-size: .9rem;
+                    margin: 0;
+                    color: var(--ion-color-dark);
+                }
+        
+                .subTitle {
+                    font-size: .8rem;
+                    margin: 0;
+                    padding-bottom: .2rem;
+                    color: var(--ion-color-primary);
+                }
+            }
+        }
+
+        .postFooter {
+            height: 2rem;
+            padding-top: .5rem;
+
+            ion-col {
+                display: flex;
+                font-size: .8rem;
+
+                &:first-of-type {
+                    padding-left: 1rem;
+                }
+
+                &:nth-of-type(2) {
+                    padding-left: 1rem;
+                }
+
+                ion-icon {
+                    height: 0.9375rem;
+                    padding-right: .2rem;
+                }
+            }
+        }
+
+        img {
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+ion-toolbar {
+    --border-style: none;
 }
 
 .noResultContainer {

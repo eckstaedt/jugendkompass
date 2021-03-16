@@ -23,7 +23,7 @@ export class PostPage implements OnInit {
   public soundReady = false;
   public playing = false;
   favoritePosts: Post[] = [];
-  defaultHref = '';
+  defaultHref: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -46,9 +46,13 @@ export class PostPage implements OnInit {
     });
   }
 
+  ionViewWillEnter() {
+    this.defaultHref = Boolean(this.router['routerState'].snapshot.url.search('favorites') > -1)
+      ? '/tabs/favorites' : '/tabs/posts';
+  }
+
   async loadData() {
     await this.wp.getCategories();
-    this.backButton.defaultHref = this.router['routerState'].snapshot.url.search('favorites') ? 'tabs/favorites' : 'tabs/posts';
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.storage.get('favoritePosts').then((res: any) => {
       if(res) this.favoritePosts = JSON.parse(res);
@@ -139,12 +143,19 @@ export class PostPage implements OnInit {
 
   async setPostFavorite() {
     if(!this.post.isFavorite){
-      if (this.post.media_url) {
+      if (this.post.media_url && !this.post.media_url.startsWith('data')) {
         await this.wp.getBase64ImgFromUrl(this.post.media_url).then((res: string) =>
           this.post.base64Img = res
         );
       }
       this.post.isFavorite = true;
+      for (const image of Array.from(document.querySelectorAll('.postContent img'))) {
+        const imageSrc: string = (image as HTMLImageElement).src;
+        if (imageSrc.startsWith('data')) {
+          const base64: string = await this.wp.getBase64ImgFromUrl(imageSrc);
+          this.post.content.rendered = this.post.content.rendered.replace(imageSrc, base64);
+        }
+      }
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {

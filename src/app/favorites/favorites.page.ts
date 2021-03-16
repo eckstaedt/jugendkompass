@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSelect } from '@ionic/angular';
+import { IonSelect, IonContent, DomController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AppComponent } from 'src/app/app.component';
 import { Post } from '../utils/interfaces';
@@ -12,6 +12,7 @@ import { Post } from '../utils/interfaces';
 export class FavoritesPage implements OnInit {
 
   @ViewChild('select') select: IonSelect;
+  @ViewChild('content') content: IonContent;
 
   posts: Post[] = [];
   allPosts: Post[] = [];
@@ -27,7 +28,8 @@ export class FavoritesPage implements OnInit {
 
   constructor(
     private appComponent: AppComponent,
-    private storage: Storage
+    private storage: Storage,
+    private domCtrl: DomController,
   ) { }
 
   ngOnInit() {
@@ -36,6 +38,13 @@ export class FavoritesPage implements OnInit {
         this.loadData();
       }
     });
+    this.domCtrl.read(() => {
+      this.content.scrollToPoint(0, 60);
+    });
+  }
+
+  ionViewDidEnter() {
+    this.loadData();
   }
 
   loadData(event?: any) {
@@ -49,10 +58,6 @@ export class FavoritesPage implements OnInit {
       }
       if(event) event.target.complete();
     });
-  }
-
-  ionViewWillEnter(){
-    this.loadData();
   }
 
   sortByMostRecent(posts: any[]){

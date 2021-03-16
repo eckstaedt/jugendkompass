@@ -47,12 +47,13 @@ export class PostListPage implements OnInit {
         this.loadData();
       }
     });
+  }
+
+  ionViewWillEnter() {
     this.domCtrl.read(() => {
       this.content.scrollToPoint(0, 60);
     });
-  }
 
-  ionViewDidEnter() {
     const filterData: Category | undefined = this.routerService.getData();
 
     if (filterData) {
