@@ -38,9 +38,6 @@ export class FavoritesPage implements OnInit {
         this.loadData();
       }
     });
-    this.domCtrl.read(() => {
-      this.content.scrollToPoint(0, 60);
-    });
   }
 
   ionViewDidEnter() {
@@ -55,6 +52,9 @@ export class FavoritesPage implements OnInit {
         this.allPosts = this.posts;
         this.filteredPosts = this.posts;
         this.favoritePosts = this.posts;
+        this.domCtrl.read(() => {
+          this.content.scrollToPoint(0, 60);
+        });
       }
       if(event) event.target.complete();
     });
