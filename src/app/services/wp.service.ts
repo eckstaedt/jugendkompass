@@ -88,8 +88,8 @@ export class WpService {
   async getBase64ImgFromUrl(imageUrl): Promise<any> {
     return new Promise(async resolve => {
       const res = await Http.downloadFile({
-        url: imageUrl,
-        filePath: imageUrl,
+        url: `https://cors.bridged.cc/${imageUrl}`,
+        filePath: imageUrl
       });
       let reader = new FileReader();
       reader.readAsDataURL(res.blob);
