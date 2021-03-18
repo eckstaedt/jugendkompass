@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent {
   observer: any;
   observable: any;
-  verifyKeyUrl = `https://us-central1-cloud-functions-467d8.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
+  verifyKeyUrl = `https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
 
   constructor(
     private platform: Platform,
