@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 import { Platform, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -23,7 +22,6 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private storage: Storage,
-    private deeplinks: Deeplinks,
     private alertController: AlertController,
     private httpClient: HttpClient
   ) {
