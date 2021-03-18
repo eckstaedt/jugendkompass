@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Stephanus - WdN</string>
-    <string name="title_activity_main">Stephanus - WdN</string>
-    <string name="package_name">io.stephanus.wdn</string>
-    <string name="custom_url_scheme">io.stephanus.wdn</string>
-</resources>

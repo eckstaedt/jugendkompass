@@ -1,6 +1,6 @@
 {
-  "appId": "io.stephanus.wdn",
-  "appName": "Stephanus - WdN",
+  "appId": "io.stephanus.jugendkompass",
+  "appName": "Jugendkompass",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
