@@ -8,6 +8,7 @@
 *.tmp.*
 *.sublime-project
 *.sublime-workspace
+*GoogleService-Info.plist
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
