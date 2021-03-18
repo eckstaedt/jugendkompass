@@ -5,10 +5,9 @@ import { IonRange } from '@ionic/angular';
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
-  styleUrls: ['tabs.page.scss']
+  styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage {
-
   @ViewChild('range') range: IonRange;
 
   playing = false;
@@ -18,9 +17,7 @@ export class TabsPage {
   curTime = '00:00';
   duration = '00:00';
 
-  constructor(
-    private audioService: AudioService
-  ) {
+  constructor(private audioService: AudioService) {
     this.audioService.onChange().subscribe((res: any) => {
       this.playing = res.playing;
       if (this.playing) {
@@ -34,7 +31,9 @@ export class TabsPage {
 
   seek() {
     const newValue: number = +this.range.value;
-    this.audioService.setSeek(this.audioService.getDuration() * (newValue / 100));
+    this.audioService.setSeek(
+      this.audioService.getDuration() * (newValue / 100),
+    );
     this.focus = false;
     this.updateProgress();
   }
@@ -52,9 +51,15 @@ export class TabsPage {
   updateProgress() {
     if (!this.focus) {
       if (!isNaN(this.audioService.getSeek())) {
-        this.progress = (this.audioService.getSeek() / this.audioService.getDuration()) * 100 || 0;
-        this.curTime = this.getMinString(Math.round(this.audioService.getSeek()));
-        this.duration = this.getMinString(Math.round(this.audioService.getDuration()));
+        this.progress =
+          (this.audioService.getSeek() / this.audioService.getDuration()) *
+            100 || 0;
+        this.curTime = this.getMinString(
+          Math.round(this.audioService.getSeek()),
+        );
+        this.duration = this.getMinString(
+          Math.round(this.audioService.getDuration()),
+        );
       }
       setTimeout(() => {
         this.updateProgress();
@@ -64,8 +69,8 @@ export class TabsPage {
 
   getMinString(time: number): string {
     const hours: number | string = Math.floor(time / 3600);
-    let minutes: number | string = Math.floor((time - (hours * 3600)) / 60);
-    let seconds: number | string = time - (hours * 3600) - (minutes * 60);
+    let minutes: number | string = Math.floor((time - hours * 3600) / 60);
+    let seconds: number | string = time - hours * 3600 - minutes * 60;
 
     if (minutes < 10) {
       minutes = '0' + minutes;
@@ -79,5 +84,4 @@ export class TabsPage {
   onRangeFocus() {
     this.focus = true;
   }
-
 }

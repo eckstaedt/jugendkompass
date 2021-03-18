@@ -10,7 +10,6 @@ import { Post } from '../utils/interfaces';
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
-
   @ViewChild('select') select: IonSelect;
   @ViewChild('content') content: IonContent;
 
@@ -30,7 +29,7 @@ export class FavoritesPage implements OnInit {
     private appComponent: AppComponent,
     private storage: Storage,
     private domCtrl: DomController,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
@@ -40,13 +39,13 @@ export class FavoritesPage implements OnInit {
     });
   }
 
-  ionViewDidEnter() {
+  ionViewDidEnter() {
     this.loadData();
   }
 
   loadData(event?: any) {
     this.storage.get('favoritePosts').then((res: any) => {
-      if(res) {
+      if (res) {
         this.posts = JSON.parse(res);
         this.posts = this.sortByMostRecent(this.posts);
         this.allPosts = this.posts;
@@ -56,11 +55,11 @@ export class FavoritesPage implements OnInit {
           this.content.scrollToPoint(0, 60);
         });
       }
-      if(event) event.target.complete();
+      if (event) event.target.complete();
     });
   }
 
-  sortByMostRecent(posts: any[]){
+  sortByMostRecent(posts: any[]) {
     return posts.sort((a, b) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
@@ -84,10 +83,15 @@ export class FavoritesPage implements OnInit {
     if (this.currentRubrik === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+      posts = this.allPosts.filter(
+        (post: any) => post.rubrik && post.rubrik.id === this.currentRubrik,
+      );
     }
     if (this.currentCategory !== 'all') {
-      posts = posts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+      posts = posts.filter(
+        (post: any) =>
+          post.category && post.category.id === this.currentCategory,
+      );
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -99,10 +103,15 @@ export class FavoritesPage implements OnInit {
     if (this.currentCategory === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) => post.category && post.category.id === this.currentCategory);
+      posts = this.allPosts.filter(
+        (post: any) =>
+          post.category && post.category.id === this.currentCategory,
+      );
     }
     if (this.currentRubrik !== 'all') {
-      posts = posts.filter((post: any) => post.rubrik && post.rubrik.id === this.currentRubrik);
+      posts = posts.filter(
+        (post: any) => post.rubrik && post.rubrik.id === this.currentRubrik,
+      );
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -118,15 +127,29 @@ export class FavoritesPage implements OnInit {
     } else {
       return this.filteredPosts.filter((post: any) => {
         if (post.rubrik) {
-          if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.rubrik.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+          if (
+            post.title.rendered
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.rubrik.name
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.excerpt.rendered
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1
+          ) {
             return true;
           }
           return false;
         } else {
-          if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+          if (
+            post.title.rendered
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.excerpt.rendered
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1
+          ) {
             return true;
           }
           return false;

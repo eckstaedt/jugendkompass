@@ -1,12 +1,12 @@
 <ion-tabs>
   <ion-toolbar *ngIf="title !== ''">
-    <ion-buttons slot=start>
+    <ion-buttons slot="start">
       <ion-button expand="full" fill="clear" (click)="play()">
         <ion-icon *ngIf="!playing" name="play"></ion-icon>
         <ion-icon *ngIf="playing" name="pause"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <div style="height: 5.5rem;">
+    <div style="height: 5.5rem">
       <ion-button fill="clear" class="close" size="small" (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>

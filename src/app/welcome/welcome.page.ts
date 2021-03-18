@@ -11,27 +11,23 @@ import { PushNotifications } from '@capacitor/push-notifications';
   styleUrls: ['./welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
-
   mode = 'bright';
 
-  constructor(
-    private router: Router,
-    private storage: Storage
-  ) { }
+  constructor(private router: Router, private storage: Storage) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   toHome() {
     PushNotifications.requestPermissions().then((res: any) => {
       if (res.granted) {
-        PushNotifications.register().then(() => {
-          fcm
-            .subscribeTo({ topic: 'general' })
-            .then(() => console.log('subscribed successfully'))
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(JSON.stringify(err)));
+        PushNotifications.register()
+          .then(() => {
+            fcm
+              .subscribeTo({ topic: 'general' })
+              .then(() => console.log('subscribed successfully'))
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(JSON.stringify(err)));
       }
     });
 
@@ -44,5 +40,4 @@ export class WelcomePage implements OnInit {
     document.body.classList.toggle('dark', Boolean(this.mode === 'dark'));
     console.log(this.mode);
   }
-
 }

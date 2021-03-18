@@ -8,25 +8,28 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-
   let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy;
 
-  beforeEach(waitForAsync(() => {
-    statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
-    splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
-    platformReadySpy = Promise.resolve();
-    platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy });
+  beforeEach(
+    waitForAsync(() => {
+      statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
+      splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
+      platformReadySpy = Promise.resolve();
+      platformSpy = jasmine.createSpyObj('Platform', {
+        ready: platformReadySpy,
+      });
 
-    TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: StatusBar, useValue: statusBarSpy },
-        { provide: SplashScreen, useValue: splashScreenSpy },
-        { provide: Platform, useValue: platformSpy },
-      ],
-    }).compileComponents();
-  }));
+      TestBed.configureTestingModule({
+        declarations: [AppComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: StatusBar, useValue: statusBarSpy },
+          { provide: SplashScreen, useValue: splashScreenSpy },
+          { provide: Platform, useValue: platformSpy },
+        ],
+      }).compileComponents();
+    }),
+  );
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
@@ -43,5 +46,4 @@ describe('AppComponent', () => {
   });
 
   // TODO: add more tests!
-
 });

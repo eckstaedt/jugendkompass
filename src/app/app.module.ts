@@ -27,14 +27,14 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
     HttpClientModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // AngularFirestoreModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     PhotoViewer,
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

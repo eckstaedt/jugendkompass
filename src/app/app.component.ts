@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
   observer: any;
@@ -23,14 +23,16 @@ export class AppComponent {
     private statusBar: StatusBar,
     private storage: Storage,
     private alertController: AlertController,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.observable = new Observable((observer) => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.observable = new Observable(observer => {
         this.observer = observer;
         this.storage.get('isLoggedIn').then((isLoggedIn: boolean) => {
           if (isLoggedIn) {
@@ -42,15 +44,13 @@ export class AppComponent {
           }
         });
       });
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
       this.setupDeepLinks();
       this.storage.get('darkMode').then((darkMode: boolean) => {
         document.body.classList.toggle('dark', darkMode);
         if (darkMode) {
-          document.documentElement.setAttribute("data-theme", "dark");
+          document.documentElement.setAttribute('data-theme', 'dark');
         } else {
-          document.documentElement.setAttribute("data-theme", "light");
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       });
     });
@@ -63,31 +63,37 @@ export class AppComponent {
   async showPasswordAlert() {
     const alert = await this.alertController.create({
       backdropDismiss: false,
-      header: "App Passwort erforderlich",
+      header: 'App Passwort erforderlich',
       cssClass: 'password-alert',
-      inputs: [{
-        type: 'password',
-        placeholder: 'Passwort eingeben...',
-        name: 'password'
-      }],
-      buttons: [{
-        text: 'Okay',
-        handler: (event: any) => {
-          this.httpClient.get(`${this.verifyKeyUrl}/${event.password}`).toPromise()
-          .then(res => {
-            if (res) {
-              this.observer.next(true);
-              this.observer.complete();
-              this.storage.set('isLoggedIn', true);
-              alert.dismiss();
-            }
-          })
-          .catch(() => {
-            alert.message = 'Bitte gebe das richtige Passwort ein.';
-          });
-          return false;
-        }
-      }]
+      inputs: [
+        {
+          type: 'password',
+          placeholder: 'Passwort eingeben...',
+          name: 'password',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Okay',
+          handler: (event: any) => {
+            this.httpClient
+              .get(`${this.verifyKeyUrl}/${event.password}`)
+              .toPromise()
+              .then(res => {
+                if (res) {
+                  this.observer.next(true);
+                  this.observer.complete();
+                  this.storage.set('isLoggedIn', true);
+                  alert.dismiss();
+                }
+              })
+              .catch(() => {
+                alert.message = 'Bitte gebe das richtige Passwort ein.';
+              });
+            return false;
+          },
+        },
+      ],
     });
 
     await alert.present();

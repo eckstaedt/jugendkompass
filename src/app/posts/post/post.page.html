@@ -1,11 +1,18 @@
 <ion-header #header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="" [defaultHref]="defaultHref" #backButton></ion-back-button>
+      <ion-back-button
+        text=""
+        [defaultHref]="defaultHref"
+        #backButton
+      ></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="setPostFavorite()" [disabled]="!post?.id">
-        <ion-icon slot="icon-only" [name]="post?.isFavorite ? 'star' : 'star-outline'"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          [name]="post?.isFavorite ? 'star' : 'star-outline'"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
     <!-- <ion-buttons slot="end">
@@ -15,8 +22,14 @@
     </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
- 
-<ion-content fullscreen="true" scrollEvents="true" appHideHeader [header]="header" [isList]="false">
+
+<ion-content
+  fullscreen="true"
+  scrollEvents="true"
+  appHideHeader
+  [header]="header"
+  [isList]="false"
+>
   <div *ngIf="post">
     <ion-card>
       <ion-grid>
@@ -24,14 +37,23 @@
           <ion-col size="8">
             <p class="title">{{ post.title.rendered }}</p>
             <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">
-              <a (click)="openFilteredList(post.ausgabe)">{{ post.ausgabe.name }}</a>
+              <a (click)="openFilteredList(post.ausgabe)"
+                >{{ post.ausgabe.name }}</a
+              >
             </p>
             <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
-              <a (click)="openFilteredList(post.rubrik)">{{ post.rubrik.name }}</a>
+              <a (click)="openFilteredList(post.rubrik)"
+                >{{ post.rubrik.name }}</a
+              >
             </p>
             <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
-              <a (click)="openFilteredList(post.ausgabe)">{{ post.ausgabe.name }}</a> |
-              <a (click)="openFilteredList(post.rubrik)">{{post.rubrik.name }}</a>
+              <a (click)="openFilteredList(post.ausgabe)"
+                >{{ post.ausgabe.name }}</a
+              >
+              |
+              <a (click)="openFilteredList(post.rubrik)"
+                >{{post.rubrik.name }}</a
+              >
             </p>
           </ion-col>
           <ion-col size="4">
@@ -40,7 +62,7 @@
               *ngIf="post.media_url || post.base64Img"
               [src]="post.isFavorite ? post.base64Img : post.media_url"
               [style.width]="'100%'"
-            >
+            />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -48,13 +70,13 @@
     <div class="text postContent" [innerHTML]="post.content.rendered"></div>
   </div>
 
-        <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
+  <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>
       <ion-fab-button style="margin: auto;" *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" size="small">
         <ion-icon size="medium" name="play-outline"></ion-icon>
       </ion-fab-button> -->
 
   <div *ngIf="!post">
-    <div class="text" >
+    <div class="text">
       <p>
         <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
         <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
@@ -114,7 +136,12 @@
     </div>
   </div>
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button style="margin: auto;" *ngIf="post && post?.audio && post?.audio !== ''" (click)="play()" size="small">
+    <ion-fab-button
+      style="margin: auto"
+      *ngIf="post && post?.audio && post?.audio !== ''"
+      (click)="play()"
+      size="small"
+    >
       <ion-icon size="medium" name="play"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -1,138 +1,138 @@
 ion-toolbar {
-    --padding-top: .5rem;
-    --padding-start: .5rem;
-    --padding-end: .5rem;
+  --padding-top: 0.5rem;
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
 
-    img {
-        height: 2rem;
-        content:url("../../assets/logo.png");
-    }
+  img {
+    height: 2rem;
+    content: url('../../assets/logo.png');
+  }
 }
 
 ion-thumbnail {
-    height: 7rem;
-    width: 100%;
+  height: 7rem;
+  width: 100%;
 }
 
 .hideSearchbar {
-    display: none;
+  display: none;
 }
 
 ion-card {
-    --background: var(--ion-color-light);
-    box-shadow: none;
-    margin: .4rem .5rem;
+  --background: var(--ion-color-light);
+  box-shadow: none;
+  margin: 0.4rem 0.5rem;
+  height: 7rem;
+
+  &.read {
+    opacity: 0.7;
+
+    img {
+      filter: grayscale(100%);
+    }
+
+    .subTitle {
+      color: var(--ion-color-dark) !important;
+    }
+  }
+
+  ion-grid {
+    padding: 0;
     height: 7rem;
 
-    &.read {
-        opacity: .7;
+    p {
+      margin: 0;
+    }
 
-        img {
-            filter: grayscale(100%);
+    .cardColumn {
+      height: 7rem;
+    }
+
+    ion-col {
+      padding: 0;
+    }
+
+    .postHeader {
+      height: 5rem;
+      ion-card-header {
+        padding: 0.5rem;
+
+        .title {
+          font-size: 0.9rem;
+          margin: 0;
+          color: var(--ion-color-dark);
         }
 
         .subTitle {
-            color: var(--ion-color-dark) !important;
+          font-size: 0.8rem;
+          margin: 0;
+          padding-bottom: 0.2rem;
+          color: var(--ion-color-primary);
         }
+      }
     }
 
-    ion-grid {
-        padding: 0;
-        height: 7rem;
+    .postFooter {
+      height: 2rem;
+      padding-top: 0.5rem;
 
-        p {
-            margin: 0;
+      ion-col {
+        display: flex;
+        font-size: 0.8rem;
+
+        &:first-of-type {
+          padding-left: 1rem;
         }
 
-        .cardColumn {
-            height: 7rem;
-        }
-    
-        ion-col {
-            padding: 0;
+        &:nth-of-type(2) {
+          padding-left: 1rem;
         }
 
-        .postHeader {
-            height: 5rem;
-            ion-card-header {
-                padding: .5rem;
-    
-                .title {
-                    font-size: .9rem;
-                    margin: 0;
-                    color: var(--ion-color-dark);
-                }
-        
-                .subTitle {
-                    font-size: .8rem;
-                    margin: 0;
-                    padding-bottom: .2rem;
-                    color: var(--ion-color-primary);
-                }
-            }
+        ion-icon {
+          height: 0.9375rem;
+          padding-right: 0.2rem;
         }
-
-        .postFooter {
-            height: 2rem;
-            padding-top: .5rem;
-
-            ion-col {
-                display: flex;
-                font-size: .8rem;
-
-                &:first-of-type {
-                    padding-left: 1rem;
-                }
-
-                &:nth-of-type(2) {
-                    padding-left: 1rem;
-                }
-
-                ion-icon {
-                    height: 0.9375rem;
-                    padding-right: .2rem;
-                }
-            }
-        }
-
-        img {
-            height: 100%;
-            object-fit: cover;
-        }
+      }
     }
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
 
 ion-toolbar {
-    --border-style: none;
+  --border-style: none;
 }
 
 .noResultContainer {
+  height: 100%;
+
+  ion-grid {
     height: 100%;
 
-    ion-grid {
-        height: 100%;
+    .noItemsIcon {
+      font-size: 5rem;
+      height: 48%;
+      text-align: center;
 
-        .noItemsIcon {
-            font-size: 5rem;
-            height: 48%;
-            text-align: center;
-
-            ion-icon {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-            }
-        }
-    
-        .noItemsLabel {
-            height: 52%;
-            text-align: center;
-            font-size: 1rem;
-
-            ion-label {
-                width: 100%;
-            }
-        }
+      ion-icon {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+      }
     }
+
+    .noItemsLabel {
+      height: 52%;
+      text-align: center;
+      font-size: 1rem;
+
+      ion-label {
+        width: 100%;
+      }
+    }
+  }
 }

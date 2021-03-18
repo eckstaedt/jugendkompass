@@ -4,40 +4,42 @@ import { WpService } from '../services/wp.service';
 import { Post, CategoryData, Category } from './interfaces';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class Utils {
-    constructor(
-      private toastController: ToastController
-    ) {}
+  constructor(private toastController: ToastController) {}
 
-    async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
-      const toast = await this.toastController.create({
-        message: text,
-        color: status,
-        position: p,
-        duration: 2000
-      });
+  async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
+    const toast = await this.toastController.create({
+      message: text,
+      color: status,
+      position: p,
+      duration: 2000,
+    });
 
-      toast.present();
-    }
+    toast.present();
+  }
 
-    getCategoryData(post: Post, rubriken: Category[], ausgaben: Category[]): CategoryData {
-      let ausgabe: Category | undefined;
-      let rubrik: Category | undefined;
-  
-      for (const cat of post.categories) {
-        if (Boolean(rubriken.find((rub: any) => rub.id === cat))) {
-          rubrik = rubriken.find((rub: any) => rub.id === cat);
-        }
-        if (Boolean(ausgaben.find((aus: any) => aus.id === cat))) {
-          ausgabe = ausgaben.find((aus: any) => aus.id === cat);
-        }
+  getCategoryData(
+    post: Post,
+    rubriken: Category[],
+    ausgaben: Category[],
+  ): CategoryData {
+    let ausgabe: Category | undefined;
+    let rubrik: Category | undefined;
+
+    for (const cat of post.categories) {
+      if (Boolean(rubriken.find((rub: any) => rub.id === cat))) {
+        rubrik = rubriken.find((rub: any) => rub.id === cat);
       }
-  
-      return {
-        ausgabe: ausgabe,
-        rubrik: rubrik,
+      if (Boolean(ausgaben.find((aus: any) => aus.id === cat))) {
+        ausgabe = ausgaben.find((aus: any) => aus.id === cat);
       }
     }
+
+    return {
+      ausgabe: ausgabe,
+      rubrik: rubrik,
+    };
+  }
 }

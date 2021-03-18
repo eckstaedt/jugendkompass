@@ -9,12 +9,7 @@ import { DataprotPageRoutingModule } from './dataprot-routing.module';
 import { DataprotPage } from './dataprot.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    DataprotPageRoutingModule
-  ],
-  declarations: [DataprotPage]
+  imports: [CommonModule, FormsModule, IonicModule, DataprotPageRoutingModule],
+  declarations: [DataprotPage],
 })
 export class DataprotPageModule {}

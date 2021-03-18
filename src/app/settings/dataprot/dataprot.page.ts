@@ -8,13 +8,12 @@ import { WpService } from 'src/app/services/wp.service';
   styleUrls: ['./dataprot.page.scss'],
 })
 export class DataprotPage implements OnInit {
-
   public dataProt: any;
 
   constructor(
     private wp: WpService,
-    private loadingController: LoadingController
-  ) { }
+    private loadingController: LoadingController,
+  ) {}
 
   ngOnInit() {
     this.getImprint();
@@ -22,7 +21,7 @@ export class DataprotPage implements OnInit {
 
   async getImprint() {
     const loading = await this.loadingController.create({
-      message: ''
+      message: '',
     });
     await loading.present();
 
@@ -31,5 +30,4 @@ export class DataprotPage implements OnInit {
       loading.dismiss();
     });
   }
-
 }

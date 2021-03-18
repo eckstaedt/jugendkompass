@@ -7,19 +7,19 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-
   public darkMode = false;
 
-  constructor(
-    private storage: Storage
-  ) { }
+  constructor(private storage: Storage) {}
 
   ngOnInit() {
-    this.storage.get('darkMode').then((res: boolean) => {
-      this.darkMode = res;
-    }).catch(() => {
-      this.darkMode = false;
-    });
+    this.storage
+      .get('darkMode')
+      .then((res: boolean) => {
+        this.darkMode = res;
+      })
+      .catch(() => {
+        this.darkMode = false;
+      });
   }
 
   toggleMode() {
@@ -30,5 +30,4 @@ export class SettingsPage implements OnInit {
   openMail() {
     window.open('mailto:entwickler@stephanus-zeitschrift.de', '_blank');
   }
-
 }

@@ -17,6 +17,6 @@ import { SharedDirectivesModule } from 'src/app/directives/shared-directives.mod
     PostPageRoutingModule,
     SharedDirectivesModule,
   ],
-  declarations: [PostPage]
+  declarations: [PostPage],
 })
 export class PostPageModule {}

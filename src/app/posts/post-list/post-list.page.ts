@@ -1,7 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
 import { Rubrik } from 'src/app/utils/constants';
-import { IonSelect, DomController, IonContent, IonSearchbar } from '@ionic/angular';
+import {
+  IonSelect,
+  DomController,
+  IonContent,
+  IonSearchbar,
+} from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
@@ -14,7 +19,6 @@ import { RouterService } from 'src/app/services/router.service';
   styleUrls: ['./post-list.page.scss'],
 })
 export class PostListPage implements OnInit {
-
   @ViewChild('select') select: IonSelect;
   @ViewChild('content') content: IonContent;
   @ViewChild('searchbar') searchbar: any;
@@ -94,13 +98,15 @@ export class PostListPage implements OnInit {
     if (this.currentAusgabe === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) =>
-        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      posts = this.allPosts.filter(
+        (post: any) =>
+          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
       );
     }
     if (this.currentRubrik !== 'all') {
-      posts = posts.filter((post: any) =>
-        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      posts = posts.filter(
+        (post: any) =>
+          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
       );
     }
     this.posts = posts;
@@ -113,13 +119,15 @@ export class PostListPage implements OnInit {
     if (this.currentRubrik === 'all') {
       posts = this.allPosts;
     } else {
-      posts = this.allPosts.filter((post: any) =>
-        post.rubrik && post.rubrik.id.toString() === this.currentRubrik
+      posts = this.allPosts.filter(
+        (post: any) =>
+          post.rubrik && post.rubrik.id.toString() === this.currentRubrik,
       );
     }
     if (this.currentAusgabe !== 'all') {
-      posts = posts.filter((post: any) =>
-        post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe
+      posts = posts.filter(
+        (post: any) =>
+          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
       );
     }
     this.posts = posts;
@@ -131,10 +139,22 @@ export class PostListPage implements OnInit {
       return this.filteredPosts;
     } else {
       return this.filteredPosts.filter((post: any) => {
-        if (post.title.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-        post.rubrik && post.rubrik.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-        post.ausgabe && post.ausgabe.name.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
-        post.excerpt.rendered.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1) {
+        if (
+          post.title.rendered
+            .toLowerCase()
+            .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+          (post.rubrik &&
+            post.rubrik.name
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1) ||
+          (post.ausgabe &&
+            post.ausgabe.name
+              .toLowerCase()
+              .indexOf(this.searchTerm.toLowerCase()) > -1) ||
+          post.excerpt.rendered
+            .toLowerCase()
+            .indexOf(this.searchTerm.toLowerCase()) > -1
+        ) {
           return true;
         }
         return false;
@@ -149,7 +169,7 @@ export class PostListPage implements OnInit {
   getAllPosts() {
     // get local storage for already read articles
     this.storage.get('readArticles').then((res: any) => {
-      if(res) this.readArticles = JSON.parse(res);
+      if (res) this.readArticles = JSON.parse(res);
     });
     this.wp.getAllPosts().then((res: any) => {
       this.allPosts = this.getEditedPosts(res.data);
@@ -182,7 +202,7 @@ export class PostListPage implements OnInit {
       const categroyData: CategoryData = this.utils.getCategoryData(
         post,
         this.rubriken,
-        this.ausgaben
+        this.ausgaben,
       );
       let articleWasRead: boolean;
       if (this.readArticles) {
@@ -190,11 +210,13 @@ export class PostListPage implements OnInit {
       }
       return {
         ...post,
-        media_url: post._embedded['wp:featuredmedia'] ?
-          post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined,
+        media_url: post._embedded['wp:featuredmedia']
+          ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
+              .source_url
+          : undefined,
         rubrik: categroyData.rubrik,
         ausgabe: categroyData.ausgabe,
-        articleWasRead: articleWasRead
+        articleWasRead: articleWasRead,
       };
     });
   }
@@ -203,13 +225,18 @@ export class PostListPage implements OnInit {
     this.page++;
 
     this.wp.getPosts(this.page).then((res: any) => {
-      this.posts = [...this.posts, ...res.data.map((post: any) => {
-        return {
-          ...post,
-          media_url: post._embedded['wp:featuredmedia'] ?
-            post._embedded['wp:featuredmedia'][0].media_details.sizes.medium.source_url : undefined
-        };
-      })];
+      this.posts = [
+        ...this.posts,
+        ...res.data.map((post: any) => {
+          return {
+            ...post,
+            media_url: post._embedded['wp:featuredmedia']
+              ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
+                  .source_url
+              : undefined,
+          };
+        }),
+      ];
       event.target.complete();
 
       // Disable infinite loading when maximum reached
@@ -220,7 +247,7 @@ export class PostListPage implements OnInit {
   }
   // set local storage when a post is clicked
   setAsRead(post: any) {
-    if(!this.readArticles.includes(post.id)) {
+    if (!this.readArticles.includes(post.id)) {
       post.articleWasRead = true;
       this.readArticles.push(post.id);
       this.storage.set('readArticles', JSON.stringify(this.readArticles));

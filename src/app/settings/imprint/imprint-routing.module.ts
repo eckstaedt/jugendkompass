@@ -6,8 +6,8 @@ import { ImprintPage } from './imprint.page';
 const routes: Routes = [
   {
     path: '',
-    component: ImprintPage
-  }
+    component: ImprintPage,
+  },
 ];
 
 @NgModule({

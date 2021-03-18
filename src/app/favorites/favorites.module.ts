@@ -17,6 +17,6 @@ import { SharedDirectivesModule } from '../directives/shared-directives.module';
     FavoritesPageRoutingModule,
     SharedDirectivesModule,
   ],
-  declarations: [FavoritesPage]
+  declarations: [FavoritesPage],
 })
 export class FavoritesPageModule {}

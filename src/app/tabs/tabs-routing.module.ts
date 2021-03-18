@@ -9,31 +9,48 @@ const routes: Routes = [
     children: [
       {
         path: 'posts',
-        loadChildren: () => import('./../posts/post-list/post-list.module').then( m => m.PostListPageModule)
+        loadChildren: () =>
+          import('./../posts/post-list/post-list.module').then(
+            m => m.PostListPageModule,
+          ),
       },
       {
         path: 'posts/:id',
-        loadChildren: () => import('./../posts/post/post.module').then( m => m.PostPageModule)
+        loadChildren: () =>
+          import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       {
         path: 'settings',
-        loadChildren: () => import('./../settings/settings/settings.module').then( m => m.SettingsPageModule)
+        loadChildren: () =>
+          import('./../settings/settings/settings.module').then(
+            m => m.SettingsPageModule,
+          ),
       },
       {
         path: 'settings/imprint',
-        loadChildren: () => import('./../settings/imprint/imprint.module').then( m => m.ImprintPageModule)
+        loadChildren: () =>
+          import('./../settings/imprint/imprint.module').then(
+            m => m.ImprintPageModule,
+          ),
       },
       {
         path: 'settings/dataprotection',
-        loadChildren: () => import('./../settings/dataprot/dataprot.module').then( m => m.DataprotPageModule)
+        loadChildren: () =>
+          import('./../settings/dataprot/dataprot.module').then(
+            m => m.DataprotPageModule,
+          ),
       },
       {
         path: 'favorites',
-        loadChildren: () => import('../favorites/favorites.module').then( m => m.FavoritesPageModule)
+        loadChildren: () =>
+          import('../favorites/favorites.module').then(
+            m => m.FavoritesPageModule,
+          ),
       },
       {
         path: 'favorites/:id',
-        loadChildren: () => import('./../posts/post/post.module').then( m => m.PostPageModule)
+        loadChildren: () =>
+          import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       // {
       //   path: 'dates',
@@ -42,14 +59,14 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: '/tabs/posts',
-        pathMatch: 'full'
-      }
-    ]
-  }
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class TabsPageRoutingModule {}

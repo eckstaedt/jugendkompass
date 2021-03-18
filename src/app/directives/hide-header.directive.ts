@@ -2,10 +2,9 @@ import { Directive, Input, Renderer2, HostListener } from '@angular/core';
 import { DomController } from '@ionic/angular';
 
 @Directive({
-  selector: '[appHideHeader]'
+  selector: '[appHideHeader]',
 })
 export class HideHeaderDirective {
-
   @Input('header') header: any;
   @Input('isList') isList: boolean;
   private toolbarHeight: number;
@@ -13,10 +12,10 @@ export class HideHeaderDirective {
   // private isScrollingToTop: boolean = false;
   // private scrollingToTopStartingHeight: number;
 
-  constructor(private renderer: Renderer2, private domCtrl: DomController) { }
+  constructor(private renderer: Renderer2, private domCtrl: DomController) {}
 
   ngOnInit() {
-    this.domCtrl.read(() => {
+    this.domCtrl.read(() => {
       this.header = this.header.el;
       this.toolbarHeight = this.header.clientHeight;
     });
@@ -27,13 +26,13 @@ export class HideHeaderDirective {
     if (scrollTop > 0) {
       if ($event.detail.scrollTop > this.lastY) {
         // this.isScrollingToTop = false;
-        let newPosition: number = - (scrollTop / 5);
+        let newPosition: number = -(scrollTop / 5);
 
         if (newPosition < -this.toolbarHeight) {
           newPosition = -this.toolbarHeight;
         }
-    
-        let newOpacity = 1 - (newPosition / -this.toolbarHeight);
+
+        let newOpacity = 1 - newPosition / -this.toolbarHeight;
 
         this.domCtrl.write(() => {
           this.renderer.setStyle(this.header, 'top', `${newPosition}px`);
@@ -54,7 +53,7 @@ export class HideHeaderDirective {
         // if (newPosition > 0) {
         //   newPosition = 0;
         // }
-    
+
         // let newOpacity = newPosition === 0 ? 1 : 1 - (-newPosition / this.toolbarHeight);
 
         // this.domCtrl.write(() => {

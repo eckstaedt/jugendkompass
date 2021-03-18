@@ -8,13 +8,12 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['./imprint.page.scss'],
 })
 export class ImprintPage implements OnInit {
-
   public imprint: any;
 
   constructor(
     private wp: WpService,
-    private loadingController: LoadingController
-  ) { }
+    private loadingController: LoadingController,
+  ) {}
 
   ngOnInit() {
     this.getImprint();
@@ -22,7 +21,7 @@ export class ImprintPage implements OnInit {
 
   async getImprint() {
     const loading = await this.loadingController.create({
-      message: ''
+      message: '',
     });
     await loading.present();
 
@@ -31,5 +30,4 @@ export class ImprintPage implements OnInit {
       loading.dismiss();
     });
   }
-
 }

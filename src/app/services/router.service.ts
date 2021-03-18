@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Category } from '../utils/interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RouterService {
-
   private category: Category;
 
-  constructor() { }
+  constructor() {}
 
   setData(category: Category) {
     this.category = category;
