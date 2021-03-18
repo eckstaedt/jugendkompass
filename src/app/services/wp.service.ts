@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import '@capacitor-community/http';
 
-import { Http } from '@capacitor-community/http';
+import { Plugins } from '@capacitor/core';
 import { Utils } from '../utils/utils';
 import { Category } from '../utils/interfaces';
+const { Http } = Plugins;
 
 @Injectable({
   providedIn: 'root',

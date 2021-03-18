@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 const fcm = new FCM();
-import { PushNotifications } from '@capacitor/push-notifications';
+import { Plugins } from '@capacitor/core';
+
+const { PushNotifications } = Plugins;
 
 @Component({
   selector: 'app-welcome',
