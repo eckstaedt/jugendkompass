@@ -8,8 +8,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-import { NgAddToCalendarModule } from '@trademe/ng-add-to-calendar';
 import { HttpClientModule } from '@angular/common/http';
 
 // import { AngularFireModule } from '@angular/fire';
@@ -28,7 +26,6 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    NgAddToCalendarModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // AngularFirestoreModule,
     IonicStorageModule.forRoot()
