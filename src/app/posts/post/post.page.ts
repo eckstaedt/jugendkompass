@@ -67,9 +67,7 @@ export class PostPage implements OnInit {
     });
     let isFavorite: boolean = false;
     if (this.favoritePosts)
-      isFavorite = this.favoritePosts.find(post => post.id.toString() == id)
-        ? true
-        : false;
+      isFavorite = this.favoritePosts.find(post => post.id.toString() == id) ? true : false;
 
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
@@ -172,8 +170,7 @@ export class PostPage implements OnInit {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
       if (this.post.media_url && !this.post.media_url.startsWith('data')) {
-        await this.wp
-          .getBase64ImgFromUrl(this.post.media_url)
+        await this.wp.getBase64ImgFromUrl(this.post.media_url)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -192,6 +189,7 @@ export class PostPage implements OnInit {
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {
       this.post.isFavorite = false;
+      this.post.base64Img = null;
       this.favoritePosts = this.favoritePosts.filter(
         post => post.id != this.post.id,
       );
