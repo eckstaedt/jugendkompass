@@ -67,7 +67,7 @@ export class PostPage implements OnInit {
     });
     let isFavorite: boolean = false;
     if (this.favoritePosts)
-      isFavorite = this.favoritePosts.find(post => post.id.toString() == id) ? true : false;
+      isFavorite = Boolean(this.favoritePosts.find(post => post.id.toString() === id));
 
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
