@@ -14,6 +14,10 @@ ion-thumbnail {
   width: 100%;
 }
 
+.overallColumn {
+  --ion-grid-column-padding: 0;
+}
+
 .hideSearchbar {
   display: none;
 }
@@ -46,6 +50,10 @@ ion-card {
 
     .cardColumn {
       height: 7rem;
+
+      &:first-of-type {
+        text-align: center;
+      }
     }
 
     ion-col {

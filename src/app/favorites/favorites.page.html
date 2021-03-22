@@ -31,50 +31,61 @@
   </ion-searchbar>
 
   <div *ngIf="posts.length">
-    <ion-card
-      [routerLink]="['/', 'tabs', 'favorites', post.id]"
-      *ngFor="let post of posts"
-    >
-      <ion-grid>
-        <ion-row>
-          <ion-col class="cardColumn" size="4">
-            <img *ngIf="post.media_url" [src]="post.media_url" />
-          </ion-col>
-          <ion-col class="cardColumn" size="8">
-            <div class="postHeader">
-              <ion-card-header>
-                <p class="subTitle" *ngIf="!post.ausgabe">
-                  {{ post.date_gmt | date: 'dd.MM.yyyy' }}
-                </p>
-                <p class="subTitle" *ngIf="post.ausgabe && !post.rubrik">
-                  {{ post.ausgabe.name }}
-                </p>
-                <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
-                  {{ post.rubrik.name }}
-                </p>
-                <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
-                  {{ post.ausgabe.name}} | {{post.rubrik.name }}
-                </p>
-                <p class="title" [innerHTML]="post.title.rendered"></p>
-              </ion-card-header>
-            </div>
-            <div class="postFooter">
-              <ion-row>
-                <ion-col size="4">
-                  <ion-icon name="book-outline"></ion-icon> 5 min
-                </ion-col>
-                <ion-col size="4">
-                  <ion-icon name="eye-outline"></ion-icon> {{post.views}}
-                </ion-col>
-                <ion-col *ngIf="post.audio" size="4">
-                  <ion-icon name="volume-high-outline"></ion-icon> 5:52 min
-                </ion-col>
-              </ion-row>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          class="overallColumn"
+          *ngFor="let post of posts"
+          size="12"
+          size-md="6"
+          size-xl="4"
+        >
+          <ion-card
+            [routerLink]="['/', 'tabs', 'favorites', post.id]"
+          >
+          <ion-grid>
+            <ion-row>
+              <ion-col class="cardColumn" size="4">
+                <img *ngIf="post.media_url" [src]="post.media_url" />
+              </ion-col>
+              <ion-col class="cardColumn" size="8">
+                <div class="postHeader">
+                  <ion-card-header>
+                    <p class="subTitle" *ngIf="!post.ausgabe">
+                      {{ post.date_gmt | date: 'dd.MM.yyyy' }}
+                    </p>
+                    <p class="subTitle" *ngIf="post.ausgabe && !post.rubrik">
+                      {{ post.ausgabe.name }}
+                    </p>
+                    <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
+                      {{ post.rubrik.name }}
+                    </p>
+                    <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
+                      {{ post.ausgabe.name}} | {{post.rubrik.name }}
+                    </p>
+                    <p class="title" [innerHTML]="post.title.rendered"></p>
+                  </ion-card-header>
+                </div>
+                <div class="postFooter">
+                  <ion-row>
+                    <ion-col size="4">
+                      <ion-icon name="book-outline"></ion-icon> 5 min
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-icon name="eye-outline"></ion-icon> {{post.views}}
+                    </ion-col>
+                    <ion-col *ngIf="post.audio" size="4">
+                      <ion-icon name="volume-high-outline"></ion-icon> 5:52 min
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
   <div class="noResultContainer" *ngIf="!posts.length">

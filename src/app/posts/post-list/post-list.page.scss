@@ -50,6 +50,10 @@ ion-card {
 
     .cardColumn {
       height: 7rem;
+
+      &:first-of-type {
+        text-align: center;
+      }
     }
 
     ion-col {
