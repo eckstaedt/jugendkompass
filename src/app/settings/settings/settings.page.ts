@@ -28,6 +28,6 @@ export class SettingsPage implements OnInit {
   }
 
   openMail() {
-    window.open('mailto:entwickler@stephanus-zeitschrift.de', '_blank');
+    window.open('mailto:entwickler@jugendkompass.de', '_blank');
   }
 }
