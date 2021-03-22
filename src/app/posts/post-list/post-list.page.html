@@ -37,7 +37,12 @@
   <div *ngIf="posts.length">
     <ion-grid>
       <ion-row>
-        <ion-col class="overallColumn" *ngFor="let post of posts" size="12" size-md="6">
+        <ion-col
+          class="overallColumn"
+          *ngFor="let post of posts"
+          size="12"
+          size-md="6"
+        >
           <ion-card
           [ngClass]="post.articleWasRead ? 'read' : ''"
           [routerLink]="['/', 'tabs', 'posts', post.id]"
@@ -89,57 +94,68 @@
   </div>
 
   <div *ngIf="!posts.length && !allPosts.length">
-    <ion-card *ngFor="let i of items">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="4">
-            <ion-thumbnail>
-              <ion-skeleton-text animated></ion-skeleton-text>
-            </ion-thumbnail>
-          </ion-col>
-          <ion-col size="8">
-            <div class="postHeader">
-              <ion-card-header>
-                <p class="subTitle">
-                  <ion-skeleton-text
-                    animated
-                    style="width: 40%"
-                  ></ion-skeleton-text>
-                </p>
-                <p class="title">
-                  <ion-skeleton-text
-                    animated
-                    style="width: 90%"
-                  ></ion-skeleton-text>
-                </p>
-              </ion-card-header>
-            </div>
-            <div class="postFooter">
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          class="overallColumn"
+          *ngFor="let i of items"
+          size="12"
+          size-md="6"
+        >
+          <ion-card>
+            <ion-grid>
               <ion-row>
                 <ion-col size="4">
-                  <ion-skeleton-text
-                    animated
-                    style="width: 50%"
-                  ></ion-skeleton-text>
+                  <ion-thumbnail>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </ion-thumbnail>
                 </ion-col>
-                <ion-col size="4">
-                  <ion-skeleton-text
-                    animated
-                    style="width: 40%"
-                  ></ion-skeleton-text>
-                </ion-col>
-                <ion-col size="4">
-                  <ion-skeleton-text
-                    animated
-                    style="width: 40%"
-                  ></ion-skeleton-text>
+                <ion-col size="8">
+                  <div class="postHeader">
+                    <ion-card-header>
+                      <p class="subTitle">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </p>
+                      <p class="title">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 90%"
+                        ></ion-skeleton-text>
+                      </p>
+                    </ion-card-header>
+                  </div>
+                  <div class="postFooter">
+                    <ion-row>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 50%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                    </ion-row>
+                  </div>
                 </ion-col>
               </ion-row>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
   <div class="noResultContainer" *ngIf="!posts.length && allPosts.length">
