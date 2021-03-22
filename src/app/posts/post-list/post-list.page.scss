@@ -18,6 +18,10 @@ ion-thumbnail {
   display: none;
 }
 
+.overallColumn {
+  --ion-grid-column-padding: 0;
+}
+
 ion-card {
   --background: var(--ion-color-light);
   box-shadow: none;
