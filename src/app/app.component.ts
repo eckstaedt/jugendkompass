@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, AlertController } from '@ionic/angular';
+import { Platform, AlertController, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
@@ -24,6 +24,7 @@ export class AppComponent {
     private storage: Storage,
     private alertController: AlertController,
     private httpClient: HttpClient,
+    private loadingController: LoadingController
   ) {
     this.initializeApp();
   }
@@ -60,7 +61,7 @@ export class AppComponent {
     return this.observable;
   }
 
-  async showPasswordAlert() {
+  async showPasswordAlert(message?: string) {
     const alert = await this.alertController.create({
       backdropDismiss: false,
       header: 'App Passwort erforderlich',
@@ -72,11 +73,14 @@ export class AppComponent {
           name: 'password',
         },
       ],
+      message: message,
       buttons: [
         {
           text: 'Okay',
-          handler: (event: any) => {
-            this.httpClient
+          handler: async(event: any) => {
+            const loading = await this.loadingController.create();
+            loading.present();
+            await this.httpClient
               .get(`${this.verifyKeyUrl}/${event.password}`)
               .toPromise()
               .then(res => {
@@ -88,9 +92,9 @@ export class AppComponent {
                 }
               })
               .catch(() => {
-                alert.message = 'Bitte gebe das richtige Passwort ein.';
+                this.showPasswordAlert(message = 'Bitte gebe das richtige Passwort ein.');
               });
-            return false;
+            loading.dismiss();
           },
         },
       ],
