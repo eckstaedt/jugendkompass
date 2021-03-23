@@ -78,6 +78,10 @@ export class AppComponent {
         {
           text: 'Okay',
           handler: async(event: any) => {
+            if(!event.password){
+              this.showPasswordAlert(message = 'Bitte gebe das Passwort ein.');
+              return;
+            }
             const loading = await this.loadingController.create();
             loading.present();
             await this.httpClient
