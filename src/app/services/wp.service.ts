@@ -95,7 +95,7 @@ export class WpService {
     return this.rubriken;
   }
 
-  async getBase64FromUrl(mediaUrl, fileType?: string): Promise<any> {
+  async getBase64FromUrl(mediaUrl): Promise<any> {
     return new Promise(async resolve => {
       const res = await Http.downloadFile({
         url: `https://cors.bridged.cc/${mediaUrl}`,

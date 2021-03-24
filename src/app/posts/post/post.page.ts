@@ -170,7 +170,7 @@ export class PostPage implements OnInit {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
       if (this.post.media_url && !this.post.media_url.startsWith('data')) {
-        await this.wp.getBase64FromUrl(this.post.media_url, 'image')
+        await this.wp.getBase64FromUrl(this.post.media_url)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
