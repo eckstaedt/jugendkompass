@@ -17,6 +17,7 @@ export interface Post {
   audio?: any;
   author?: any;
   base64Img?: any;
+  base64Audio?: any;
   categories?: any[];
   category?: any;
   comment_status?: string;

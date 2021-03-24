@@ -95,11 +95,11 @@ export class WpService {
     return this.rubriken;
   }
 
-  async getBase64ImgFromUrl(imageUrl): Promise<any> {
+  async getBase64FromUrl(mediaUrl, fileType?: string): Promise<any> {
     return new Promise(async resolve => {
       const res = await Http.downloadFile({
-        url: `https://cors.bridged.cc/${imageUrl}`,
-        filePath: imageUrl,
+        url: `https://cors.bridged.cc/${mediaUrl}`,
+        filePath: mediaUrl,
       });
       let reader = new FileReader();
       reader.readAsDataURL(res.blob);

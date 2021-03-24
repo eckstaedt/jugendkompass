@@ -76,9 +76,9 @@ export class PostPage implements OnInit {
       );
       this.post = { ...localPost };
 
-      if (this.post.audio) {
+      if (this.post.base64Audio) {
         this.audioService.loadNewAudio(
-          this.post.audio,
+          this.post.base64Audio,
           this.post.title.rendered,
         );
       }
@@ -170,7 +170,7 @@ export class PostPage implements OnInit {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
       if (this.post.media_url && !this.post.media_url.startsWith('data')) {
-        await this.wp.getBase64ImgFromUrl(this.post.media_url)
+        await this.wp.getBase64FromUrl(this.post.media_url, 'image')
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -178,13 +178,19 @@ export class PostPage implements OnInit {
       )) {
         const imageSrc: string = (image as HTMLImageElement).src;
         if (imageSrc.startsWith('data')) {
-          const base64: string = await this.wp.getBase64ImgFromUrl(imageSrc);
+          const base64: string = await this.wp.getBase64FromUrl(imageSrc);
           this.post.content.rendered = this.post.content.rendered.replace(
             imageSrc,
             base64,
           );
         }
       }
+      // CORS-Problem muss gelöst werden, 
+      // dann funktioniert das Speichern von Audio-dateien 
+      // in Favoriten mit dem unten stehenden Code
+      // if(this.post.audio && this.post.audio !== ''){
+      //   this.post.base64Audio = await this.wp.getBase64FromUrl(this.post.audio);
+      // }
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
     } else {
