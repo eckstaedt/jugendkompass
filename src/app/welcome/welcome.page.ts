@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-// import { FCM } from '@capacitor-community/fcm';
-// const fcm = new FCM();
-// import { Plugins } from '@capacitor/core';
+import { FCM } from '@capacitor-community/fcm';
+const fcm = new FCM();
+import { Plugins } from '@capacitor/core';
 
-// const { PushNotifications } = Plugins;
+const { PushNotifications } = Plugins;
 
 @Component({
   selector: 'app-welcome',
@@ -20,18 +20,18 @@ export class WelcomePage implements OnInit {
   ngOnInit() {}
 
   toHome() {
-    // PushNotifications.requestPermissions().then((res: any) => {
-    //   if (res.granted) {
-    //     PushNotifications.register()
-    //       .then(() => {
-    //         fcm
-    //           .subscribeTo({ topic: 'general' })
-    //           .then(() => console.log('subscribed successfully'))
-    //           .catch(err => console.log(err));
-    //       })
-    //       .catch(err => console.log(JSON.stringify(err)));
-    //   }
-    // });
+    PushNotifications.requestPermissions().then((res: any) => {
+      if (res.granted) {
+        PushNotifications.register()
+          .then(() => {
+            fcm
+              .subscribeTo({ topic: 'general' })
+              .then(() => console.log('subscribed successfully'))
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(JSON.stringify(err)));
+      }
+    });
 
     this.storage.set('oldUser', true);
     this.router.navigateByUrl('/tabs', { replaceUrl: true });

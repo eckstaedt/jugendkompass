@@ -28,6 +28,10 @@ ion-card {
   margin: 0.4rem 0.5rem;
   height: 7rem;
 
+  &:focus {
+    outline: none;
+  }
+
   &.read {
     opacity: 0.7;
 
