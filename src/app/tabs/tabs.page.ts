@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AudioService } from '../services/audio.service';
 import { IonRange } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -13,9 +14,10 @@ export class TabsPage {
   playing = false;
   title = '';
   progress = 0;
-  focus = false;
   curTime = '00:00';
   duration = '00:00';
+  movingSlider = false;
+  sliderSubscription: Subscription;
 
   constructor(private audioService: AudioService) {
     this.audioService.onChange().subscribe((res: any) => {
@@ -30,11 +32,12 @@ export class TabsPage {
   }
 
   seek() {
+    this.sliderSubscription.unsubscribe();
+    this.movingSlider = false;
     const newValue: number = +this.range.value;
     this.audioService.setSeek(
       this.audioService.getDuration() * (newValue / 100),
     );
-    this.focus = false;
     this.updateProgress();
   }
 
@@ -49,7 +52,7 @@ export class TabsPage {
   }
 
   updateProgress() {
-    if (!this.focus) {
+    if (this.playing && !this.movingSlider) {
       if (!isNaN(this.audioService.getSeek())) {
         this.progress =
           (this.audioService.getSeek() / this.audioService.getDuration()) *
@@ -82,6 +85,10 @@ export class TabsPage {
   }
 
   onRangeFocus() {
-    this.focus = true;
+    this.movingSlider = true;
+    const endTime = Math.round(this.audioService.getDuration());
+    this.sliderSubscription = this.range.ionChange.subscribe(() => {
+      this.curTime = this.getMinString(Math.round((+this.range.value / 100) * endTime));
+    });
   }
 }

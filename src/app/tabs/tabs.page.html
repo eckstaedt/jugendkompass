@@ -16,11 +16,11 @@
         #range
         [(ngModel)]="progress"
         max="100"
-        (ionFocus)="onRangeFocus()"
+        
         (touchstart)="onRangeFocus()"
         (touchend)="seek()"
         (mousedown)="onRangeFocus()"
-        (mousup)="seek()"
+        (mouseup)="seek()"
       >
         <ion-label slot="start">{{ curTime }}</ion-label>
         <ion-label slot="end">{{ duration }}</ion-label>
