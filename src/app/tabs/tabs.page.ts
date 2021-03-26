@@ -36,7 +36,7 @@ export class TabsPage {
     this.movingSlider = false;
     const newValue: number = +this.range.value;
     this.audioService.setSeek(
-      this.audioService.getDuration() * (newValue / 100),
+      this.audioService.getDuration() * (newValue / 1000),
     );
     this.updateProgress();
   }
@@ -56,7 +56,7 @@ export class TabsPage {
       if (!isNaN(this.audioService.getSeek())) {
         this.progress =
           (this.audioService.getSeek() / this.audioService.getDuration()) *
-            100 || 0;
+            1000 || 0;
         this.curTime = this.getMinString(
           Math.round(this.audioService.getSeek()),
         );
@@ -86,9 +86,9 @@ export class TabsPage {
 
   onRangeFocus() {
     this.movingSlider = true;
-    const endTime = Math.round(this.audioService.getDuration());
+    const endTime = this.audioService.getDuration();
     this.sliderSubscription = this.range.ionChange.subscribe(() => {
-      this.curTime = this.getMinString(Math.round((+this.range.value / 100) * endTime));
+      this.curTime = this.getMinString(Math.round((+this.range.value / 1000) * endTime));
     });
   }
 }

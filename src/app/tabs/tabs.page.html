@@ -15,8 +15,7 @@
         class="songRange"
         #range
         [(ngModel)]="progress"
-        max="100"
-        
+        max="1000"
         (touchstart)="onRangeFocus()"
         (touchend)="seek()"
         (mousedown)="onRangeFocus()"
