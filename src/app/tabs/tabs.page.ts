@@ -49,6 +49,9 @@ export class TabsPage {
     this.audioService.stop();
     this.playing = false;
     this.title = '';
+    this.progress = 0;
+    this.duration = '00:00';
+    this.curTime = '00:00';
   }
 
   updateProgress() {

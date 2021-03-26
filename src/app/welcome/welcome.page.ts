@@ -20,18 +20,18 @@ export class WelcomePage implements OnInit {
   ngOnInit() {}
 
   toHome() {
-    PushNotifications.requestPermissions().then((res: any) => {
-      if (res.granted) {
-        PushNotifications.register()
-          .then(() => {
-            fcm
-              .subscribeTo({ topic: 'general' })
-              .then(() => console.log('subscribed successfully'))
-              .catch(err => console.log(err));
-          })
-          .catch(err => console.log(JSON.stringify(err)));
-      }
-    });
+    // PushNotifications.requestPermissions().then((res: any) => {
+    //   if (res.granted) {
+    //     PushNotifications.register()
+    //       .then(() => {
+    //         fcm
+    //           .subscribeTo({ topic: 'general' })
+    //           .then(() => console.log('subscribed successfully'))
+    //           .catch(err => console.log(err));
+    //       })
+    //       .catch(err => console.log(JSON.stringify(err)));
+    //   }
+    // });
 
     this.storage.set('oldUser', true);
     this.router.navigateByUrl('/tabs', { replaceUrl: true });
