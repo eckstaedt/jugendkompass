@@ -33,5 +33,9 @@
         (ionChange)="toggleMode()"
       ></ion-toggle>
     </ion-item>
+    <ion-item (click)="share()" lines="full" detail button>
+      <ion-icon slot="start" name="share-outline"></ion-icon>
+      <ion-label>App weiterempfehlen</ion-label>
+    </ion-item>
   </ion-list>
 </ion-content>
