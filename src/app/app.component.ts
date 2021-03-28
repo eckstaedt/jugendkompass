@@ -6,6 +6,11 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { FCM } from '@capacitor-community/fcm';
+import { Plugins } from '@capacitor/core';
+
+const fcm = new FCM();
+const { App, PushNotifications } = Plugins;
 
 @Component({
   selector: 'app-root',
@@ -54,6 +59,21 @@ export class AppComponent {
           document.documentElement.setAttribute('data-theme', 'light');
         }
       });
+    });
+  }
+
+  setupPush() {
+    PushNotifications.requestPermission().then((res: any) => {
+      if (res.granted) {
+        PushNotifications.register()
+          .then(() => {
+            fcm
+              .subscribeTo({ topic: 'general' })
+              .then(() => console.log('subscribed successfully'))
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(JSON.stringify(err)));
+      }
     });
   }
 
