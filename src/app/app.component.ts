@@ -51,14 +51,7 @@ export class AppComponent {
         });
       });
       this.setupDeepLinks();
-      this.storage.get('darkMode').then((darkMode: boolean) => {
-        document.body.classList.toggle('dark', darkMode);
-        if (darkMode) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      });
+      this.setupTheme();
     });
   }
 
@@ -75,6 +68,16 @@ export class AppComponent {
           .catch(err => console.log(JSON.stringify(err)));
       }
     });
+  }
+
+  setupTheme() {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.toggleDarkTheme(prefersDark.matches);
+    prefersDark.addListener((mediaQuery: any) => this.toggleDarkTheme(mediaQuery.matches));
+  }
+
+  toggleDarkTheme(shouldAdd: boolean): void {
+    document.body.classList.toggle('dark', shouldAdd);
   }
 
   public getObservable() {

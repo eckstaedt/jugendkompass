@@ -6,8 +6,8 @@
 
 <ion-content>
   <ion-list>
-    <ion-list-header> Allgemein </ion-list-header>
-    <ion-item detail (click)="openMail()">
+    <ion-item detail button (click)="openMail()">
+      <ion-icon slot="start" name="mail-outline"></ion-icon>
       <ion-label>Kontakt</ion-label>
     </ion-item>
     <ion-item
@@ -15,6 +15,7 @@
       routerDirection="forward"
       routerLink="/tabs/settings/imprint"
     >
+      <ion-icon slot="start" name="briefcase-outline"></ion-icon>
       <ion-label>Impressum</ion-label>
     </ion-item>
     <ion-item
@@ -22,16 +23,8 @@
       routerDirection="forward"
       routerLink="/tabs/settings/dataprotection"
     >
+      <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
       <ion-label>Datenschutzerklärung</ion-label>
-    </ion-item>
-
-    <ion-list-header> Theme </ion-list-header>
-    <ion-item>
-      <ion-label>Dunkel</ion-label>
-      <ion-toggle
-        [(ngModel)]="darkMode"
-        (ionChange)="toggleMode()"
-      ></ion-toggle>
     </ion-item>
     <ion-item (click)="share()" lines="full" detail button>
       <ion-icon slot="start" name="share-outline"></ion-icon>
