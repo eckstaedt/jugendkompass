@@ -15,6 +15,9 @@ import { Storage } from '@ionic/storage';
 import { Post, CategoryData, Category } from 'src/app/utils/interfaces';
 import { Utils } from 'src/app/utils/utils';
 import { RouterService } from 'src/app/services/router.service';
+import { Plugins } from '@capacitor/core';
+const { Browser, Share } = Plugins;
+
 @Component({
   selector: 'app-post',
   templateUrl: './post.page.html',
@@ -36,6 +39,7 @@ export class PostPage implements OnInit {
     private wp: WpService,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
+    private platform: Platform,
     private actionSheetController: ActionSheetController,
     private appComponent: AppComponent,
     private storage: Storage,
@@ -136,9 +140,26 @@ export class PostPage implements OnInit {
   async openMenu() {
     const actionButtons: any[] = [
       {
+        text: 'Artikel teilen',
+        handler: async () => {
+          if (this.platform.is("capacitor")) {
+            await Share.share({
+              title: 'Artikel teilen',
+              text: this.post.title.rendered,
+              url: this.post.link,
+              dialogTitle: 'Artikel teilen',
+            });
+          } else {
+            window.open(this.post.link, "_blank");
+          }
+        },
+      },
+      {
         text: 'Artikel im Browser aufrufen',
-        handler: () => {
-          window.open(this.post.link, '_blank');
+        handler: async () => {
+          await Browser.open({
+            url: this.post.link,
+          });
         },
       },
     ];
@@ -146,8 +167,10 @@ export class PostPage implements OnInit {
     if (this.post.pdf) {
       actionButtons.push({
         text: 'Artikel als PDF anzeigen',
-        handler: () => {
-          window.open(this.post.pdf, '_blank');
+        handler: async () => {
+          await Browser.open({
+            url: this.post.pdf,
+          });
         },
       });
     }
