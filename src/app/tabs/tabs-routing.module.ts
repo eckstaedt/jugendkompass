@@ -61,6 +61,13 @@ const routes: Routes = [
         redirectTo: '/tabs/posts',
         pathMatch: 'full',
       },
+      {
+        path: 'settings/text-size',
+        loadChildren: () =>
+          import('./../settings/text-size/text-size.module').then(
+            m => m.TextSizePageModule,
+          ),
+      },
     ],
   },
 ];

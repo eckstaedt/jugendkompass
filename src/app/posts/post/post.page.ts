@@ -32,6 +32,7 @@ export class PostPage implements OnInit {
   public playing = false;
   favoritePosts: Post[] = [];
   defaultHref: string = '';
+  public textSize = 15;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -45,7 +46,7 @@ export class PostPage implements OnInit {
     private storage: Storage,
     private utils: Utils,
     private routerService: RouterService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
@@ -61,6 +62,22 @@ export class PostPage implements OnInit {
     )
       ? '/tabs/favorites'
       : '/tabs/posts';
+
+    this.storage.get('text-size').then((res: number) => {
+      this.textSize = res;
+    });
+  }
+
+  async setDivStyle() {
+    var fontSize = 15;
+
+    await this.storage.get('text-size').then((res: number) => {
+      fontSize = res;
+    });
+
+    return {
+      'font-size': fontSize + 'px'
+    };
   }
 
   async loadData() {
@@ -109,7 +126,7 @@ export class PostPage implements OnInit {
           ...res.data,
           media_url: res.data._embedded['wp:featuredmedia']
             ? res.data._embedded['wp:featuredmedia'][0].media_details.sizes
-                .medium.source_url
+              .medium.source_url
             : undefined,
           isFavorite: isFavorite,
           rubrik: categoryData.rubrik,
@@ -142,7 +159,7 @@ export class PostPage implements OnInit {
       {
         text: 'Artikel teilen',
         handler: async () => {
-          if (this.platform.is("capacitor")) {
+          if (this.platform.is('capacitor')) {
             await Share.share({
               title: 'Artikel teilen',
               text: this.post.title.rendered,
@@ -150,7 +167,7 @@ export class PostPage implements OnInit {
               dialogTitle: 'Artikel teilen',
             });
           } else {
-            window.open(this.post.link, "_blank");
+            window.open(this.post.link, '_blank');
           }
         },
       },
@@ -195,7 +212,8 @@ export class PostPage implements OnInit {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
       if (this.post.media_url && !this.post.media_url.startsWith('data')) {
-        await this.wp.getBase64FromUrl(this.post.media_url)
+        await this.wp
+          .getBase64FromUrl(this.post.media_url)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -210,8 +228,8 @@ export class PostPage implements OnInit {
           );
         }
       }
-      // CORS-Problem muss gelöst werden, 
-      // dann funktioniert das Speichern von Audio-dateien 
+      // CORS-Problem muss gelöst werden,
+      // dann funktioniert das Speichern von Audio-dateien
       // in Favoriten mit dem unten stehenden Code
       // if(this.post.audio && this.post.audio !== ''){
       //   this.post.base64Audio = await this.wp.getBase64FromUrl(this.post.audio);
