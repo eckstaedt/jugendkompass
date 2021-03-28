@@ -91,7 +91,9 @@ export class TabsPage {
     this.movingSlider = true;
     const endTime = this.audioService.getDuration();
     this.sliderSubscription = this.range.ionChange.subscribe(() => {
-      this.curTime = this.getMinString(Math.round((+this.range.value / 1000) * endTime));
+      this.curTime = this.getMinString(
+        Math.round((+this.range.value / 1000) * endTime),
+      );
     });
   }
 }

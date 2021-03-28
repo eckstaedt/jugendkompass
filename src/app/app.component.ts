@@ -29,7 +29,7 @@ export class AppComponent {
     private storage: Storage,
     private alertController: AlertController,
     private httpClient: HttpClient,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
   ) {
     this.initializeApp();
   }
@@ -73,7 +73,9 @@ export class AppComponent {
   setupTheme() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     this.toggleDarkTheme(prefersDark.matches);
-    prefersDark.addListener((mediaQuery: any) => this.toggleDarkTheme(mediaQuery.matches));
+    prefersDark.addListener((mediaQuery: any) =>
+      this.toggleDarkTheme(mediaQuery.matches),
+    );
   }
 
   toggleDarkTheme(shouldAdd: boolean): void {
@@ -100,9 +102,11 @@ export class AppComponent {
       buttons: [
         {
           text: 'Okay',
-          handler: async(event: any) => {
-            if(!event.password){
-              this.showPasswordAlert(message = 'Bitte gebe das Passwort ein.');
+          handler: async (event: any) => {
+            if (!event.password) {
+              this.showPasswordAlert(
+                (message = 'Bitte gebe das Passwort ein.'),
+              );
               return;
             }
             const loading = await this.loadingController.create();
@@ -119,7 +123,9 @@ export class AppComponent {
                 }
               })
               .catch(() => {
-                this.showPasswordAlert(message = 'Bitte gebe das richtige Passwort ein.');
+                this.showPasswordAlert(
+                  (message = 'Bitte gebe das richtige Passwort ein.'),
+                );
               });
             loading.dismiss();
           },

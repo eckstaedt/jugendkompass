@@ -22,7 +22,7 @@ export class AudioService {
   loadNewAudio(audioUrl: string, title: string) {
     this.loadedSound = new Howl({
       html5: true,
-      src: [audioUrl]
+      src: [audioUrl],
     });
     this.title = title;
   }

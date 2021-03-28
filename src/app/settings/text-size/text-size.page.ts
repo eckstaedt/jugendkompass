@@ -7,18 +7,19 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./text-size.page.scss'],
 })
 export class TextSizePage implements OnInit {
-
   public textSize = 15;
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage) {}
 
-  ngOnInit() { 
-    this.storage.get('text-size').then((res: number) => {
-      this.textSize = res;
-    })
-    .catch(() => {
-      this.textSize = 15;
-    });
+  ngOnInit() {
+    this.storage
+      .get('text-size')
+      .then((res: number) => {
+        this.textSize = res;
+      })
+      .catch(() => {
+        this.textSize = 15;
+      });
   }
 
   changeFontSize() {

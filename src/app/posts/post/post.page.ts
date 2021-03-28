@@ -46,7 +46,7 @@ export class PostPage implements OnInit {
     private storage: Storage,
     private utils: Utils,
     private routerService: RouterService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
@@ -76,7 +76,7 @@ export class PostPage implements OnInit {
     });
 
     return {
-      'font-size': fontSize + 'px'
+      'font-size': fontSize + 'px',
     };
   }
 
@@ -126,7 +126,7 @@ export class PostPage implements OnInit {
           ...res.data,
           media_url: res.data._embedded['wp:featuredmedia']
             ? res.data._embedded['wp:featuredmedia'][0].media_details.sizes
-              .medium.source_url
+                .medium.source_url
             : undefined,
           isFavorite: isFavorite,
           rubrik: categoryData.rubrik,

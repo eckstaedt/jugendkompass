@@ -67,7 +67,11 @@
         </ion-row>
       </ion-grid>
     </ion-card>
-    <div class="text postContent" [innerHTML]="post.content.rendered" [style.font-size.px]="textSize"></div>
+    <div
+      class="text postContent"
+      [innerHTML]="post.content.rendered"
+      [style.font-size.px]="textSize"
+    ></div>
   </div>
 
   <!-- <div *ngIf="post && post?.audio && post?.audio !== ''" class="horizontalLine"></div>

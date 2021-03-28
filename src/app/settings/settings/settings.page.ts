@@ -15,8 +15,8 @@ export class SettingsPage implements OnInit {
   constructor(
     private storage: Storage,
     private plt: Platform,
-    private actionSheetController: ActionSheetController
-  ) { }
+    private actionSheetController: ActionSheetController,
+  ) {}
 
   ngOnInit() {
     this.storage
@@ -39,13 +39,13 @@ export class SettingsPage implements OnInit {
   }
 
   async share() {
-    if (this.plt.is("capacitor")) {
+    if (this.plt.is('capacitor')) {
       await Share.share({
         title: 'Artikel teilen',
         text: 'Jugendkompass',
-        url: this.plt.is("ios") ?
-          "https://apps.apple.com/us/app/stephanus-jugendkompass/id1529600025?ign-mpt=uo%3D2" : // URL anpassen sobald im App Store
-          "https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass&hl=gsw&gl=DE", // URL anpassen sobald im Play Store
+        url: this.plt.is('ios')
+          ? 'https://apps.apple.com/us/app/stephanus-jugendkompass/id1529600025?ign-mpt=uo%3D2' // URL anpassen sobald im App Store
+          : 'https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass&hl=gsw&gl=DE', // URL anpassen sobald im Play Store
         dialogTitle: 'App weiterempfehlen',
       });
     } else {
@@ -55,23 +55,33 @@ export class SettingsPage implements OnInit {
 
   async openShareActionSheet(): Promise<void> {
     const actionSheet = await this.actionSheetController.create({
-      buttons: [{
-        text: 'iOS App weiterempfehlen',
-        icon: 'logo-apple',
-        handler: () => {
-          window.open("https://apps.apple.com/us/app/stephanus-jugendkompass/id1529600025?ign-mpt=uo%3D2", "_blank"); // URL anpassen sobald im App Store
-        }
-      }, {
-        text: 'Android App weiterempfehlen',
-        icon: 'logo-android',
-        handler: () => {
-          window.open("https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass&hl=gsw&gl=DE", "_blank"); // URL anpassen sobald im Play Store
-        }
-      }, {
-        text: 'Cancel',
-        icon: 'close',
-        role: 'cancel'
-      }]
+      buttons: [
+        {
+          text: 'iOS App weiterempfehlen',
+          icon: 'logo-apple',
+          handler: () => {
+            window.open(
+              'https://apps.apple.com/us/app/stephanus-jugendkompass/id1529600025?ign-mpt=uo%3D2',
+              '_blank',
+            ); // URL anpassen sobald im App Store
+          },
+        },
+        {
+          text: 'Android App weiterempfehlen',
+          icon: 'logo-android',
+          handler: () => {
+            window.open(
+              'https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass&hl=gsw&gl=DE',
+              '_blank',
+            ); // URL anpassen sobald im Play Store
+          },
+        },
+        {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+        },
+      ],
     });
     await actionSheet.present();
   }

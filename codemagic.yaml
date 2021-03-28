@@ -3,35 +3,35 @@
 # Remove or comment out the workflows you don't require
 
 workflows:
-    # Ionic Capacitor workflows
-    ionic-capacitor-ios-app:
-        name: Jugendkompass
-        environment:
-            vars:
-                XCODE_WORKSPACE: "ios/App/App.xcworkspace" # <- 'App' is the default workspace name for Capacitor projects
-                XCODE_SCHEME: "App" # <- 'App' is the default Scheme name for Capacitor projects
-            node: latest
-        scripts:
-            - npm install     
-            - npx cap sync
-            - |
-                # build iOS
-                cd platforms/ios
-                pod install
-                xcodebuild build -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
-        artifacts:
-            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-    ionic-capacitor-android-app:
-        name: Jugendkompass
-        environment:
-            node: latest
-        scripts:
-            - npm install     
-            - npx cap sync
-            - |
-                # build Android
-                cd android
-                ./gradlew assembleDebug
-        artifacts:
-            - android/app/build/outputs/**/*.apk
+  # Ionic Capacitor workflows
+  ionic-capacitor-ios-app:
+    name: Jugendkompass
+    environment:
+      vars:
+        XCODE_WORKSPACE: 'ios/App/App.xcworkspace' # <- 'App' is the default workspace name for Capacitor projects
+        XCODE_SCHEME: 'App' # <- 'App' is the default Scheme name for Capacitor projects
+      node: latest
+    scripts:
+      - npm install
+      - npx cap sync
+      - |
+        # build iOS
+        cd platforms/ios
+        pod install
+        xcodebuild build -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+    artifacts:
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+  ionic-capacitor-android-app:
+    name: Jugendkompass
+    environment:
+      node: latest
+    scripts:
+      - npm install
+      - npx cap sync
+      - |
+        # build Android
+        cd android
+        ./gradlew assembleDebug
+    artifacts:
+      - android/app/build/outputs/**/*.apk
