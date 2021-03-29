@@ -35,6 +35,11 @@ export class TabsPage {
     this.sliderSubscription.unsubscribe();
     this.movingSlider = false;
     const newValue: number = +this.range.value;
+    const endTime: number = this.audioService.getDuration();
+    if(endTime * (newValue / 1000) === endTime) {
+      this.close();
+      return;
+    }
     this.audioService.setSeek(
       this.audioService.getDuration() * (newValue / 1000),
     );
@@ -57,12 +62,16 @@ export class TabsPage {
   updateProgress() {
     if (this.playing && !this.movingSlider) {
       if (!isNaN(this.audioService.getSeek())) {
+        if(this.curTime === this.duration && this.curTime !== '00:00') {
+          this.close();
+          return;
+        }
         this.progress =
-          (this.audioService.getSeek() / this.audioService.getDuration()) *
-            1000 || 0;
+        (this.audioService.getSeek() / this.audioService.getDuration()) *
+        1000 || 0;
         this.curTime = this.getMinString(
           Math.round(this.audioService.getSeek()),
-        );
+          );
         this.duration = this.getMinString(
           Math.round(this.audioService.getDuration()),
         );
