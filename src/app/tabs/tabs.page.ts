@@ -62,7 +62,9 @@ export class TabsPage {
   updateProgress() {
     if (this.playing && !this.movingSlider) {
       if (!isNaN(this.audioService.getSeek())) {
-        if(this.curTime === this.duration && this.curTime !== '00:00') {
+        const newValue: number = +this.range.value;
+        const endTime:number = this.audioService.getDuration();
+        if((endTime * (newValue / 1000) + 0.1) > endTime && this.curTime !== '00:00') {
           this.close();
           return;
         }
@@ -78,7 +80,7 @@ export class TabsPage {
       }
       setTimeout(() => {
         this.updateProgress();
-      }, 500);
+      }, 50);
     }
   }
 
