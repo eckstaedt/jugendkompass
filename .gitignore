@@ -23,6 +23,8 @@ CertificateSigningRequest.certSigningRequest
 Certificates.p12
 package-lock.json
 
+cloud-functions/functions/src/serviceAccountKey.json
+
 /.idea
 /.ionic
 /.sass-cache
