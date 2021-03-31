@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  url: 'https://eckstaedt-webdesign.com/wp-json/wp/v2/',
   // firebase: {}
 };
 

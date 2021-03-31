@@ -91,7 +91,6 @@ export class PostListPage implements OnInit {
     await this.wp.getCategories();
     this.ausgaben = this.wp.getAusgaben();
     this.rubriken = this.wp.getRubriken();
-    this.loadPosts();
     this.getAllPosts();
   }
 
@@ -170,25 +169,6 @@ export class PostListPage implements OnInit {
     });
   }
 
-  loadPosts(event?: any) {
-    // this.pages = resp.headers.get('x-wp-totalpages');
-    // this.totalPosts = parseInt(resp.headers.get('x-wp-total'), 10);
-    this.wp.getPosts().then((res: any) => {
-      if (!this.allPosts) {
-        this.count = parseInt(res.headers.get('x-wp-total'), 10);
-        this.posts = this.getEditedPosts(res.data);
-      }
-      if (event) {
-        event.target.complete();
-        this.currentRubrik = 'all';
-        this.currentAusgabe = 'all';
-        this.allPosts = [];
-        this.filteredPosts = [];
-        this.getAllPosts();
-      }
-    });
-  }
-
   getEditedPosts(posts: Post[]): Post[] {
     return posts.map((post: any) => {
       const categroyData: CategoryData = this.utils.getCategoryData(
@@ -213,30 +193,6 @@ export class PostListPage implements OnInit {
     });
   }
 
-  loadMore(event: any) {
-    this.page++;
-
-    this.wp.getPosts(this.page).then((res: any) => {
-      this.posts = [
-        ...this.posts,
-        ...res.data.map((post: any) => {
-          return {
-            ...post,
-            media_url: post._embedded['wp:featuredmedia']
-              ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
-                  .source_url
-              : undefined,
-          };
-        }),
-      ];
-      event.target.complete();
-
-      // Disable infinite loading when maximum reached
-      if (this.page.toString() === this.wp.pages) {
-        event.target.disabled = true;
-      }
-    });
-  }
   // set local storage when a post is clicked
   setAsRead(post: any) {
     if (!this.readArticles.includes(post.id)) {

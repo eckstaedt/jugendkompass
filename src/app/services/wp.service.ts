@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import '@capacitor-community/http';
 
@@ -10,7 +11,7 @@ const { Http } = Plugins;
   providedIn: 'root',
 })
 export class WpService {
-  url = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  url = environment.url;
   totalPosts = null;
   pages: any;
   ausgaben: Category[] = [];

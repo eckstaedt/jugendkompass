@@ -17,10 +17,6 @@
   [header]="header"
   [isList]="true"
 >
-  <ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
   <ion-searchbar
     #searchbar
     type="search"
@@ -172,15 +168,4 @@
       </ion-row>
     </ion-grid>
   </div>
-
-  <ion-infinite-scroll
-    *ngIf="count && count > 10 && !allPosts.length"
-    threshold="100px"
-    (ionInfinite)="loadMore($event)"
-  >
-    <ion-infinite-scroll-content
-      loadingText="Weitere Artikel werden geladen..."
-    >
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 </ion-content>
