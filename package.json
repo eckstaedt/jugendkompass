@@ -8,8 +8,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "openIos": "ng build --prod && npx cap copy && npx cap sync && npx cap open ios",
-    "openAnd": "ng build --prod && npx cap copy && npx cap sync && npx cap open android",
+    "openIosProd": "ng build --prod && npx cap copy && npx cap sync && npx cap open ios",
+    "openIos": "ng build && npx cap copy && npx cap sync && npx cap open ios",
+    "openAndProd": "ng build --prod && npx cap copy && npx cap sync && npx cap open android",
+    "openAnd": "ng build && npx cap copy && npx cap sync && npx cap open android",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
