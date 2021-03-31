@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import { Plugins } from '@capacitor/core';
+import { Router } from '@angular/router';
 
 const fcm = new FCM();
 const { App, PushNotifications } = Plugins;
@@ -30,6 +31,7 @@ export class AppComponent {
     private alertController: AlertController,
     private httpClient: HttpClient,
     private loadingController: LoadingController,
+    private router: Router
   ) {
     this.initializeApp();
   }
@@ -50,7 +52,7 @@ export class AppComponent {
           }
         });
       });
-      this.setupDeepLinks();
+      this.registerEvents();
       this.setupTheme();
     });
   }
@@ -136,12 +138,12 @@ export class AppComponent {
     await alert.present();
   }
 
-  setupDeepLinks() {
-    // TODO
-    // this.deeplinks.route({
-    //   '/tabs/posts/:id': PostPage
-    // }).subscribe((match: any) => {
-    //   console.log(match);
-    // });
+  registerEvents(): void {
+    this.platform.backButton.subscribeWithPriority(-1, () => {
+      if (this.router.url === '/tabs/posts' || this.router.url === '/tabs/favorites'
+        || this.router.url === '/tabs/settings' || this.router.url === '/') {
+        App.exitApp();
+      }
+    });
   }
 }
