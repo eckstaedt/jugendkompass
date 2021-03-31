@@ -5,6 +5,8 @@
 export const environment = {
   production: false,
   url: 'https://eckstaedt-webdesign.com/wp-json/wp/v2/',
+  dataProdPageId: '3',
+  imprintPageId: '164',
   // firebase: {}
 };
 

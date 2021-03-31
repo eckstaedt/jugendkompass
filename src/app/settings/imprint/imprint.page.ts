@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
 import { LoadingController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-imprint',
@@ -25,7 +26,7 @@ export class ImprintPage implements OnInit {
     });
     await loading.present();
 
-    this.wp.getPageContent('24').then((imprint: any) => {
+    this.wp.getPageContent(environment.imprintPageId).then((imprint: any) => {
       this.imprint = imprint;
       loading.dismiss();
     });
