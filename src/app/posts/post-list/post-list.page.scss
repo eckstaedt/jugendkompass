@@ -73,6 +73,10 @@ ion-card {
           font-size: 0.9rem;
           margin: 0;
           color: var(--ion-color-dark);
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          overflow: hidden;
+          -webkit-box-orient: vertical;
         }
 
         .subTitle {
