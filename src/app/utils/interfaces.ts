@@ -43,6 +43,7 @@ export interface Post {
   modified_gmt?: string;
   pdf?: string;
   ping_status?: string;
+  readingTime: number;
   rubrik?: Category;
   ausgabe?: Category;
   slug?: string;
