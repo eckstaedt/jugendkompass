@@ -13,11 +13,25 @@
         hier davon und kannst eine Auswahl an Artikeln direkt in der App lesen.
       </p>
     </ion-slide>
-    <!-- <ion-slide>
-      <ion-icon class="icon" name="calendar-outline"></ion-icon>
-      <h2>Verpasse keine Termine mehr</h2>
-      <p>Alle für die Öffentlichkeit relevanten Termine und Veranstaltungen werden in der App angezeigt.</p>
-    </ion-slide> -->
+    <ion-slide>
+      <ion-icon class="icon" name="brush-outline"></ion-icon>
+      <h2>Wähle ein Theme aus</h2>
+
+      <ion-radio-group (ionChange)="onThemeChange()" [(ngModel)]="theme">
+        <ion-item lines="none">
+          <ion-label>Systemeinstellung</ion-label>
+          <ion-radio slot="start" value="system"></ion-radio>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Hell</ion-label>
+          <ion-radio slot="start" value="light"></ion-radio>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Dunkel</ion-label>
+          <ion-radio slot="start" value="dark"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-slide>
     <ion-slide>
       <ion-icon class="icon" name="mail-unread-outline"></ion-icon>
       <h2>Push</h2>

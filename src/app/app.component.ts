@@ -73,11 +73,25 @@ export class AppComponent {
   }
 
   setupTheme() {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    this.toggleDarkTheme(prefersDark.matches);
-    prefersDark.addListener((mediaQuery: any) =>
-      this.toggleDarkTheme(mediaQuery.matches),
-    );
+    this.storage.get('theme').then((theme: string) => {
+      if (theme) {
+        if (theme === 'default') {
+          const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+          var defaultTheme = prefersColor.matches;
+          document.body.classList.toggle('dark', defaultTheme);
+        } else if (theme === 'light') {
+          document.body.classList.toggle('dark', false);
+        } else if (theme === 'dark') {
+          document.body.classList.toggle('dark', true);
+        }
+      } else {
+        const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+        var defaultTheme = prefersColor.matches;
+        document.body.classList.toggle('dark', defaultTheme);
+        this.storage.set('theme', 'default');
+      }
+    });
+
   }
 
   toggleDarkTheme(shouldAdd: boolean): void {

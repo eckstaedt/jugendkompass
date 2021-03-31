@@ -13,7 +13,7 @@ const { PushNotifications } = Plugins;
   styleUrls: ['./welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
-  mode = 'bright';
+  theme = 'system';
 
   constructor(private router: Router, private storage: Storage) {}
 
@@ -38,8 +38,15 @@ export class WelcomePage implements OnInit {
   }
 
   onThemeChange() {
-    this.storage.set('darkMode', Boolean(this.mode === 'dark'));
-    document.body.classList.toggle('dark', Boolean(this.mode === 'dark'));
-    console.log(this.mode);
+    this.storage.set('theme', this.theme);
+    if (this.theme === 'default') {
+      const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+      var defaultTheme = prefersColor.matches;
+      document.body.classList.toggle('dark', defaultTheme);
+    } else if(this.theme === 'light') {
+      document.body.classList.toggle('dark', false);
+    } else if(this.theme === 'dark') {
+      document.body.classList.toggle('dark', true);
+    }
   }
 }

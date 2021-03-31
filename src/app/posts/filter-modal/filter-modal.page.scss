@@ -11,7 +11,7 @@ ion-row {
 
     ion-col {
         margin-bottom: 30px;
-        color: var(--ion-color-light);
+        color: #fff;
 
         &.selected {
             color: var(--ion-color-primary);
@@ -26,7 +26,7 @@ ion-footer {
 
     ion-item {
         --background: transparent;
-        color: var(--ion-color-light);
+        color: #fff;
     }
 
     ion-toolbar {
