@@ -69,7 +69,8 @@ export class WpService {
                   (cat: Category) =>
                     cat.parent === ausgabenCategory.id && cat.count !== 0,
                 )
-                .sort((a: Category, b: Category) => b.id - a.id);
+                .sort((a: Category, b: Category) => b.name > a.name)
+                .reverse();
               this.rubriken = categories.data
                 .filter(
                   (cat: Category) =>

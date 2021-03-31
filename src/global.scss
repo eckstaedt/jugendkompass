@@ -74,3 +74,18 @@ body.dark {
 .password-alert .alert-message {
   color: var(--ion-color-danger);
 }
+
+.transparent-modal {
+  --background: var(--ion-color-light);
+
+  .modal-wrapper {
+    --background: transparent;
+    backdrop-filter: blur(12px);
+    height: 100%;
+    width: 100%;
+  }
+
+  ion-content {
+    --background: transparent;
+  }
+}

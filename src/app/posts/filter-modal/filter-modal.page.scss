@@ -1,0 +1,44 @@
+ion-header {
+    ion-toolbar {
+        height: 8vh;
+        --background: transparent;
+        --border-style: none;
+    }
+}
+
+ion-row {
+    padding-bottom: 30px;
+
+    ion-col {
+        margin-bottom: 30px;
+        color: var(--ion-color-light);
+
+        &.selected {
+            color: var(--ion-color-primary);
+        }
+    }
+}
+
+ion-footer {
+    max-width: 50rem;
+    margin: auto;
+    margin-top: 2rem;
+
+    ion-item {
+        --background: transparent;
+        color: var(--ion-color-light);
+    }
+
+    ion-toolbar {
+        --background: transparent;
+        --border-style: none;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    
+        ion-button {
+            ion-icon {
+                font-size: 50px;
+            }
+        }
+    }
+}

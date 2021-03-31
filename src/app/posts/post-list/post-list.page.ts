@@ -5,13 +5,15 @@ import {
   IonSelect,
   DomController,
   IonContent,
-  IonSearchbar,
+  ModalController,
 } from '@ionic/angular';
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Post, Category, CategoryData } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router.service';
+import { FilterModalPage } from '../filter-modal/filter-modal.page';
+import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
 
 @Component({
   selector: 'app-post-list',
@@ -35,6 +37,8 @@ export class PostListPage implements OnInit {
   ausgaben: Category[] = [];
   currentAusgabe: string = 'all';
   readArticles: Category[] = [];
+  showOnlyUnread: boolean = false;
+  areFiltersActive: boolean = false;
 
   constructor(
     private wp: WpService,
@@ -43,6 +47,7 @@ export class PostListPage implements OnInit {
     private storage: Storage,
     private domCtrl: DomController,
     private routerService: RouterService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -51,6 +56,18 @@ export class PostListPage implements OnInit {
         this.loadData();
       }
     });
+
+    this.getInitialFilterData();
+  }
+
+  async getInitialFilterData(): Promise<void> {
+    const filterObject = await this.storage.get("filter");
+    if (filterObject) {
+      this.currentAusgabe = filterObject.ausgabe;
+      this.currentRubrik = filterObject.rubrik;
+      this.showOnlyUnread = filterObject.showOnlyUnread;
+      this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
+    }
   }
 
   ionViewWillEnter() {
@@ -63,11 +80,10 @@ export class PostListPage implements OnInit {
     if (filterData) {
       if (this.ausgaben.find((aus: Category) => aus.id === filterData.id)) {
         this.currentAusgabe = filterData.id.toString();
-        this.filterAusgabe();
       } else {
         this.currentRubrik = filterData.id.toString();
-        this.filterRubrik();
       }
+      this.filter();
     }
   }
 
@@ -89,52 +105,32 @@ export class PostListPage implements OnInit {
       return;
     }
 
-    this.posts = this.filter();
+    this.posts = this.search();
   }
 
-  filterAusgabe() {
+  filter() {
     this.searchTerm = '';
-    let posts: any[] = [];
-    if (this.currentAusgabe === 'all') {
-      posts = this.allPosts;
-    } else {
-      posts = this.allPosts.filter(
+    let posts: any[] = this.allPosts;
+    if (this.currentAusgabe !== 'all') {
+      posts = posts.filter(
         (post: any) =>
-          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
+          post.ausgabe && post.ausgabe.id === this.currentAusgabe,
       );
     }
     if (this.currentRubrik !== 'all') {
       posts = posts.filter(
         (post: any) =>
-          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
+          post.rubrik && post.rubrik.id === this.currentRubrik,
       );
+    }
+    if (this.showOnlyUnread) {
+      posts = posts.filter((post: Post) => !post.articleWasRead);
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
   }
 
-  filterRubrik() {
-    this.searchTerm = '';
-    let posts: any[] = [];
-    if (this.currentRubrik === 'all') {
-      posts = this.allPosts;
-    } else {
-      posts = this.allPosts.filter(
-        (post: any) =>
-          post.rubrik && post.rubrik.id.toString() === this.currentRubrik,
-      );
-    }
-    if (this.currentAusgabe !== 'all') {
-      posts = posts.filter(
-        (post: any) =>
-          post.ausgabe && post.ausgabe.id.toString() === this.currentAusgabe,
-      );
-    }
-    this.posts = posts;
-    this.filteredPosts = this.posts;
-  }
-
-  filter() {
+  search() {
     if (this.searchTerm === '') {
       return this.filteredPosts;
     } else {
@@ -162,10 +158,6 @@ export class PostListPage implements OnInit {
     }
   }
 
-  async onFilter() {
-    this.select.open();
-  }
-
   getAllPosts() {
     // get local storage for already read articles
     this.storage.get('readArticles').then((res: any) => {
@@ -173,7 +165,7 @@ export class PostListPage implements OnInit {
     });
     this.wp.getAllPosts().then((res: any) => {
       this.allPosts = this.getEditedPosts(res.data);
-      this.posts = this.allPosts;
+      this.filter();
       this.filteredPosts = this.allPosts;
     });
   }
@@ -204,7 +196,7 @@ export class PostListPage implements OnInit {
         this.rubriken,
         this.ausgaben,
       );
-      let articleWasRead: boolean;
+      let articleWasRead: boolean = false;
       if (this.readArticles) {
         articleWasRead = this.readArticles.includes(post.id);
       }
@@ -251,6 +243,36 @@ export class PostListPage implements OnInit {
       post.articleWasRead = true;
       this.readArticles.push(post.id);
       this.storage.set('readArticles', JSON.stringify(this.readArticles));
+    }
+  }
+
+  async openFilterModal(): Promise<void> {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: FilterModalPage,
+      cssClass: 'transparent-modal',
+      enterAnimation: modalEnterAnimation,
+      leaveAnimation: modalLeaveAnimation,
+      componentProps: {
+        showOnlyUnread: this.showOnlyUnread,
+        ausgabe: this.currentAusgabe
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data.filterObject) {
+      const filterObject: any = data.filterObject;
+      this.currentAusgabe = filterObject.ausgabe;
+      this.showOnlyUnread = filterObject.showOnlyUnread;
+      this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
+      this.filter();
+      await this.storage.set("filter", {
+        showOnlyUnread: filterObject.showOnlyUnread,
+        rubrik: this.currentRubrik,
+        ausgabe: filterObject.ausgabe
+      });
     }
   }
 }
