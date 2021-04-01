@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { AdminGuardService } from '../services/admin-guard.service';
 
 const routes: Routes = [
   {
@@ -39,6 +40,16 @@ const routes: Routes = [
           import('./../settings/dataprot/dataprot.module').then(
             m => m.DataprotPageModule,
           ),
+      },
+      {
+        path: 'settings/push',
+        loadChildren: () => import('./../admin/push/push.module').then( m => m.PushPageModule),
+        canLoad: [AdminGuardService]
+      },
+      {
+        path: 'settings/feedback-summary',
+        loadChildren: () => import('./../admin/feedback-summary/feedback-summary.module').then( m => m.FeedbackSummaryPageModule),
+        canLoad: [AdminGuardService]
       },
       {
         path: 'favorites',

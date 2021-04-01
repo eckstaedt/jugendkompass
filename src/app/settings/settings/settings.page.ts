@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
 import { Platform, ActionSheetController } from '@ionic/angular';
+import { FirebaseService } from 'src/app/services/firebase.service';
 const { Share } = Plugins;
 
 @Component({
@@ -14,11 +15,13 @@ export class SettingsPage implements OnInit {
   public darkMode = false;
   public version: string = version;
   public theme: string = 'system';
+  public isAdmin: boolean = false;
 
   constructor(
     private storage: Storage,
     private plt: Platform,
     private actionSheetController: ActionSheetController,
+    private firebaseService: FirebaseService
   ) {}
 
   ngOnInit() {
@@ -30,6 +33,10 @@ export class SettingsPage implements OnInit {
       .catch(() => {
         this.darkMode = false;
       });
+
+    this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
+      this.isAdmin = isAdmin;
+    });
   }
 
   onThemeChange() {
