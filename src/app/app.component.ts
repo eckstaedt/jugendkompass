@@ -11,7 +11,7 @@ import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
 
 const fcm = new FCM();
-const { App, PushNotifications } = Plugins;
+const { App, PushNotifications, Network } = Plugins;
 
 @Component({
   selector: 'app-root',
@@ -54,6 +54,7 @@ export class AppComponent {
       });
       this.registerEvents();
       this.setupTheme();
+      this.setupNetworkCheck();
     });
   }
 
@@ -159,5 +160,23 @@ export class AppComponent {
         App.exitApp();
       }
     });
+  }
+
+  async setupNetworkCheck(){
+    let loading = await this.loadingController.create({
+      message: 'Verbindung verloren',
+    });
+    let handler = Network.addListener('networkStatusChange', async (status) => {
+      if (!status.connected){
+        loading.present();
+      }
+      else {
+        loading.dismiss();
+        loading = await this.loadingController.create({
+          message: 'Verbindung verloren',
+        });
+      }
+    });
+
   }
 }
