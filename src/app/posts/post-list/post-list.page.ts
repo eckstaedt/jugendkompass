@@ -16,6 +16,7 @@ import { RouterService } from 'src/app/services/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
 import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import {SegmentChangeEventDetail} from '@ionic/core';
 
 @Component({
   selector: 'app-post-list',
@@ -214,6 +215,15 @@ export class PostListPage implements OnInit {
       this.readArticles.push(post.id);
       this.storage.set('readArticles', JSON.stringify(this.readArticles));
     }
+  }
+
+  filterKategorie(event: CustomEvent<SegmentChangeEventDetail>) {
+    // console.log(event.detail);  TEST functionality in browser view
+    // console.log(this.rubriken); TEST if rubriken get loaded from wp service (they dont currently 6/4)
+    this.currentRubrik = event.detail.value;
+    //console.log(this.currentRubrik);
+    //console.log(this.rubriken);
+    this.filter();
   }
 
   async openFilterModal(): Promise<void> {
