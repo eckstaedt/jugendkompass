@@ -8,21 +8,6 @@
 </ion-header>
 
 <ion-content>
-  <ion-item lines="none">
-    <ion-range
-      (ionChange)="changeFontSize()"
-      [(ngModel)]="textSize"
-      style="padding: 0"
-      step="5"
-      min="10"
-      max="100"
-      snaps="true"
-    >
-      <ion-label style="font-size: 10px" size="small" slot="start">A</ion-label>
-      <ion-label style="font-size: 20px" slot="end">A</ion-label>
-    </ion-range>
-  </ion-item>
-
   <ion-item-divider position="floating">VORSCHAU</ion-item-divider>
   <ion-textarea class="preview-text">
     <p [style.font-size.px]="textSize">
@@ -71,3 +56,18 @@
     </p>
   </ion-textarea>
 </ion-content>
+
+<ion-item>
+  <ion-range
+    (ionChange)="changeFontSize()"
+    [(ngModel)]="textSize"
+    style="padding: 0"
+    step="5"
+    min="10"
+    max="50"
+    snaps="true"
+  >
+    <ion-label style="font-size: 10px" size="small" slot="start">A</ion-label>
+    <ion-label style="font-size: 20px" slot="end">A</ion-label>
+  </ion-range>
+</ion-item>
