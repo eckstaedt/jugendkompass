@@ -9,9 +9,23 @@ ion-toolbar {
   }
 }
 
+ion-content > div {
+  height: 100%;
+
+  > ion-grid {
+    padding-bottom: 3.5rem;
+  }
+}
+
 ion-segment {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   ion-segment-button {
     text-transform: none;
+    --padding-end: .4rem;
+    --padding-start: .4rem;
   }
 }
 

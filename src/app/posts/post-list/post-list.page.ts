@@ -16,7 +16,6 @@ import { RouterService } from 'src/app/services/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
 import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import {SegmentChangeEventDetail} from '@ionic/core';
 
 @Component({
   selector: 'app-post-list',
