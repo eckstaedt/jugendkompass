@@ -14,7 +14,8 @@ ion-row {
         color: #fff;
 
         &.selected {
-            color: var(--ion-color-primary);
+            transform: scale(1.4);
+            transition: transform .2s;
         }
     }
 }
