@@ -134,7 +134,7 @@ export class PostListPage implements OnInit {
     if (this.currentRubrik !== 'all') {
       posts = posts.filter(
         (post: any) =>
-          post.rubrik && post.rubrik.id === this.currentRubrik,
+          post.categories && Boolean(post.categories.find((cat: number) => cat.toString() === this.currentRubrik)),
       );
     }
     if (this.showOnlyUnread) {
@@ -215,15 +215,6 @@ export class PostListPage implements OnInit {
       this.readArticles.push(post.id);
       this.storage.set('readArticles', JSON.stringify(this.readArticles));
     }
-  }
-
-  filterKategorie(event: CustomEvent<SegmentChangeEventDetail>) {
-    // console.log(event.detail);  TEST functionality in browser view
-    // console.log(this.rubriken); TEST if rubriken get loaded from wp service (they dont currently 6/4)
-    this.currentRubrik = event.detail.value;
-    //console.log(this.currentRubrik);
-    //console.log(this.rubriken);
-    this.filter();
   }
 
   async openFilterModal(): Promise<void> {

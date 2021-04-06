@@ -9,6 +9,12 @@ ion-toolbar {
   }
 }
 
+ion-segment {
+  ion-segment-button {
+    text-transform: none;
+  }
+}
+
 ion-thumbnail {
   height: 7rem;
   width: 100%;

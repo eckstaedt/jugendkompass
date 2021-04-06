@@ -30,8 +30,8 @@
   >
   </ion-searchbar>
 
-  <ion-segment scrollable (ionChange)="filterKategorie($event)">
-    <ion-segment-button value = "all"> Alle Kategorien </ion-segment-button>
+  <ion-segment [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
+    <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
     <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}</ion-segment-button>
   </ion-segment>
 
