@@ -163,20 +163,35 @@ export class AppComponent {
   }
 
   async setupNetworkCheck(){
-    let loading = await this.loadingController.create({
-      message: 'Verbindung verloren',
-    });
+    let alert = await this.createNetworkAlert();
     let handler = Network.addListener('networkStatusChange', async (status) => {
       if (!status.connected){
-        loading.present();
+        alert.present();
       }
       else {
-        loading.dismiss();
-        loading = await this.loadingController.create({
-          message: 'Verbindung verloren',
-        });
+        alert.dismiss();
+        alert = await this.createNetworkAlert();
       }
     });
 
+  }
+
+  async createNetworkAlert(){
+    let alert = await this.alertController.create({
+      backdropDismiss: false,
+      header: 'Verbindung verloren',
+      cssClass: 'password-alert',
+      buttons: [
+        {
+          text: 'Zu Favoriten',
+          handler: data => {
+            this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
+          }
+        },
+        {
+          text: 'Abbrechen'
+        }],
+    });
+    return alert;
   }
 }
