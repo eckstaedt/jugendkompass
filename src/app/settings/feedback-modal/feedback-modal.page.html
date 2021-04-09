@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Feedback</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        (click)="close()"
+      >
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button [disabled]="true" color="success" expand="block" (click)="submit()">Feedback einreichen</ion-button>
+  <ion-button color="light" expand="block" (click)="close()">Abbrechen</ion-button>
+</ion-content>

@@ -2,8 +2,9 @@ import { version } from '../../../../package.json';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
-import { Platform, ActionSheetController } from '@ionic/angular';
+import { Platform, ActionSheetController, ModalController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { Utils } from 'src/app/utils/utils';
 const { Share } = Plugins;
 
 @Component({
@@ -21,7 +22,8 @@ export class SettingsPage implements OnInit {
     private storage: Storage,
     private plt: Platform,
     private actionSheetController: ActionSheetController,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private utils: Utils
   ) {}
 
   ngOnInit() {
@@ -37,6 +39,10 @@ export class SettingsPage implements OnInit {
     this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
       this.isAdmin = isAdmin;
     });
+  }
+
+  openFeedbackModal() {
+    this.utils.openFeedbackModal();
   }
 
   onThemeChange() {

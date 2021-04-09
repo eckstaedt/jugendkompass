@@ -46,6 +46,13 @@
       <ion-label>Push Benachrichtigungen</ion-label>
     </ion-item>
     <ion-item
+      (click)="openFeedbackModal()"
+      detail
+    >
+      <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+      <ion-label>Feedback</ion-label>
+    </ion-item>
+    <ion-item
       *ngIf="isAdmin"
       detail
       routerDirection="forward"

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WpService } from 'src/app/services/wp.service';
-import { Rubrik } from 'src/app/utils/constants';
 import {
   IonSelect,
   DomController,

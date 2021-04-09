@@ -17,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module';
+import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module'
     AppRoutingModule,
     HttpClientModule,
     FilterModalPageModule,
+    FeedbackModalPageModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // AngularFirestoreModule,
     IonicStorageModule.forRoot(),

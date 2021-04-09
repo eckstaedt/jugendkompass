@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
+import { Utils } from './utils/utils';
+import { SESSION_FEEDBACK_THRESHOLD } from './utils/constants';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
@@ -31,7 +33,8 @@ export class AppComponent {
     private alertController: AlertController,
     private httpClient: HttpClient,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private utils: Utils
   ) {
     this.initializeApp();
   }
@@ -46,6 +49,7 @@ export class AppComponent {
           if (isLoggedIn) {
             this.observer.next(true);
             observer.complete();
+            this.handleSessionCount();
           } else {
             this.showPasswordAlert();
             this.observer.next(false);
@@ -56,6 +60,32 @@ export class AppComponent {
       this.setupTheme();
       this.setupNetworkCheck();
     });
+  }
+
+  async handleSessionCount() {
+    let count = await this.storage.get('sessions');
+    await this.storage.set('sessions', count ? count + 1 : 1);
+
+    if (count === SESSION_FEEDBACK_THRESHOLD) {
+      const hasFeedbackSend: boolean = await this.storage.get('hasFeedbackSend');
+      if (!hasFeedbackSend) {
+        const alert = await this.alertController.create({
+          header: 'Gefällt dir die App?',
+          message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten nehmen und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
+          buttons: [{
+            text: 'Ja gerne',
+            handler: () => {
+              this.utils.openFeedbackModal();
+            }
+          },
+          {
+            text: 'Nein danke'
+          }]
+        });
+
+        alert.present();
+      }
+    }
   }
 
   setupPush() {
@@ -176,7 +206,7 @@ export class AppComponent {
 
   }
 
-  async createNetworkAlert(){
+  async createNetworkAlert() {
     let alert = await this.alertController.create({
       backdropDismiss: false,
       header: 'Verbindung verloren',
@@ -184,7 +214,7 @@ export class AppComponent {
       buttons: [
         {
           text: 'Zu Favoriten',
-          handler: data => {
+          handler: () => {
             this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
           }
         },

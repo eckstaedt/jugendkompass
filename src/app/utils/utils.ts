@@ -1,13 +1,17 @@
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { WpService } from '../services/wp.service';
 import { Post, CategoryData, Category } from './interfaces';
+import { FeedbackModalPage } from '../settings/feedback-modal/feedback-modal.page';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Utils {
-  constructor(private toastController: ToastController) {}
+  constructor(
+    private toastController: ToastController,
+    private modalController: ModalController
+  ) {}
 
   async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
     const toast = await this.toastController.create({
@@ -18,6 +22,14 @@ export class Utils {
     });
 
     toast.present();
+  }
+
+  async openFeedbackModal() {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: FeedbackModalPage
+    });
+
+    await modal.present();
   }
 
   getCategoryData(
