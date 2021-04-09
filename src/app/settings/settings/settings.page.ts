@@ -57,8 +57,28 @@ export class SettingsPage implements OnInit {
     document.body.classList.toggle('dark', this.darkMode);
   }
 
-  openMail() {
-    window.open('mailto:entwickler@jugendkompass.de', '_blank');
+  async openContactActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'E-Mail',
+        handler: () => this.openContactSource('mailto:entwickler@jugendkompass.de')
+      }, {
+        text: 'Telegram',
+        handler: () => this.openContactSource('https://t.me/JugendKompass')
+      }, {
+        text: 'Whatsapp',
+        handler: () => this.openContactSource('https://api.whatsapp.com/send?phone=4915737855537')
+      }, {
+        text: 'Abbrechen',
+        role: 'cancel'
+      }]
+    });
+
+    await actionSheet.present();
+  }
+
+  openContactSource(url: string): void {
+    window.open(url, '_blank');
   }
 
   async share() {
