@@ -17,7 +17,7 @@ export class HideHeaderDirective {
   ngOnInit() {
     this.domCtrl.read(() => {
       this.header = this.header.el;
-      this.toolbarHeight = this.header.clientHeight;
+      this.toolbarHeight = 60;
     });
   }
 

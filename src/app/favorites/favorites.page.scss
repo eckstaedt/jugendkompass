@@ -9,6 +9,14 @@ ion-toolbar {
   }
 }
 
+ion-content > div {
+  height: 100%;
+
+  > ion-grid {
+    padding-bottom: 3.5rem;
+  }
+}
+
 ion-thumbnail {
   height: 7rem;
   width: 100%;
