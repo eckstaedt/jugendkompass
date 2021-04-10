@@ -6,8 +6,8 @@ import { DataprotPage } from './dataprot.page';
 const routes: Routes = [
   {
     path: '',
-    component: DataprotPage
-  }
+    component: DataprotPage,
+  },
 ];
 
 @NgModule({

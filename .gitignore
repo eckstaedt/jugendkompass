@@ -8,6 +8,7 @@
 *.tmp.*
 *.sublime-project
 *.sublime-workspace
+*GoogleService-Info.plist
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
@@ -20,6 +21,9 @@ keystore_wdn
 private_key.pepk
 CertificateSigningRequest.certSigningRequest
 Certificates.p12
+package-lock.json
+
+cloud-functions/functions/src/serviceAccountKey.json
 
 /.idea
 /.ionic
@@ -32,3 +36,4 @@ Certificates.p12
 /node_modules
 /platforms
 /plugins
+/www

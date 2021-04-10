@@ -1,0 +1,14 @@
+[
+  {
+    "pkg": "@capacitor-community/fcm",
+    "classpath": "com.getcapacitor.community.fcm.FCMPlugin"
+  },
+  {
+    "pkg": "@capacitor-community/http",
+    "classpath": "com.getcapacitor.plugin.http.Http"
+  },
+  {
+    "pkg": "@capacitor/push-notifications",
+    "classpath": "com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin"
+  }
+]

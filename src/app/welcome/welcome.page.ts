@@ -13,38 +13,40 @@ const { PushNotifications } = Plugins;
   styleUrls: ['./welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
+  theme = 'system';
 
-  mode = 'bright';
+  constructor(private router: Router, private storage: Storage) {}
 
-  constructor(
-    private router: Router,
-    private storage: Storage
-  ) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   toHome() {
-    PushNotifications.requestPermission().then((res: any) => {
-      if (res.granted) {
-        PushNotifications.register().then(() => {
-          fcm
-            .subscribeTo({ topic: 'general' })
-            .then(() => console.log('subscribed successfully'))
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(JSON.stringify(err)));
-      }
-    });
+    // PushNotifications.requestPermissions().then((res: any) => {
+    //   if (res.granted) {
+    //     PushNotifications.register()
+    //       .then(() => {
+    //         fcm
+    //           .subscribeTo({ topic: 'general' })
+    //           .then(() => console.log('subscribed successfully'))
+    //           .catch(err => console.log(err));
+    //       })
+    //       .catch(err => console.log(JSON.stringify(err)));
+    //   }
+    // });
 
     this.storage.set('oldUser', true);
     this.router.navigateByUrl('/tabs', { replaceUrl: true });
   }
 
   onThemeChange() {
-    this.storage.set('darkMode', Boolean(this.mode === 'dark'));
-    document.body.classList.toggle('dark', Boolean(this.mode === 'dark'));
-    console.log(this.mode);
+    this.storage.set('theme', this.theme);
+    if (this.theme === 'default') {
+      const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+      var defaultTheme = prefersColor.matches;
+      document.body.classList.toggle('dark', defaultTheme);
+    } else if(this.theme === 'light') {
+      document.body.classList.toggle('dark', false);
+    } else if(this.theme === 'dark') {
+      document.body.classList.toggle('dark', true);
+    }
   }
-
 }

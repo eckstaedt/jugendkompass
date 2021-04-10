@@ -1,20 +1,30 @@
-.content {
-    img {
-        padding: 1rem;
-        border-radius: 7%;
-    }
-
-    .playButton {
-        --padding-start: .8rem;
-        --padding-end: .6rem;
-        margin-left: 1rem;
-    }
-
+ion-content {
+  --padding-bottom: 2.5rem;
+  ion-card {
+    --background: var(--ion-color-light);
+    box-shadow: none;
+    margin-top: 0.2rem;
     .title {
-        padding: 0 1rem;
+      font-size: 1.1rem;
+      height: 80%;
     }
-
-    .text {
-        padding: 0 1rem;
+    img {
+      height: 7rem;
+      object-fit: contain;
     }
+    p {
+      margin: 0 0 0.3rem 0;
+    }
+  }
+  .text {
+    padding: 0 1rem;
+  }
+  // .horizontalLine {
+  //     height: .3rem;
+  //     background-color: var(--ion-color-medium);
+  //     width: 80%;
+  //     margin: auto;
+  //     border-radius: .2rem;
+  //     margin-bottom: -1.4rem;
+  // }
 }

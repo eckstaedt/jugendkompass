@@ -8,8 +8,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-import { NgAddToCalendarModule } from '@trademe/ng-add-to-calendar';
 import { HttpClientModule } from '@angular/common/http';
 
 // import { AngularFireModule } from '@angular/fire';
@@ -18,7 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module';
+import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,18 +27,18 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    NgAddToCalendarModule,
+    FilterModalPageModule,
+    FeedbackModalPageModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // AngularFirestoreModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     PhotoViewer,
-    Deeplinks,
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

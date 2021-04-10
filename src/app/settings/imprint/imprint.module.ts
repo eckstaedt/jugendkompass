@@ -9,12 +9,7 @@ import { ImprintPageRoutingModule } from './imprint-routing.module';
 import { ImprintPage } from './imprint.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ImprintPageRoutingModule
-  ],
-  declarations: [ImprintPage]
+  imports: [CommonModule, FormsModule, IonicModule, ImprintPageRoutingModule],
+  declarations: [ImprintPage],
 })
 export class ImprintPageModule {}

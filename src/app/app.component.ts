@@ -1,101 +1,227 @@
 import { Component } from '@angular/core';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
-import { Platform, AlertController } from '@ionic/angular';
+import { Platform, AlertController, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { FCM } from '@capacitor-community/fcm';
+import { Plugins } from '@capacitor/core';
+import { Router } from '@angular/router';
+import { Utils } from './utils/utils';
+import { SESSION_FEEDBACK_THRESHOLD } from './utils/constants';
+
+const fcm = new FCM();
+const { App, PushNotifications, Network } = Plugins;
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
   observer: any;
   observable: any;
-  verifyKeyUrl = `https://us-central1-cloud-functions-467d8.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
+  verifyKeyUrl = `https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private storage: Storage,
-    private deeplinks: Deeplinks,
     private alertController: AlertController,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private loadingController: LoadingController,
+    private router: Router,
+    private utils: Utils
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.observable = new Observable((observer) => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.observable = new Observable(observer => {
         this.observer = observer;
         this.storage.get('isLoggedIn').then((isLoggedIn: boolean) => {
           if (isLoggedIn) {
             this.observer.next(true);
             observer.complete();
+            this.handleSessionCount();
           } else {
             this.showPasswordAlert();
             this.observer.next(false);
           }
         });
       });
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      this.setupDeepLinks();
-      this.storage.get('darkMode').then((darkMode: boolean) => {
-        document.body.classList.toggle('dark', darkMode);
-      });
+      this.registerEvents();
+      this.setupTheme();
+      this.setupNetworkCheck();
     });
+  }
+
+  async handleSessionCount() {
+    let count = await this.storage.get('sessions');
+    await this.storage.set('sessions', count ? count + 1 : 1);
+
+    if (count === SESSION_FEEDBACK_THRESHOLD) {
+      const hasFeedbackSend: boolean = await this.storage.get('hasFeedbackSend');
+      if (!hasFeedbackSend) {
+        const alert = await this.alertController.create({
+          header: 'Gefällt dir die App?',
+          message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten nehmen und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
+          buttons: [{
+            text: 'Ja gerne',
+            handler: () => {
+              this.utils.openFeedbackModal();
+            }
+          },
+          {
+            text: 'Nein danke'
+          }]
+        });
+
+        alert.present();
+      }
+    }
+  }
+
+  setupPush() {
+    PushNotifications.requestPermission().then((res: any) => {
+      if (res.granted) {
+        PushNotifications.register()
+          .then(() => {
+            fcm
+              .subscribeTo({ topic: 'general' })
+              .then(() => console.log('subscribed successfully'))
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(JSON.stringify(err)));
+      }
+    });
+  }
+
+  setupTheme() {
+    this.storage.get('theme').then((theme: string) => {
+      if (theme) {
+        if (theme === 'default') {
+          const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+          var defaultTheme = prefersColor.matches;
+          document.body.classList.toggle('dark', defaultTheme);
+        } else if (theme === 'light') {
+          document.body.classList.toggle('dark', false);
+        } else if (theme === 'dark') {
+          document.body.classList.toggle('dark', true);
+        }
+      } else {
+        const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
+        var defaultTheme = prefersColor.matches;
+        document.body.classList.toggle('dark', defaultTheme);
+        this.storage.set('theme', 'default');
+      }
+    });
+
+  }
+
+  toggleDarkTheme(shouldAdd: boolean): void {
+    document.body.classList.toggle('dark', shouldAdd);
   }
 
   public getObservable() {
     return this.observable;
   }
 
-  async showPasswordAlert() {
+  async showPasswordAlert(message?: string) {
     const alert = await this.alertController.create({
       backdropDismiss: false,
-      header: "App Passwort erforderlich",
+      header: 'App Passwort erforderlich',
       cssClass: 'password-alert',
-      inputs: [{
-        type: 'password',
-        placeholder: 'Passwort eingeben...',
-        name: 'password'
-      }],
-      buttons: [{
-        text: 'Okay',
-        handler: (event: any) => {
-          this.httpClient.get(`${this.verifyKeyUrl}/${event.password}`).toPromise()
-          .then(res => {
-            if (res) {
-              this.observer.next(true);
-              this.observer.complete();
-              this.storage.set('isLoggedIn', true);
-              alert.dismiss();
+      inputs: [
+        {
+          type: 'password',
+          placeholder: 'Passwort eingeben...',
+          name: 'password',
+        },
+      ],
+      message: message,
+      buttons: [
+        {
+          text: 'Okay',
+          handler: async (event: any) => {
+            if (!event.password) {
+              this.showPasswordAlert(
+                (message = 'Bitte gebe das Passwort ein.'),
+              );
+              return;
             }
-          })
-          .catch(() => {
-            alert.message = 'Bitte gebe das richtige Passwort ein.';
-          });
-          return false;
-        }
-      }]
+            const loading = await this.loadingController.create();
+            loading.present();
+            await this.httpClient
+              .get(`${this.verifyKeyUrl}/${event.password}`)
+              .toPromise()
+              .then(res => {
+                if (res) {
+                  this.observer.next(true);
+                  this.observer.complete();
+                  this.storage.set('isLoggedIn', true);
+                  alert.dismiss();
+                }
+              })
+              .catch(() => {
+                this.showPasswordAlert(
+                  (message = 'Bitte gebe das richtige Passwort ein.'),
+                );
+              });
+            loading.dismiss();
+          },
+        },
+      ],
     });
 
     await alert.present();
   }
 
-  setupDeepLinks() {
-    // TODO
-    // this.deeplinks.route({
-    //   '/tabs/posts/:id': PostPage
-    // }).subscribe((match: any) => {
-    //   console.log(match);
-    // });
+  registerEvents(): void {
+    this.platform.backButton.subscribeWithPriority(-1, () => {
+      if (this.router.url === '/tabs/posts' || this.router.url === '/tabs/favorites'
+        || this.router.url === '/tabs/settings' || this.router.url === '/') {
+        App.exitApp();
+      }
+    });
+  }
+
+  async setupNetworkCheck(){
+    let alert = await this.createNetworkAlert();
+    let handler = Network.addListener('networkStatusChange', async (status) => {
+      if (!status.connected){
+        alert.present();
+      }
+      else {
+        alert.dismiss();
+        alert = await this.createNetworkAlert();
+      }
+    });
+
+  }
+
+  async createNetworkAlert() {
+    let alert = await this.alertController.create({
+      backdropDismiss: false,
+      header: 'Verbindung verloren',
+      cssClass: 'password-alert',
+      buttons: [
+        {
+          text: 'Zu Favoriten',
+          handler: () => {
+            this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
+          }
+        },
+        {
+          text: 'Abbrechen'
+        }],
+    });
+    return alert;
   }
 }

@@ -1,25 +1,37 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { CalendarDate } from '../utils/interfaces';
+// import {
+//   AngularFirestore,
+//   AngularFirestoreCollection,
+// } from '@angular/fire/firestore';
+import { Storage } from '@ionic/storage';
+import { Observable, Subscriber } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirebaseService {
-  datesCollection: AngularFirestoreCollection<CalendarDate>;
+  subscriber: Subscriber<boolean>;
 
   constructor(
-    private db: AngularFirestore
-  ) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    this.datesCollection = this.db.collection<CalendarDate>(
-      'dates',
-      (ref: any) => ref.where('end', '>=', yesterday).orderBy('end')
-    );
+    // private db: AngularFirestore,
+    private storage: Storage
+  ) {}
+
+  async setAdmin() {
+    this.subscriber.next(true);
+    return await this.storage.set('isAdmin', true);
   }
 
-  getDates(): AngularFirestoreCollection<CalendarDate> {
-    return this.datesCollection;
+  async isAdmin(): Promise<boolean> {
+    const isAdmin: boolean = Boolean(await this.storage.get('isAdmin'));
+    this.subscriber.next(isAdmin);
+    return isAdmin;
+  }
+
+  subscribeToAdmin(): Observable<boolean> {
+    return new Observable((subscriber: Subscriber<boolean>) => {
+      this.subscriber = subscriber;
+      this.isAdmin();
+    });
   }
 }

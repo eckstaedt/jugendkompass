@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Howl } from 'howler';
 import { Observable } from 'rxjs';
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AudioService {
-
   private sound: any;
   private loadedSound: any;
   private observer: any;
   private title: string;
   private playing = false;
 
-  constructor() { }
+  constructor() {}
 
   onChange(): Observable<any> {
-    return new Observable((observer) => {
+    return new Observable(observer => {
       this.observer = observer;
     });
   }
@@ -24,7 +22,7 @@ export class AudioService {
   loadNewAudio(audioUrl: string, title: string) {
     this.loadedSound = new Howl({
       html5: true,
-      src: [audioUrl]
+      src: [audioUrl],
     });
     this.title = title;
   }
@@ -54,7 +52,7 @@ export class AudioService {
     this.playing = true;
     this.observer.next({
       title: this.title,
-      playing: true
+      playing: true,
     });
   }
 
@@ -63,13 +61,13 @@ export class AudioService {
       this.sound.pause();
       this.playing = false;
       this.observer.next({
-        playing: false
+        playing: false,
       });
     } else {
       this.sound.play();
       this.playing = true;
       this.observer.next({
-        playing: true
+        playing: true,
       });
     }
   }

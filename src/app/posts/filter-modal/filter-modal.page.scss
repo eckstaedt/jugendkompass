@@ -1,0 +1,45 @@
+ion-header {
+    ion-toolbar {
+        height: 8vh;
+        --background: transparent;
+        --border-style: none;
+    }
+}
+
+ion-row {
+    padding-bottom: 30px;
+
+    ion-col {
+        margin-bottom: 30px;
+        color: #fff;
+
+        &.selected {
+            transform: scale(1.4);
+            transition: transform .2s;
+        }
+    }
+}
+
+ion-footer {
+    max-width: 50rem;
+    margin: auto;
+    margin-top: 2rem;
+
+    ion-item {
+        --background: transparent;
+        color: #fff;
+    }
+
+    ion-toolbar {
+        --background: transparent;
+        --border-style: none;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    
+        ion-button {
+            ion-icon {
+                font-size: 50px;
+            }
+        }
+    }
+}

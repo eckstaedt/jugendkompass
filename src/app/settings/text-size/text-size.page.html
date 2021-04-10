@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/tabs/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Textgröße</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-divider position="floating">VORSCHAU</ion-item-divider>
+  <ion-textarea class="preview-text">
+    <p [style.font-size.px]="textSize">
+      800 v. Chr. wurde Israel von einer schrecklichen Heuschreckenplage
+      heimgesucht, die aufgrund der Sünden des Volkes kam. Der öffentliche
+      Gottesdienst konnte deshalb nicht mehr ausgeführt werden. Auch heute führt
+      die Sünde zu einem Stillstehen des geistlichen Lebens und hat negative
+      Auswirkungen auf unseren Alltag. Man muss Kraft anlegen, um zu Gott
+      zurückzukommen.
+      <br />
+      <br />
+      Gott spricht hier zu dem Volk, dass sie ihre Herzen, und nicht ihre
+      Kleider, zerreißen sollen. Somit fordert Gott hier zur wahren, inneren
+      Buße auf und will uns nicht strafen. Jeder hat von Gott die Chance
+      bekommen und kann mit einem aufrichtigen Herzen zu ihm zurückkehren. Man
+      muss Kraft anlegen, um zu Gott zurückzukommen.
+      <br />
+      <br />
+      Der Wendepunkt ist in diesem Abschnitt und besonders im 23. Vers zu
+      finden. Gott eiferte (zerstörte/richtete) für sein Land und hat nun
+      Mitleid mit seinem Volk. Auffällig ist hier die Symmetrie. Das Buch
+      beschreibt zuerst in 478 Wörtern Not, Verwüstung und das Gericht und
+      daraufhin, in 478 Wörtern, Freude, Überfluss und Erretung. Genau in der
+      Mitte des Buches steht der Vers 23 und das Wort Mitleid. Hierdurch werden
+      Jesu Worte, aus Mat. 5,18, bestätigt, die den Bestand des Wortes
+      zusichern.
+      <br />
+      <br />
+      Gott verheißt hier, dass er seinen Geist über alle Menschen ausgießen
+      wird. Somit offenbart Gott 800 Jahre vor Pfingsten das Kommen des Heiligen
+      Geistes. Wir selbst sind Zeugen dieser Verheißungen durch die Taufe des
+      Heiligen Geistes und können Gottes Treue so auch an uns klar sehen. Joel
+      schreibt auch von einem Mond, der in Blut verwandelt wird, was wir
+      ebenfalls in der Offenbarung lesen können.
+      <br />
+      <br />
+      Gott verheißt, dass er am Ende der Tage mit seinem Volk sein wird und
+      ihnen den Sieg geben wird, weil es aufrichtige Buße getan hat. Das Gericht
+      wird kommen und mit ihm auch der Tag mit den verheißenen Segnungen. Das
+      Buch Joel ist vor dem Exil, circa 835 v.Chr., zur Zeit Joas, entstanden.
+      Das Volk ist in der Zeit davor in Gleichgültigkeit gegenüber Gott
+      gefallen, weil es sich geweigert hat, Antalia, die Tochter Isebels,
+      abzusetzen. Joas wurde von den Priestern versteckt, um seinen Tod zu
+      verhindern, da verordnet wurde, alle Jungen zu töten. Der Prophet Obadja
+      wirtke 10 Jahre davor.
+    </p>
+  </ion-textarea>
+</ion-content>
+
+<ion-item>
+  <ion-range
+    (ionChange)="changeFontSize()"
+    [(ngModel)]="textSize"
+    style="padding: 0"
+    step="5"
+    min="10"
+    max="50"
+    snaps="true"
+  >
+    <ion-label style="font-size: 10px" size="small" slot="start">A</ion-label>
+    <ion-label style="font-size: 20px" slot="end">A</ion-label>
+  </ion-range>
+</ion-item>

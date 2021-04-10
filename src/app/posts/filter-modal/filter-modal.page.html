@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col
+      (click)="selectAusgabe('all')"
+      size="12"
+      class="ion-text-center"
+      [ngClass]="'all' === selectedAusgabe ? 'selected' : ''"
+    >
+      Alle Ausgaben
+    </ion-col>
+    <ion-col
+      (click)="selectAusgabe(a.id)"
+      size="12"
+      class="ion-text-center"
+      *ngFor="let a of ausgaben"
+      [ngClass]="a.id === selectedAusgabe ? 'selected' : ''"
+    >
+      {{ a.name }}
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer class="ion-text-center">
+  <ion-item lines="none">
+    <ion-label>Nur Ungelesene Artikel anzeigen</ion-label>
+    <ion-toggle [(ngModel)]="showOnlyUnread"></ion-toggle>
+  </ion-item>
+  <ion-toolbar>
+    <ion-button (click)="dismiss()" fill="clear" color="light">
+      <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+    </ion-button>
+    <ion-button (click)="apply()" fill="clear" color="light">
+      <ion-icon name="checkmark-circle" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

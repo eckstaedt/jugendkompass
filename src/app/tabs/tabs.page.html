@@ -1,12 +1,12 @@
 <ion-tabs>
   <ion-toolbar *ngIf="title !== ''">
-    <ion-buttons slot=start>
+    <ion-buttons slot="start">
       <ion-button expand="full" fill="clear" (click)="play()">
         <ion-icon *ngIf="!playing" name="play"></ion-icon>
         <ion-icon *ngIf="playing" name="pause"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <div style="height: 5.5rem;">
+    <div style="height: 5.5rem">
       <ion-button fill="clear" class="close" size="small" (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
@@ -15,19 +15,18 @@
         class="songRange"
         #range
         [(ngModel)]="progress"
-        max="100"
-        (ionFocus)="onRangeFocus()"
+        max="1000"
         (touchstart)="onRangeFocus()"
         (touchend)="seek()"
         (mousedown)="onRangeFocus()"
-        (mousup)="seek()"
+        (mouseup)="seek()"
       >
         <ion-label slot="start">{{ curTime }}</ion-label>
         <ion-label slot="end">{{ duration }}</ion-label>
       </ion-range>
     </div>
   </ion-toolbar>
-  <ion-tab-bar color="primary" slot="bottom">
+  <ion-tab-bar slot="bottom">
     <ion-tab-button tab="favorites">
       <ion-icon name="star"></ion-icon>
       <ion-label>Favoriten</ion-label>
@@ -37,8 +36,8 @@
       <ion-label>Artikel</ion-label>
     </ion-tab-button>
     <ion-tab-button tab="settings">
-      <ion-icon name="ellipsis-horizontal"></ion-icon>
-      <ion-label>Mehr</ion-label>
+      <ion-icon name="cog"></ion-icon>
+      <ion-label>Einstellungen</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
