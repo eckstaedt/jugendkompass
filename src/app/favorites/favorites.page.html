@@ -39,7 +39,7 @@
             <ion-grid>
               <ion-row>
                 <ion-col class="cardColumn" size="4">
-                  <img *ngIf="post.media_url" [src]="post.media_url" />
+                  <img *ngIf="post.postImg" [src]="post.postImg" />
                 </ion-col>
                 <ion-col class="cardColumn" size="8">
                   <div class="postHeader">
@@ -56,7 +56,7 @@
                       <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
                         {{ post.ausgabe.name}} | {{post.rubrik.name }}
                       </p>
-                      <p class="title" [innerHTML]="post.title.rendered"></p>
+                      <p class="title" [innerHTML]="post.title"></p>
                     </ion-card-header>
                   </div>
                   <div class="postFooter">

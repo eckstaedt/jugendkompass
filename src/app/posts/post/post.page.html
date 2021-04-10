@@ -35,7 +35,7 @@
       <ion-grid>
         <ion-row>
           <ion-col size="8">
-            <p class="title">{{ post.title.rendered }}</p>
+            <p class="title">{{ post.title }}</p>
             <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">
               <a (click)="openFilteredList(post.ausgabe)"
                 >{{ post.ausgabe.name }}</a
@@ -59,8 +59,8 @@
           <ion-col size="4">
             <img
               id="headerImage"
-              *ngIf="post.media_url || post.base64Img"
-              [src]="post.base64Img ? post.base64Img : post.media_url"
+              *ngIf="post.postImg || post.base64Img"
+              [src]="post.base64Img ? post.base64Img : post.postImg"
               [style.width]="'100%'"
             />
           </ion-col>
@@ -69,7 +69,7 @@
     </ion-card>
     <div
       class="text postContent"
-      [innerHTML]="post.content.rendered"
+      [innerHTML]="post.content"
       [style.font-size.px]="textSize"
     ></div>
   </div>

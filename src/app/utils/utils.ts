@@ -1,7 +1,6 @@
 import { ToastController, ModalController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
-import { WpService } from '../services/wp.service';
-import { Post, CategoryData, Category } from './interfaces';
+import { CategoryData, Category, FirebasePost } from './interfaces';
 import { FeedbackModalPage } from '../settings/feedback-modal/feedback-modal.page';
 
 @Injectable({
@@ -33,7 +32,7 @@ export class Utils {
   }
 
   getCategoryData(
-    post: Post,
+    post: FirebasePost,
     rubriken: Category[],
     ausgaben: Category[],
   ): CategoryData {
@@ -41,11 +40,11 @@ export class Utils {
     let rubrik: Category | undefined;
 
     for (const cat of post.categories) {
-      if (Boolean(rubriken.find((rub: any) => rub.id === cat))) {
-        rubrik = rubriken.find((rub: any) => rub.id === cat);
+      if (Boolean(rubriken.find((rub: any) => rub.id === cat.toString()))) {
+        rubrik = rubriken.find((rub: any) => rub.id === cat.toString());
       }
-      if (Boolean(ausgaben.find((aus: any) => aus.id === cat))) {
-        ausgabe = ausgaben.find((aus: any) => aus.id === cat);
+      if (Boolean(ausgaben.find((aus: any) => aus.id === cat.toString()))) {
+        ausgabe = ausgaben.find((aus: any) => aus.id === cat.toString());
       }
     }
 

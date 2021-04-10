@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { WpService } from 'src/app/services/wp.service';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import {
   Platform,
   ActionSheetController,
-  IonButton,
-  IonIcon,
   IonBackButton,
 } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
-import { Post, CategoryData, Category } from 'src/app/utils/interfaces';
+import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { Utils } from 'src/app/utils/utils';
 import { RouterService } from 'src/app/services/router.service';
 import { Plugins } from '@capacitor/core';
+import { FirebaseService } from 'src/app/services/firebase.service';
 const { Browser, Share } = Plugins;
 
 @Component({
@@ -26,18 +24,17 @@ const { Browser, Share } = Plugins;
 export class PostPage implements OnInit {
   @ViewChild('backButton') backButton: IonBackButton;
 
-  public post: Post;
+  public post: FirebasePost;
   public sound: any;
   public soundReady = false;
   public playing = false;
-  favoritePosts: Post[] = [];
+  favoritePosts: FirebasePost[] = [];
   defaultHref: string = '';
   public textSize = 15;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private wp: WpService,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
     private platform: Platform,
@@ -46,6 +43,7 @@ export class PostPage implements OnInit {
     private storage: Storage,
     private utils: Utils,
     private routerService: RouterService,
+    private firebaseService: FirebaseService
   ) {}
 
   ngOnInit() {
@@ -81,7 +79,7 @@ export class PostPage implements OnInit {
   }
 
   async loadData() {
-    await this.wp.getCategories();
+    await this.firebaseService.loadCategories();
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.storage.get('favoritePosts').then((res: any) => {
       if (res) this.favoritePosts = JSON.parse(res);
@@ -94,7 +92,7 @@ export class PostPage implements OnInit {
 
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
-      const localPost: Post = this.favoritePosts.find(
+      const localPost: FirebasePost = this.favoritePosts.find(
         post => post.id.toString() == id,
       );
       this.post = { ...localPost };
@@ -102,7 +100,7 @@ export class PostPage implements OnInit {
       if (this.post.base64Audio) {
         this.audioService.loadNewAudio(
           this.post.base64Audio,
-          this.post.title.rendered,
+          this.post.title,
         );
       }
 
@@ -116,41 +114,23 @@ export class PostPage implements OnInit {
         }
       }, 100);
     } else {
-      this.wp.getPostContent(id).then((res: any) => {
-        const categoryData: CategoryData = this.utils.getCategoryData(
-          res.data,
-          this.wp.getRubriken(),
-          this.wp.getAusgaben(),
+      this.post = await this.firebaseService.getPost(id);
+      if (this.post.audio) {
+        this.audioService.loadNewAudio(
+          this.post.audio,
+          this.post.title,
         );
-        this.post = {
-          ...res.data,
-          media_url: res.data._embedded['wp:featuredmedia']
-            ? res.data._embedded['wp:featuredmedia'][0].media_details.sizes
-                .medium.source_url
-            : undefined,
-          isFavorite: isFavorite,
-          rubrik: categoryData.rubrik,
-          ausgabe: categoryData.ausgabe,
-          views: res.data.views ? parseInt(res.data.views, 10) + 1 : 1,
-        };
+      }
 
-        if (this.post.audio) {
-          this.audioService.loadNewAudio(
-            this.post.audio,
-            this.post.title.rendered,
-          );
+      setTimeout(() => {
+        for (const image of Array.from(
+          document.querySelectorAll('.postContent img'),
+        )) {
+          (image as any).onclick = () => {
+            this.photoViewer.show((image as any).src);
+          };
         }
-
-        setTimeout(() => {
-          for (const image of Array.from(
-            document.querySelectorAll('.postContent img'),
-          )) {
-            (image as any).onclick = () => {
-              this.photoViewer.show((image as any).src);
-            };
-          }
-        }, 100);
-      });
+      }, 100);
     }
   }
 
@@ -162,7 +142,7 @@ export class PostPage implements OnInit {
           if (this.platform.is('capacitor')) {
             await Share.share({
               title: 'Artikel teilen',
-              text: this.post.title.rendered,
+              text: this.post.title,
               url: this.post.link,
               dialogTitle: 'Artikel teilen',
             });
@@ -211,9 +191,9 @@ export class PostPage implements OnInit {
   async setPostFavorite() {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
-      if (this.post.media_url && !this.post.media_url.startsWith('data')) {
-        await this.wp
-          .getBase64FromUrl(this.post.media_url)
+      if (this.post.postImg && !this.post.postImg.startsWith('data')) {
+        await this.firebaseService
+          .getBase64FromUrl(this.post.postImg)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -221,8 +201,8 @@ export class PostPage implements OnInit {
       )) {
         const imageSrc: string = (image as HTMLImageElement).src;
         if (imageSrc.startsWith('data')) {
-          const base64: string = await this.wp.getBase64FromUrl(imageSrc);
-          this.post.content.rendered = this.post.content.rendered.replace(
+          const base64: string = await this.firebaseService.getBase64FromUrl(imageSrc);
+          this.post.content = this.post.content.replace(
             imageSrc,
             base64,
           );

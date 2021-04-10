@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSelect, IonContent, DomController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AppComponent } from 'src/app/app.component';
-import { Post } from '../utils/interfaces';
+import { FirebasePost } from '../utils/interfaces';
 
 @Component({
   selector: 'app-favorites',
@@ -13,10 +13,10 @@ export class FavoritesPage implements OnInit {
   @ViewChild('select') select: IonSelect;
   @ViewChild('content') content: IonContent;
 
-  posts: Post[] = [];
-  allPosts: Post[] = [];
-  filteredPosts: Post[] = [];
-  favoritePosts: Post[] = [];
+  posts: FirebasePost[] = [];
+  allPosts: FirebasePost[] = [];
+  filteredPosts: FirebasePost[] = [];
+  favoritePosts: FirebasePost[] = [];
   searchTerm = '';
   rubriken = [];
   currentRubrik = 'all';

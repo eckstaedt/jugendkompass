@@ -11,67 +11,31 @@ export interface CalendarDate {
   long?: number;
 }
 
-//kein Plan, wofür wir die ganzen Properties in Post brauchen...
-export interface Post {
-  articleWasRead?: boolean;
-  audio?: any;
-  author?: any;
-  base64Img?: any;
-  base64Audio?: any;
-  categories?: any[];
-  category?: any;
-  comment_status?: string;
-  content: {
-    protected: boolean;
-    rendered: string;
-  };
-  date?: string;
-  date_gmt?: string;
-  excerpt?: {
-    protected: boolean;
-    rendered: string;
-  };
-  featured_media?: number;
-  format?: string;
-  guid?: { rendered: string };
-  id?: number;
-  isFavorite?: boolean;
-  link?: string;
-  media_url?: string;
-  meta?: any[];
-  modified?: string;
-  modified_gmt?: string;
-  pdf?: string;
-  ping_status?: string;
-  readingTime: number;
-  rubrik?: Category;
+export enum PostStatus {
+  PUBLISH = 'publish'
+}
+
+export interface FirebasePost {
+  content: string;
+  categories: number[];
+  date: string;
+  excerpt: string;
+  id: string;
+  link: string;
+  modified: string;
+  postImg: string;
+  status: PostStatus;
+  title: string;
+  type: string;
+  views: number;
   ausgabe?: Category;
-  slug?: string;
-  status?: string;
-  sticky?: boolean;
-  tags?: any[];
-  template?: string;
-  title: { rendered: string };
-  type?: string;
-  views?: number;
-  _embedded?: {
-    'author': any[];
-    'wp:featuredmedia': any[];
-    'wp:term': any[];
-  };
-  _links?: {
-    'about': any[];
-    'author': any[];
-    'collection': any[];
-    'curies': any[];
-    'predecessor-version': any[];
-    'replies': any[];
-    'self': any[];
-    'version-history': any[];
-    'wp:attachment': any[];
-    'wp:featuredmedia': any[];
-    'wp:term': any[];
-  };
+  rubrik?: Category;
+  base64Audio?: string;
+  audio?: string;
+  pdf?: string;
+  isFavorite?: boolean;
+  base64Img?: string;
+  articleWasRead: boolean;
 }
 
 export interface Category {
@@ -84,8 +48,8 @@ export interface Category {
   parent: number;
   slug: string;
   taxonomy: string;
-  _embedded: any;
-  _links: any;
+  _embedded?: any;
+  _links?: any;
 }
 
 export interface CategoryData {
