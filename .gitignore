@@ -25,6 +25,8 @@ package-lock.json
 
 cloud-functions/functions/src/serviceAccountKey.json
 
+src/environments
+
 /.idea
 /.ionic
 /.sass-cache
