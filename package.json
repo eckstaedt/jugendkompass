@@ -12,6 +12,7 @@
     "openIos": "ng build && npx cap copy && npx cap sync && npx cap open ios",
     "openAndProd": "ng build --prod && npx cap copy && npx cap sync && npx cap open android",
     "openAnd": "ng build && npx cap copy && npx cap sync && npx cap open android",
+    "deployHosting": "ng build && firebase deploy --only hosting --project jugendkompasstest",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
