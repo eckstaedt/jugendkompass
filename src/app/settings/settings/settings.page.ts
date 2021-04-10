@@ -15,7 +15,7 @@ const { Share } = Plugins;
 export class SettingsPage implements OnInit {
   public darkMode = false;
   public version: string = version;
-  public theme: string = 'system';
+  public theme: string = 'default';
   public isAdmin: boolean = false;
 
   constructor(

@@ -13,7 +13,7 @@ const { PushNotifications } = Plugins;
   styleUrls: ['./welcome.page.scss'],
 })
 export class WelcomePage implements OnInit {
-  theme = 'system';
+  theme = 'default';
 
   constructor(private router: Router, private storage: Storage) {}
 
