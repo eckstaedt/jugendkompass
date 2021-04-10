@@ -10,9 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 
-// import { AngularFireModule } from '@angular/fire';
-// import { AngularFirestoreModule } from '@angular/fire/firestore';
-// import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
@@ -29,8 +29,8 @@ import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-moda
     HttpClientModule,
     FilterModalPageModule,
     FeedbackModalPageModule,
-    // AngularFireModule.initializeApp(environment.firebase),
-    // AngularFirestoreModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [

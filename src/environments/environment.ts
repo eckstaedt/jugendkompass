@@ -7,6 +7,14 @@ export const environment = {
   url: 'https://eckstaedt-webdesign.com/wp-json/wp/v2/',
   dataProdPageId: '3',
   imprintPageId: '164',
+  firebase: {
+    apiKey: "AIzaSyBzAKk5KWeMXaT3waSqidnCgjTjD8uC0qA",
+    authDomain: "jugendkompasstest.firebaseapp.com",
+    projectId: "jugendkompasstest",
+    storageBucket: "jugendkompasstest.appspot.com",
+    messagingSenderId: "620221103032",
+    appId: "1:620221103032:web:5c3f437e5126ab018ced4d"
+  }
   // firebase: {}
 };
 

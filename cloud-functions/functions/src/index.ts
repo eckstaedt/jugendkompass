@@ -217,7 +217,7 @@ app.delete('/oneTimeKeys', async (req: any, res: any) => {
   });
 });
 
-exports.syncWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
   const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   let posts: any[];
 
@@ -230,7 +230,6 @@ exports.syncWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Eur
   } catch (error) {
     return `Could not load posts from Wordpress (${url}) ${error}`;
   }
-
 
   const batch = db.batch();
 
@@ -248,13 +247,51 @@ exports.syncWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Eur
       excerpt: post.excerpt.rendered,
       categories: post.categories,
       audio: post.audio,
-      views: post.views,
+      views: parseInt(post.views, 10),
       postImg: post._embedded['wp:featuredmedia']
         ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
         : ""
+    }, {
+      merge: true
     });
   }
 
   await batch.commit();
   return "Successfully updated posts";
+});
+
+exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+  const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  let categories: any[];
+
+  try {
+    const options: any = {
+      uri: `${url}categories?_embed&per_page=100`,
+    };
+    const res: any = await request.get(options);
+    categories = JSON.parse(res);
+  } catch (error) {
+    return `Could not load categories from Wordpress (${url}) ${error}`;
+  }
+
+  const batch = db.batch();
+
+  for (const category of categories) {
+    const postRef = db.collection("categories").doc(`${category.id}`);
+    batch.set(postRef, {
+      id: `${category.id}`,
+      content: category.name,
+      link: category.link,
+      parent: category.parent,
+      count: category.count,
+      description: category.description,
+      name: category.name,
+      taxonomy: category.taxonomy
+    }, { 
+      merge: true
+    });
+  }
+
+  await batch.commit();
+  return "Successfully updated categories";
 });

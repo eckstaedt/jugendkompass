@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { WpService } from 'src/app/services/wp.service';
 import {
   IonSelect,
   DomController,
@@ -10,7 +9,7 @@ import {
 import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
-import { Post, Category, CategoryData } from 'src/app/utils/interfaces';
+import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
 import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
@@ -26,9 +25,9 @@ export class PostListPage implements OnInit {
   @ViewChild('content') content: IonContent;
   @ViewChild('searchbar') searchbar: any;
 
-  posts: Post[] = [];
-  allPosts: Post[] = [];
-  filteredPosts: Post[] = [];
+  posts: FirebasePost[] = [];
+  allPosts: FirebasePost[] = [];
+  filteredPosts: FirebasePost[] = [];
   rubriken = [];
   page = 1;
   count = null;
@@ -42,7 +41,6 @@ export class PostListPage implements OnInit {
   areFiltersActive: boolean = false;
 
   constructor(
-    private wp: WpService,
     private utils: Utils,
     private appComponent: AppComponent,
     private storage: Storage,
@@ -91,9 +89,9 @@ export class PostListPage implements OnInit {
   }
 
   async loadData() {
-    await this.wp.getCategories();
-    this.ausgaben = this.wp.getAusgaben();
-    this.rubriken = this.wp.getRubriken();
+    await this.firebaseService.loadCategories();
+    this.ausgaben = this.firebaseService.getAusgaben();
+    this.rubriken = this.firebaseService.getRubrics();
     this.getAllPosts();
   }
 
@@ -136,7 +134,7 @@ export class PostListPage implements OnInit {
       );
     }
     if (this.showOnlyUnread) {
-      posts = posts.filter((post: Post) => !post.articleWasRead);
+      posts = posts.filter((post: FirebasePost) => !post.articleWasRead);
     }
     this.posts = posts;
     this.filteredPosts = this.posts;
@@ -175,34 +173,10 @@ export class PostListPage implements OnInit {
     this.storage.get('readArticles').then((res: any) => {
       if (res) this.readArticles = JSON.parse(res);
     });
-    this.wp.getAllPosts().then((res: any) => {
-      this.allPosts = this.getEditedPosts(res.data);
+    this.firebaseService.getPosts().subscribe((posts: FirebasePost[]) => {
+      this.allPosts = posts;
       this.filter();
       this.filteredPosts = this.allPosts;
-    });
-  }
-
-  getEditedPosts(posts: Post[]): Post[] {
-    return posts.map((post: any) => {
-      const categroyData: CategoryData = this.utils.getCategoryData(
-        post,
-        this.rubriken,
-        this.ausgaben,
-      );
-      let articleWasRead: boolean = false;
-      if (this.readArticles) {
-        articleWasRead = this.readArticles.includes(post.id);
-      }
-      return {
-        ...post,
-        media_url: post._embedded['wp:featuredmedia']
-          ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
-              .source_url
-          : undefined,
-        rubrik: categroyData.rubrik,
-        ausgabe: categroyData.ausgabe,
-        articleWasRead: articleWasRead,
-      };
     });
   }
 
