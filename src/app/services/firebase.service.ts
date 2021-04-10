@@ -55,7 +55,15 @@ export class FirebaseService {
           (cat: Category) =>
             cat.parent.toString() === ausgabenCategory.id && cat.count !== 0,
         )
-        .sort((a: Category, b: Category) => b.name > a.name)
+        .sort((a: Category, b: Category) => {
+          if ( a.name < b.name ) {
+            return -1;
+          }
+          if ( a.name > b.name ) {
+            return 1;
+          }
+          return 0;
+        })
         .reverse();
       this.rubrics = categories
         .filter(
