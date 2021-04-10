@@ -60,7 +60,7 @@
             <img
               id="headerImage"
               *ngIf="post.postImg || post.base64Img"
-              [src]="post.base64Img ? post.base64Img : post.postImg"
+              [src]="post.base64Img ? post.base64Img : post.postImg.source_url"
               [style.width]="'100%'"
             />
           </ion-col>

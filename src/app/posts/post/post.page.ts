@@ -191,7 +191,7 @@ export class PostPage implements OnInit {
   async setPostFavorite() {
     if (!this.post.isFavorite) {
       this.post.isFavorite = true;
-      if (this.post.postImg && !this.post.postImg.startsWith('data')) {
+      if (this.post.postImg && !this.post.postImg.source_url.startsWith('data')) {
         await this.firebaseService
           .getBase64FromUrl(this.post.postImg)
           .then((res: string) => (this.post.base64Img = res));

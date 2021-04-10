@@ -23,7 +23,9 @@ export interface FirebasePost {
   id: string;
   link: string;
   modified: string;
-  postImg: string;
+  postImg: {
+    source_url: string;
+  };
   status: PostStatus;
   title: string;
   type: string;
