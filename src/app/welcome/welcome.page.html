@@ -1,20 +1,21 @@
 <ion-content fullscreen class="ion-padding" scroll-y="false">
   <ion-slides pager="true">
     <ion-slide>
-      <ion-icon class="icon" name="home-outline"></ion-icon>
-      <h2>Herzlich Willkommen</h2>
-      <p>Schön das du es zum Jugendkompass geschafft hast.</p>
-    </ion-slide>
-    <ion-slide>
       <ion-img src="../../../assets/App_Anleitung.png"></ion-img>
+      <h2>Herzlich Willkommen</h2>
+      <p>Schön das du es zum Jugendkompass geschafft hast. Sobald eine neue Ausgabe der Zeitschrift herausgegeben wird, erfährst du
+        hier davon und kannst eine Auswahl an Artikeln direkt in der App lesen.</p>
+    </ion-slide>
+    <!-- <ion-slide>
+      <ion-img src="../../../assets/App Anleitung2.png"></ion-img>
       <h2>Bleib auf dem Laufenden</h2>
       <p>
         Sobald eine neue Ausgabe der Zeitschrift herausgegeben wird, erfährst du
         hier davon und kannst eine Auswahl an Artikeln direkt in der App lesen.
       </p>
-    </ion-slide>
+    </ion-slide> -->
     <ion-slide>
-      <ion-icon class="icon" name="brush-outline"></ion-icon>
+      <ion-img src="../../../assets/App Anleitung3.png"></ion-img>
       <h2>Wähle ein Theme aus</h2>
 
       <ion-radio-group (ionChange)="onThemeChange()" [(ngModel)]="theme">
@@ -33,7 +34,7 @@
       </ion-radio-group>
     </ion-slide>
     <ion-slide>
-      <ion-icon class="icon" name="mail-unread-outline"></ion-icon>
+      <ion-img src="../../../assets/App Anleitung2.png"></ion-img>
       <h2>Push</h2>
       <p>
         Damit du nicht jeden Tag nach Updates schauen musst erlaube Push
