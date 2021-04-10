@@ -5,9 +5,10 @@ ion-slides {
     display: block;
     margin-top: 2rem;
 
-    .icon {
-      font-size: 17rem;
-      color: var(--ion-color-primary);
+    ion-img {
+      max-width: 30rem;
+      margin: auto;
+      padding: 0 2rem;
     }
   }
 }
