@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Category } from 'src/app/utils/interfaces';
-import { WpService } from 'src/app/services/wp.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-filter-modal',
@@ -17,12 +17,11 @@ export class FilterModalPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    private wpService: WpService
+    private firebaseService: FirebaseService
   ) { }
 
-  async ngOnInit() {
-    await this.wpService.getCategories();
-    this.ausgaben = this.wpService.getAusgaben();
+  ngOnInit() {
+    this.ausgaben = this.firebaseService.getAusgaben();
     this.selectedAusgabe = this.ausgabe;
   }
 

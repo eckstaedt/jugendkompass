@@ -20,6 +20,7 @@ export class FirebaseService {
   readArticles: FirebasePost[] = [];
   posts: FirebasePost[];
   categories: Category[];
+  legalPages: any[];
 
   constructor(
     private db: AngularFirestore,
@@ -117,6 +118,24 @@ export class FirebaseService {
         articleWasRead: articleWasRead,
       };
     });
+  }
+
+  async loadLegalPages() {
+    if (this.legalPages) {
+      return;
+    }
+    this.legalPages = await this.db.collection<any[]>('pages')
+      .valueChanges().pipe(take(1)).toPromise();
+  }
+
+  async getImprint() {
+    await this.loadLegalPages();
+    return this.legalPages.find((page: any) => page.id === 'imprint');
+  }
+
+  async getDataProt() {
+    await this.loadLegalPages();
+    return this.legalPages.find((page: any) => page.id === 'dataprot');
   }
 
   async setAdmin() {
