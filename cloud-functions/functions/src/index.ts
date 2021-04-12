@@ -66,6 +66,7 @@ app.get('/verifyOneTimeKey/:keyValue', async (req: any, res: any) => {
         clientKey.data.remainingKeyCount -= 1;
         await db.collection(oneTimeKeyCollection).doc(clientKey.id).update({
           remainingKeyCount: clientKey.data.remainingKeyCount,
+          usedKeys: admin.firestore.FieldValue.increment(1)
         });
         res.status(200).json(clientKey);
       }
@@ -247,7 +248,7 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
       excerpt: post.excerpt.rendered,
       categories: post.categories,
       audio: post.audio,
-      views: parseInt(post.views, 10),
+      wpViews: parseInt(post.views, 10),
       readingTime: post.readingTime,
       postImg: post._embedded['wp:featuredmedia']
         ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
