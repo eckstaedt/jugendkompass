@@ -195,11 +195,12 @@ export class AppComponent {
   async setupNetworkCheck(){
     let alert = await this.createNetworkAlert();
     Network.addListener('networkStatusChange', async (status) => {
-      if (!status.connected){
+      if (!status.connected && this.router.url !== '/tabs/favorites') {
         alert.present();
-      }
-      else {
-        alert.dismiss();
+      } else {
+        if (alert) {
+          alert.dismiss();
+        }
         alert = await this.createNetworkAlert();
       }
     });
@@ -209,11 +210,11 @@ export class AppComponent {
   async createNetworkAlert() {
     let alert = await this.alertController.create({
       backdropDismiss: false,
-      header: 'Verbindung verloren',
+      header: 'Keine Internetverbindung vorhanden',
       cssClass: 'password-alert',
       buttons: [
         {
-          text: 'Zu Favoriten',
+          text: 'Zu meinen Favoriten',
           handler: () => {
             this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
           }

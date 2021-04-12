@@ -25,12 +25,12 @@
     [(ngModel)]="searchTerm"
     (ionInput)="onSearch($event)"
     [disabled]="!allPosts.length"
-    animated
     placeholder="Artikel suchen..."
+    *ngIf="online"
   >
   </ion-searchbar>
 
-  <ion-segment *ngIf="rubriken.length" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
+  <ion-segment *ngIf="rubriken.length && online" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
     <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
     <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
       <div class="placeholder"></div>
@@ -98,7 +98,7 @@
     </ion-grid>
   </div>
 
-  <div *ngIf="!posts.length && !allPosts.length">
+  <div *ngIf="!posts.length && !allPosts.length && online">
     <ion-grid>
       <ion-row>
         <ion-col
@@ -163,7 +163,7 @@
     </ion-grid>
   </div>
 
-  <div class="noResultContainer" *ngIf="!posts.length && allPosts.length">
+  <div class="noResultContainer" *ngIf="(!posts.length && allPosts.length && online) || !online">
     <ion-grid>
       <ion-row class="noItemsIcon">
         <ion-col>
@@ -171,7 +171,8 @@
         </ion-col>
       </ion-row>
       <ion-row class="noItemsLabel">
-        <ion-label color="medium">Keine Artikel gefunden</ion-label>
+        <ion-label *ngIf="!posts.length && allPosts.length && online" color="medium">Keine Artikel gefunden</ion-label>
+        <ion-label *ngIf="!online" color="medium">Keine Internetverbindung vorhanden</ion-label>
       </ion-row>
     </ion-grid>
   </div>

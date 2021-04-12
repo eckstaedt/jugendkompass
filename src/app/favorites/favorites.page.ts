@@ -128,13 +128,13 @@ export class FavoritesPage implements OnInit {
       return this.filteredPosts.filter((post: any) => {
         if (post.rubrik) {
           if (
-            post.title.rendered
+            post.title
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1 ||
             post.rubrik.name
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered
+            post.excerpt
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1
           ) {
@@ -143,10 +143,10 @@ export class FavoritesPage implements OnInit {
           return false;
         } else {
           if (
-            post.title.rendered
+            post.title
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt.rendered
+            post.excerpt
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1
           ) {

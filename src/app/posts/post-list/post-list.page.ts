@@ -14,6 +14,9 @@ import { FilterModalPage } from '../filter-modal/filter-modal.page';
 import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
+import { Plugins } from '@capacitor/core';
+const { Network } = Plugins;
+
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.page.html',
@@ -38,6 +41,7 @@ export class PostListPage implements OnInit {
   readArticles: FirebasePost[] = [];
   showOnlyUnread: boolean = false;
   areFiltersActive: boolean = false;
+  online: boolean = true;
 
   constructor(
     private appComponent: AppComponent,
@@ -53,6 +57,19 @@ export class PostListPage implements OnInit {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.loadData();
+        Network.addListener('networkStatusChange', async (status) => {
+          if (status.connected) {
+            this.online = true;
+            if (!this.allPosts.length) {
+              this.loadData();
+            }
+          } else {
+            this.online = false;
+            this.allPosts = [];
+            this.filteredPosts = [];
+            this.posts = [];
+          }
+        });
       }
     });
 
@@ -144,7 +161,7 @@ export class PostListPage implements OnInit {
     } else {
       return this.filteredPosts.filter((post: any) => {
         if (
-          post.title.rendered
+          post.title
             .toLowerCase()
             .indexOf(this.searchTerm.toLowerCase()) > -1 ||
           (post.rubrik &&
@@ -155,7 +172,7 @@ export class PostListPage implements OnInit {
             post.ausgabe.name
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1) ||
-          post.excerpt.rendered
+          post.excerpt
             .toLowerCase()
             .indexOf(this.searchTerm.toLowerCase()) > -1
         ) {
