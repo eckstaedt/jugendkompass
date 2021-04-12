@@ -1,1 +1,1 @@
-export const SESSION_FEEDBACK_THRESHOLD = 3;
+export const SESSION_FEEDBACK_THRESHOLD = 2;

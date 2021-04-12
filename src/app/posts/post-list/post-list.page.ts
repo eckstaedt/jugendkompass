@@ -6,7 +6,6 @@ import {
   ModalController,
   ToastController,
 } from '@ionic/angular';
-import { Utils } from 'src/app/utils/utils';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
@@ -36,12 +35,11 @@ export class PostListPage implements OnInit {
   currentRubrik: string = 'all';
   ausgaben: Category[] = [];
   currentAusgabe: string = 'all';
-  readArticles: Category[] = [];
+  readArticles: FirebasePost[] = [];
   showOnlyUnread: boolean = false;
   areFiltersActive: boolean = false;
 
   constructor(
-    private utils: Utils,
     private appComponent: AppComponent,
     private storage: Storage,
     private domCtrl: DomController,
@@ -92,7 +90,7 @@ export class PostListPage implements OnInit {
     await this.firebaseService.loadCategories();
     this.ausgaben = this.firebaseService.getAusgaben();
     this.rubriken = this.firebaseService.getRubrics();
-    this.getAllPosts();
+    await this.getAllPosts();
   }
 
   async onSearch(event: any) {
@@ -168,16 +166,41 @@ export class PostListPage implements OnInit {
     }
   }
 
-  getAllPosts() {
+  async getAllPosts() {
     // get local storage for already read articles
-    this.storage.get('readArticles').then((res: any) => {
-      if (res) this.readArticles = JSON.parse(res);
-    });
+    const readArticles: string | undefined = await this.storage.get('readArticles');
+    if (readArticles) {
+      this.readArticles = JSON.parse(readArticles);
+    }
     this.firebaseService.getPosts().subscribe((posts: FirebasePost[]) => {
       this.allPosts = posts;
+      this.updateFavoritePosts();
       this.filter();
       this.filteredPosts = this.allPosts;
     });
+  }
+
+  async updateFavoritePosts() {
+    const res: string | undefined = await this.storage.get('favoritePosts');
+    if (res) {
+      const favoritePosts: FirebasePost[] = JSON.parse(res);
+      if (favoritePosts && favoritePosts.length) {
+        const updatedArticles: FirebasePost[] = [];
+        for (const article of favoritePosts) {
+          if (article && article.id) {
+          const updatedArticle = this.allPosts.find((a: FirebasePost) => article.id === a.id);
+          if (updatedArticle) {
+            updatedArticles.push({
+              ...updatedArticle,
+              base64Img: article.base64Img,
+              base64Audio: article.base64Audio
+            });
+          }
+          }
+        }
+        this.storage.set('favoritePosts', JSON.stringify(updatedArticles));
+      }
+    }
   }
 
   // set local storage when a post is clicked

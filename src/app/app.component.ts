@@ -41,6 +41,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.handleSessionCount();
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.observable = new Observable(observer => {
@@ -49,7 +50,6 @@ export class AppComponent {
           if (isLoggedIn) {
             this.observer.next(true);
             observer.complete();
-            this.handleSessionCount();
           } else {
             this.showPasswordAlert();
             this.observer.next(false);
@@ -71,7 +71,7 @@ export class AppComponent {
       if (!hasFeedbackSend) {
         const alert = await this.alertController.create({
           header: 'Gefällt dir die App?',
-          message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten nehmen und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
+          message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
           buttons: [{
             text: 'Ja gerne',
             handler: () => {
@@ -194,7 +194,7 @@ export class AppComponent {
 
   async setupNetworkCheck(){
     let alert = await this.createNetworkAlert();
-    let handler = Network.addListener('networkStatusChange', async (status) => {
+    Network.addListener('networkStatusChange', async (status) => {
       if (!status.connected){
         alert.present();
       }
