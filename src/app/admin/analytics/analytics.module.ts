@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { AnalyticsPageRoutingModule } from './analytics-routing.module';
 
 import { AnalyticsPage } from './analytics.page';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AnalyticsPageRoutingModule
+    ChartsModule,
+    AnalyticsPageRoutingModule,
   ],
   declarations: [AnalyticsPage]
 })

@@ -18,6 +18,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module';
 import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-moda
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     IonicStorageModule.forRoot(),
+    ChartsModule,
   ],
   providers: [
     PhotoViewer,

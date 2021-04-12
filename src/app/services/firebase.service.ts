@@ -55,7 +55,9 @@ export class FirebaseService {
     }, { merge: true });
   }
 
-  
+  getAnalyticsOverview() {
+    return this.db.doc('analytics/overall').valueChanges();
+  }
 
   async loadCategories() {
     if (this.ausgaben && this.rubrics) {
@@ -187,7 +189,9 @@ export class FirebaseService {
 
   async isAdmin(): Promise<boolean> {
     const isAdmin: boolean = Boolean(await this.storage.get('isAdmin'));
-    this.subscriber.next(isAdmin);
+    if (this.subscriber) {
+      this.subscriber.next(isAdmin);
+    }
     return isAdmin;
   }
 
