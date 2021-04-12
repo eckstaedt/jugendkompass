@@ -15,6 +15,7 @@ import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animatio
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 import { Plugins } from '@capacitor/core';
+import { AnalyticsField } from 'src/app/utils/constants';
 const { Network } = Plugins;
 
 @Component({
@@ -72,18 +73,6 @@ export class PostListPage implements OnInit {
         });
       }
     });
-
-    this.getInitialFilterData();
-  }
-
-  async getInitialFilterData(): Promise<void> {
-    const filterObject = await this.storage.get("filter");
-    if (filterObject) {
-      this.currentAusgabe = filterObject.ausgabe;
-      this.currentRubrik = filterObject.rubrik;
-      this.showOnlyUnread = filterObject.showOnlyUnread;
-      this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
-    }
   }
 
   ionViewWillEnter() {
@@ -131,6 +120,11 @@ export class PostListPage implements OnInit {
     }
 
     this.posts = this.search();
+  }
+
+  onCategoryPressed() {
+    this.filter();
+    this.firebaseService.incrementAnalyticsField(AnalyticsField.CATEGORY_CHANGED);
   }
 
   filter() {
@@ -251,11 +245,6 @@ export class PostListPage implements OnInit {
       this.showOnlyUnread = filterObject.showOnlyUnread;
       this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
       this.filter();
-      await this.storage.set("filter", {
-        showOnlyUnread: filterObject.showOnlyUnread,
-        rubrik: this.currentRubrik,
-        ausgabe: filterObject.ausgabe
-      });
     }
   }
 }

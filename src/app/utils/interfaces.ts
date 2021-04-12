@@ -29,6 +29,7 @@ export interface FirebasePost {
   status: PostStatus;
   title: string;
   type: string;
+  wpViews: number;
   views: number;
   ausgabe?: Category;
   rubrik?: Category;
@@ -38,6 +39,7 @@ export interface FirebasePost {
   isFavorite?: boolean;
   base64Img?: string;
   articleWasRead: boolean;
+  audioPlays?: number;
 }
 
 export interface Category {

@@ -52,6 +52,11 @@ const routes: Routes = [
         canLoad: [AdminGuardService]
       },
       {
+        path: 'settings/analytics',
+        loadChildren: () => import('./../admin/analytics/analytics.module').then( m => m.AnalyticsPageModule),
+        canLoad: [AdminGuardService]
+      },
+      {
         path: 'favorites',
         loadChildren: () =>
           import('../favorites/favorites.module').then(

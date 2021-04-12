@@ -58,8 +58,17 @@
       routerDirection="forward"
       routerLink="/tabs/settings/feedback-summary"
     >
-      <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+      <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
       <ion-label>Feedbackauswertung</ion-label>
+    </ion-item>
+    <ion-item
+      *ngIf="isAdmin"
+      detail
+      routerDirection="forward"
+      routerLink="/tabs/settings/analytics"
+    >
+      <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+      <ion-label>Analysenauswertung</ion-label>
     </ion-item>
     <ion-item>
       <ion-icon slot="start" name="information-outline"></ion-icon>

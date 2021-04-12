@@ -8,6 +8,9 @@ import { take } from 'rxjs/operators';
 import { Category, FirebasePost, CategoryData } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
 import { HttpClient } from '@angular/common/http';
+import { firestore } from 'firebase/app';
+import * as firebase from 'firebase/app';
+import { AnalyticsField } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +40,22 @@ export class FirebaseService {
       this.readArticles = JSON.parse(readArticles);
     }
   }
+
+  incrementAnalyticsField(field: AnalyticsField) {
+    const now: Date = new Date();
+    const increment = firestore.FieldValue.increment(1);
+    const analyticsData: any = firestore.FieldValue.arrayUnion({
+      timestamp: firebase.firestore.Timestamp.fromDate(now),
+      platform: this.utils.getPlatform()
+    });
+
+    this.db.doc('analytics/overall').set({
+      [`${field}Count`]: increment,
+      [`${field}Data`]: analyticsData
+    }, { merge: true });
+  }
+
+  
 
   async loadCategories() {
     if (this.ausgaben && this.rubrics) {
@@ -108,6 +127,20 @@ export class FirebaseService {
     });
   }
 
+  incrementPostViews(id: string) {
+    const increment = firestore.FieldValue.increment(1);
+    this.db.doc(`posts/${id}`).update({
+      views: increment
+    });
+  }
+
+  incrementAudioPlays(id: string) {
+    const increment = firestore.FieldValue.increment(1);
+    this.db.doc(`posts/${id}`).update({
+      audioPlays: increment
+    });
+  }
+
   getEditedPosts(posts: FirebasePost[]): FirebasePost[] {
     return posts.map((post: any) => {
       const categroyData: CategoryData = this.utils.getCategoryData(
@@ -148,6 +181,7 @@ export class FirebaseService {
 
   async setAdmin() {
     this.subscriber.next(true);
+    this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
     return await this.storage.set('isAdmin', true);
   }
 

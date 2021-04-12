@@ -1,7 +1,8 @@
-import { ToastController, ModalController } from '@ionic/angular';
+import { ToastController, ModalController, Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { CategoryData, Category, FirebasePost } from './interfaces';
 import { FeedbackModalPage } from '../settings/feedback-modal/feedback-modal.page';
+import { Platforms } from './constants';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,8 @@ import { FeedbackModalPage } from '../settings/feedback-modal/feedback-modal.pag
 export class Utils {
   constructor(
     private toastController: ToastController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private platform: Platform
   ) {}
 
   async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
@@ -29,6 +31,20 @@ export class Utils {
     });
 
     await modal.present();
+  }
+
+  getPlatform(): Platforms {
+    if (this.platform.is('capacitor')) {
+      if (this.platform.is('ios')) {
+        return this.platform.is('ipad') ? Platforms.IPAD : Platforms.IPHONE;
+      } else if (this.platform.is('android')) {
+        return this.platform.is('tablet') ? Platforms.ANDROID_TABLET : Platforms.ANDROID_PHONE;
+      } else {
+        return Platforms.OTHER;
+      }
+    } else {
+      return Platforms.WEB;
+    }
   }
 
   getCategoryData(

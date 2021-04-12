@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Category } from 'src/app/utils/interfaces';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AnalyticsField } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-filter-modal',
@@ -34,6 +35,7 @@ export class FilterModalPage implements OnInit {
       showOnlyUnread: this.showOnlyUnread,
       ausgabe: this.selectedAusgabe
     });
+    this.firebaseService.incrementAnalyticsField(AnalyticsField.FILTER_MODAL_APPLIED);
   }
 
   dismiss(filterObject?: any): void {

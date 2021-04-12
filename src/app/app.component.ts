@@ -10,7 +10,9 @@ import { FCM } from '@capacitor-community/fcm';
 import { Plugins } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { Utils } from './utils/utils';
-import { SESSION_FEEDBACK_THRESHOLD } from './utils/constants';
+import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
+import { FirebaseService } from './services/firebase.service';
+import { environment } from 'src/environments/environment';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
@@ -23,7 +25,7 @@ const { App, PushNotifications, Network } = Plugins;
 export class AppComponent {
   observer: any;
   observable: any;
-  verifyKeyUrl = `https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey`;
+  verifyKeyUrl = '';
 
   constructor(
     private platform: Platform,
@@ -34,14 +36,19 @@ export class AppComponent {
     private httpClient: HttpClient,
     private loadingController: LoadingController,
     private router: Router,
-    private utils: Utils
+    private utils: Utils,
+    private firebaseService: FirebaseService
   ) {
+    this.verifyKeyUrl = environment.production ?
+      'https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
+      : 'https://us-central1-jugendkompasstest.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.handleSessionCount();
+      this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.observable = new Observable(observer => {
@@ -154,6 +161,7 @@ export class AppComponent {
               this.showPasswordAlert(
                 (message = 'Bitte gebe das Passwort ein.'),
               );
+              this.firebaseService.incrementAnalyticsField(AnalyticsField.INVALID_PASSWORD_PROVIDED);
               return;
             }
             const loading = await this.loadingController.create();
@@ -167,12 +175,14 @@ export class AppComponent {
                   this.observer.complete();
                   this.storage.set('isLoggedIn', true);
                   alert.dismiss();
+                  this.firebaseService.incrementAnalyticsField(AnalyticsField.CORRECT_PASSWORD_PROVIDED);
                 }
               })
               .catch(() => {
                 this.showPasswordAlert(
                   (message = 'Bitte gebe das richtige Passwort ein.'),
                 );
+                this.firebaseService.incrementAnalyticsField(AnalyticsField.INVALID_PASSWORD_PROVIDED);
               });
             loading.dismiss();
           },

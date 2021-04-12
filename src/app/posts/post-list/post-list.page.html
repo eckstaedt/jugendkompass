@@ -30,7 +30,7 @@
   >
   </ion-searchbar>
 
-  <ion-segment *ngIf="rubriken.length && online" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
+  <ion-segment *ngIf="rubriken.length && online" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="onCategoryPressed()">
     <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
     <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
       <div class="placeholder"></div>

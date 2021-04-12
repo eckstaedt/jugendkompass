@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AudioService } from 'src/app/services/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import {
@@ -10,10 +10,10 @@ import {
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
-import { Utils } from 'src/app/utils/utils';
 import { RouterService } from 'src/app/services/router.service';
 import { Plugins } from '@capacitor/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AnalyticsField } from 'src/app/utils/constants';
 const { Browser, Share } = Plugins;
 
 @Component({
@@ -41,7 +41,6 @@ export class PostPage implements OnInit {
     private actionSheetController: ActionSheetController,
     private appComponent: AppComponent,
     private storage: Storage,
-    private utils: Utils,
     private routerService: RouterService,
     private firebaseService: FirebaseService
   ) {}
@@ -103,16 +102,6 @@ export class PostPage implements OnInit {
           this.post.title,
         );
       }
-
-      setTimeout(() => {
-        for (const image of Array.from(
-          document.querySelectorAll('.postContent img'),
-        )) {
-          (image as any).onclick = () => {
-            this.photoViewer.show((image as any).src);
-          };
-        }
-      }, 100);
     } else {
       this.post = await this.firebaseService.getPost(id);
       if (this.post.audio) {
@@ -121,17 +110,19 @@ export class PostPage implements OnInit {
           this.post.title,
         );
       }
-
-      setTimeout(() => {
-        for (const image of Array.from(
-          document.querySelectorAll('.postContent img'),
-        )) {
-          (image as any).onclick = () => {
-            this.photoViewer.show((image as any).src);
-          };
-        }
-      }, 100);
     }
+
+    this.firebaseService.incrementPostViews(id);
+
+    setTimeout(() => {
+      for (const image of Array.from(
+        document.querySelectorAll('.postContent img'),
+      )) {
+        (image as any).onclick = () => {
+          this.photoViewer.show((image as any).src);
+        };
+      }
+    }, 100);
   }
 
   async openMenu() {
@@ -186,6 +177,7 @@ export class PostPage implements OnInit {
 
   play() {
     this.audioService.playNew();
+    this.firebaseService.incrementAudioPlays(this.post.id);
   }
 
   async setPostFavorite() {
@@ -216,14 +208,17 @@ export class PostPage implements OnInit {
       // }
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
+      this.firebaseService.incrementAnalyticsField(AnalyticsField.FAVORITE_ADDED);
     } else {
       this.post.isFavorite = false;
       this.post.base64Img = null;
       this.favoritePosts = this.favoritePosts.filter(
         post => post.id != this.post.id,
       );
-      if (this.favoritePosts)
+      if (this.favoritePosts) {
         this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
+      }
+      this.firebaseService.incrementAnalyticsField(AnalyticsField.FAVORITE_REMOVED);
     }
   }
 
