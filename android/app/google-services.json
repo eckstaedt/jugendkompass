@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "443036016738",
+    "project_id": "jugendkompass-46aa7",
+    "storage_bucket": "jugendkompass-46aa7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443036016738:android:f1c650fac9595bc619b13b",
+        "android_client_info": {
+          "package_name": "io.stephanus.jugendkompass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443036016738-vtk4aba3q7a67dlr5kq2b54p0e409atv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaUJJwfEZALTVTGjsoXei5uz6uF8v03_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443036016738-vtk4aba3q7a67dlr5kq2b54p0e409atv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "443036016738-81s02an8b0smp14526g4273ke28rrrkd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.stephanus.jugendkompass"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

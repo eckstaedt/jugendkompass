@@ -7,8 +7,7 @@ import { Observable, Subscriber } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Category, FirebasePost, CategoryData } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
-import { Plugins } from '@capacitor/core';
-const { Http } = Plugins;
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +24,8 @@ export class FirebaseService {
   constructor(
     private db: AngularFirestore,
     private storage: Storage,
-    private utils: Utils
+    private utils: Utils,
+    private httpClient: HttpClient
   ) {
     this.init();
   }
@@ -164,21 +164,18 @@ export class FirebaseService {
     });
   }
 
-  async getBase64FromUrl(mediaUrl): Promise<any> {
-    return new Promise(async resolve => {
-      const res = await Http.downloadFile({
-        url: `https://cors.bridged.cc/${mediaUrl}`,
-        filePath: mediaUrl,
-      });
-      let reader = new FileReader();
-      reader.readAsDataURL(res.blob);
-      reader.addEventListener(
-        'load',
-        () => {
+  async getBase64ImgFromUrl(imageURL: any) {
+    return new Promise(async (resolve, reject) => {
+      const data: Blob = await this.httpClient.get(`https://cors.bridged.cc/${imageURL}`, {responseType: 'blob'}).toPromise();
+      if (data) {
+        let reader = new FileReader();
+        reader.readAsDataURL(data);
+        reader.addEventListener("load", () => {
           resolve(reader.result.toString());
-        },
-        false,
-      );
+        }, false);
+      } else {
+        reject(imageURL);
+      }
     });
   }
 }

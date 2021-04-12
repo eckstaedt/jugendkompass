@@ -193,7 +193,7 @@ export class PostPage implements OnInit {
       this.post.isFavorite = true;
       if (this.post.postImg && !this.post.postImg.source_url.startsWith('data')) {
         await this.firebaseService
-          .getBase64FromUrl(this.post.postImg)
+          .getBase64ImgFromUrl(this.post.postImg.source_url)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -201,7 +201,7 @@ export class PostPage implements OnInit {
       )) {
         const imageSrc: string = (image as HTMLImageElement).src;
         if (imageSrc.startsWith('data')) {
-          const base64: string = await this.firebaseService.getBase64FromUrl(imageSrc);
+          const base64: any = await this.firebaseService.getBase64ImgFromUrl(imageSrc);
           this.post.content = this.post.content.replace(
             imageSrc,
             base64,
