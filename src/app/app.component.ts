@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { Plugins, PushNotificationToken, PushNotification } from '@capacitor/core';
+import { Plugins, PushNotificationToken, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { Utils } from './utils/utils';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
@@ -96,6 +96,10 @@ export class AppComponent {
     }
   }
 
+  navigateToAusgabe(id: string) {
+    this.router.navigateByUrl(`/tabs/posts/ausgabe/${id}`);
+  }
+
   setupPush() {
     if (this.platform.is('capacitor')) {
       PushNotifications.addListener('pushNotificationReceived',
@@ -104,11 +108,22 @@ export class AppComponent {
             header: notification.title,
             message: notification.body,
             buttons: [{
+              text: 'Ausgabe anzeigen',
+              handler: () => {
+                this.navigateToAusgabe(notification.data.ausgabe);
+              }
+            }, {
               text: 'Okay'
             }]
           });
 
           await alert.present();
+        }
+      );
+
+      PushNotifications.addListener('pushNotificationActionPerformed',
+        (notification: PushNotificationActionPerformed) => {
+          this.navigateToAusgabe(notification.notification.data.ausgabe);
         }
       );
 

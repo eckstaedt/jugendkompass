@@ -38,7 +38,7 @@
       <ion-card>
         <img [src]="video.image"/>
         <div id="fullscreen" slot="fixed"></div>
-        <ion-fab-button color="medium">
+        <ion-fab-button (click)="playVideo(video.url)" color="medium">
           <ion-icon size="medium" name="play"></ion-icon>
         </ion-fab-button>
       </ion-card>
