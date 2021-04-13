@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header #header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button
@@ -15,7 +15,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content
+  fullscreen="true"
+  scrollEvents="true"
+  appHideHeader
+  [header]="header"
+  [isList]="false"
+>
   <ion-card class="coverCard">
     <img [src]="ausgabe?.imageUrl"/>
   </ion-card>
