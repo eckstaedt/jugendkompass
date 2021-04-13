@@ -104,17 +104,22 @@ export class AppComponent {
     if (this.platform.is('capacitor')) {
       PushNotifications.addListener('pushNotificationReceived',
         async (notification: PushNotification) => {
-          const alert = await this.alertController.create({
-            header: notification.title,
-            message: notification.body,
-            buttons: [{
+          const buttons: any[] = [];
+          if (notification?.data?.ausgabe) {
+            buttons.push({
               text: 'Ausgabe anzeigen',
               handler: () => {
                 this.navigateToAusgabe(notification.data.ausgabe);
               }
-            }, {
-              text: 'Okay'
-            }]
+            });
+          }
+          buttons.push({
+            text: 'Okay'
+          });
+          const alert = await this.alertController.create({
+            header: notification.title,
+            message: notification.body,
+            buttons: buttons
           });
 
           await alert.present();
@@ -123,7 +128,9 @@ export class AppComponent {
 
       PushNotifications.addListener('pushNotificationActionPerformed',
         (notification: PushNotificationActionPerformed) => {
-          this.navigateToAusgabe(notification.notification.data.ausgabe);
+          if (notification.notification?.data?.ausgabe) {
+            this.navigateToAusgabe(notification.notification.data.ausgabe);
+          }
         }
       );
 
