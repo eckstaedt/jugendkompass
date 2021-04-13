@@ -6,20 +6,26 @@
   <ion-row>
     <ion-col
       (click)="selectAusgabe('all')"
-      size="12"
+      size="6"
       class="ion-text-center"
       [ngClass]="'all' === selectedAusgabe ? 'selected' : ''"
     >
-      Alle Ausgaben
+      <div>
+        <img src="../../../assets/AlleAusgaben.png"/>
+        <p>Alle Ausgaben</p>
+      </div>
     </ion-col>
     <ion-col
       (click)="selectAusgabe(a.id)"
-      size="12"
+      size="6"
       class="ion-text-center"
       *ngFor="let a of ausgaben"
       [ngClass]="a.id === selectedAusgabe ? 'selected' : ''"
     >
-      {{ a.name }}
+      <div>
+        <img [src]="a.imageUrl"/>
+        <p>{{ a.name }}</p>
+      </div>
     </ion-col>
   </ion-row>
 </ion-content>

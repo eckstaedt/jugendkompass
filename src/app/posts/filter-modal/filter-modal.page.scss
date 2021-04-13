@@ -12,10 +12,19 @@ ion-row {
     ion-col {
         margin-bottom: 30px;
         color: #fff;
+        padding-top: 1rem;
 
         &.selected {
-            transform: scale(1.4);
-            transition: transform .2s;
+            transform: scale(1.2);
+            transition: transform .4s;
+        }
+
+        img {
+            height: 5rem;
+        }
+
+        p {
+            margin-top: .5rem;
         }
     }
 }
