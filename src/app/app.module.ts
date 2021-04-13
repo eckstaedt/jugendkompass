@@ -19,6 +19,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module';
 import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 import { ChartsModule } from 'ng2-charts';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,6 +41,7 @@ import { ChartsModule } from 'ng2-charts';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    FileOpener
   ],
   bootstrap: [AppComponent],
 })

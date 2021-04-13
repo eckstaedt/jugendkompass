@@ -37,6 +37,16 @@
     </ion-segment-button>
   </ion-segment>
 
+  <ion-slides [options]="slideOpts" *ngIf="ausgaben && ausgaben.length">
+    <ion-slide
+      [routerLink]="['/', 'tabs', 'posts', 'ausgabe', ausgabe.id]"
+      (click)="openAusgabe(ausgabe)"
+      *ngFor="let ausgabe of ausgaben"
+    >
+      <img [src]="ausgabe.imageUrl"/>
+    </ion-slide>
+  </ion-slides>
+
   <div *ngIf="posts.length">
     <ion-grid>
       <ion-row>

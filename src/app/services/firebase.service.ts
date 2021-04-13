@@ -5,9 +5,9 @@ import {
 import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Category, FirebasePost, CategoryData } from '../utils/interfaces';
+import { Category, FirebasePost, CategoryData, Ausgabe } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { AnalyticsField } from '../utils/constants';
@@ -18,7 +18,7 @@ import { AnalyticsField } from '../utils/constants';
 export class FirebaseService {
   subscriber: Subscriber<boolean>;
   rubrics: Category[];
-  ausgaben: Category[];
+  ausgaben: Ausgabe[];
   readArticles: FirebasePost[] = [];
   posts: FirebasePost[];
   categories: Category[];
@@ -41,10 +41,11 @@ export class FirebaseService {
     }
   }
 
-  incrementAnalyticsField(field: AnalyticsField) {
+  incrementAnalyticsField(field: AnalyticsField, data: any = {}) {
     const now: Date = new Date();
     const increment = firestore.FieldValue.increment(1);
     const analyticsData: any = firestore.FieldValue.arrayUnion({
+      ...data,
       timestamp: firebase.firestore.Timestamp.fromDate(now),
       platform: this.utils.getPlatform()
     });
@@ -95,8 +96,12 @@ export class FirebaseService {
     }
   }
 
-  getAusgaben() {
+  getAusgaben(): Ausgabe[] {
     return this.ausgaben;
+  }
+
+  getAusgabe(id: string): Ausgabe {
+    return this.ausgaben.find((a: Category) => a.id.toString() === id);
   }
 
   getRubrics() {
@@ -202,6 +207,16 @@ export class FirebaseService {
     });
   }
 
+  convertBlobToBase64(data: Blob) {
+    return new Promise((resolve: any) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(data);
+      reader.addEventListener("load", () => {
+        resolve(reader.result);
+      });
+    });  
+  }
+
   async getBase64ImgFromUrl(imageURL: any) {
     return new Promise(async (resolve, reject) => {
       const data: Blob = await this.httpClient.get(`https://cors.bridged.cc/${imageURL}`, {responseType: 'blob'}).toPromise();
@@ -214,6 +229,14 @@ export class FirebaseService {
       } else {
         reject(imageURL);
       }
+    });
+  }
+
+  downloadFile(url: string) {
+    return this.httpClient.get(url, {
+      responseType: 'blob',
+      reportProgress: true,
+      observe: 'events'
     });
   }
 }

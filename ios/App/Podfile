@@ -12,6 +12,8 @@ def capacitor_pods
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCommunityFcm', :path => '../../node_modules/@capacitor-community/fcm'
   pod 'CapacitorCommunityHttp', :path => '../../node_modules/@capacitor-community/http'
+  pod 'CapacitorBlobWriter', :path => '../../node_modules/capacitor-blob-writer'
+  pod 'CapacitorVideoPlayer', :path => '../../node_modules/capacitor-video-player'
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
   # Do not delete
 end

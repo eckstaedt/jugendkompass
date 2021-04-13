@@ -8,7 +8,8 @@ export enum AnalyticsField {
     CORRECT_PASSWORD_PROVIDED = 'correctPasswordProvided',
     INVALID_PASSWORD_PROVIDED = 'invalidPasswordProvided',
     FILTER_MODAL_APPLIED = 'filterModalApplied',
-    ADMIN_LOGGED_IN = 'adminLoggedIn'
+    ADMIN_LOGGED_IN = 'adminLoggedIn',
+    AUSGABE_OPENED = 'ausgabeOpened'
 }
 
 export enum Platforms {

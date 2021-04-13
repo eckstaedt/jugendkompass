@@ -1,0 +1,23 @@
+.coverCard {
+    margin: auto;
+    margin-top: 1rem;
+    max-width: 15rem;
+}
+
+ion-slides {
+    ion-card {
+        margin-top: 0rem;
+    }
+}
+
+ion-fab-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: .8;
+}
+
+.text {
+    padding: 0 1rem;
+}

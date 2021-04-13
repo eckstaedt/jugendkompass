@@ -21,6 +21,10 @@ const routes: Routes = [
           import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       {
+        path: 'posts/ausgabe/:id',
+        loadChildren: () => import('./../posts/ausgabe/ausgabe.module').then( m => m.AusgabePageModule)
+      },
+      {
         path: 'settings',
         loadChildren: () =>
           import('./../settings/settings/settings.module').then(

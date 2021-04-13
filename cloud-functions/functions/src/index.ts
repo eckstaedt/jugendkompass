@@ -282,7 +282,6 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
     const postRef = db.collection("categories").doc(`${category.id}`);
     batch.set(postRef, {
       id: `${category.id}`,
-      content: category.name,
       link: category.link,
       parent: category.parent,
       count: category.count,

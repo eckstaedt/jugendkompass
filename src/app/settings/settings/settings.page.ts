@@ -13,7 +13,6 @@ const { Share } = Plugins;
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-  public darkMode = false;
   public version: string = version;
   public theme: string = 'default';
   public isAdmin: boolean = false;
@@ -27,13 +26,9 @@ export class SettingsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.storage
-      .get('darkMode')
-      .then((res: boolean) => {
-        this.darkMode = res;
-      })
-      .catch(() => {
-        this.darkMode = false;
+    this.storage.get('theme')
+      .then((res: string) => {
+        this.theme = res;
       });
 
     this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
@@ -56,11 +51,6 @@ export class SettingsPage implements OnInit {
     } else if(this.theme === 'dark') {
       document.body.classList.toggle('dark', true);
     }
-  }
-
-  toggleMode() {
-    this.storage.set('darkMode', this.darkMode);
-    document.body.classList.toggle('dark', this.darkMode);
   }
 
   async openContactActionSheet() {

@@ -52,8 +52,14 @@ export interface Category {
   parent: number;
   slug: string;
   taxonomy: string;
-  _embedded?: any;
-  _links?: any;
+}
+
+export interface Ausgabe extends Category {
+  title: string;
+  imageUrl: string;
+  content: string;
+  pdfUrl: string;
+  videos: { name: string, url: string, image: string }[];
 }
 
 export interface CategoryData {

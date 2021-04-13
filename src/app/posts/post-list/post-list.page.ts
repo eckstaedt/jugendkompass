@@ -43,6 +43,29 @@ export class PostListPage implements OnInit {
   showOnlyUnread: boolean = false;
   areFiltersActive: boolean = false;
   online: boolean = true;
+  slideOpts = {
+    slidesPerView: 2.4,
+    spaceBetween: 10,
+    freeMode: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 2.4,
+        spaceBetween: 10
+      },
+      480: {
+        slidesPerView: 3.4,
+        spaceBetween: 20
+      },
+      640: {
+        slidesPerView: 4.4,
+        spaceBetween: 30
+      },
+      1080: {
+        slidesPerView: 5.4,
+        spaceBetween: 40
+      }
+    }
+  };
 
   constructor(
     private appComponent: AppComponent,
@@ -246,5 +269,12 @@ export class PostListPage implements OnInit {
       this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
       this.filter();
     }
+  }
+
+  openAusgabe(ausgabe: Category) {
+    this.firebaseService.incrementAnalyticsField(AnalyticsField.AUSGABE_OPENED, {
+      ausgabe: ausgabe.id,
+      ausgabenName: ausgabe.name
+    });
   }
 }

@@ -9,6 +9,20 @@ ion-toolbar {
   }
 }
 
+ion-slides {
+  margin: 1rem 0 .4rem 0;
+  padding-left: .9rem;
+  padding-right: .9rem;
+
+  ion-slide {
+    border: 2px solid var(--ion-color-light);
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
 ion-content > div {
   height: 100%;
 

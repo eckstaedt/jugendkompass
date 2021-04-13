@@ -7,3 +7,9 @@ project(':capacitor-community-fcm').projectDir = new File('../node_modules/@capa
 
 include ':capacitor-community-http'
 project(':capacitor-community-http').projectDir = new File('../node_modules/@capacitor-community/http/android')
+
+include ':capacitor-blob-writer'
+project(':capacitor-blob-writer').projectDir = new File('../node_modules/capacitor-blob-writer/android')
+
+include ':capacitor-video-player'
+project(':capacitor-video-player').projectDir = new File('../node_modules/capacitor-video-player/android')
