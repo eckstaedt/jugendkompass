@@ -76,7 +76,7 @@ export class AusgabePage implements OnInit {
       loading.present();
       this.firebaseService.downloadFile(this.ausgabe.pdfUrl).subscribe(async (event: any) => {
         if (event.type === HttpEventType.DownloadProgress) {
-          console.log(Math.round((100 * event.loaded) / event.total));
+          // console.log(Math.round((100 * event.loaded) / event.total));
         } else if (event.type === HttpEventType.Response) {
           const { uri } = await writeFile({
             path: this.ausgabe.name.replace('.', '-') + '.pdf',

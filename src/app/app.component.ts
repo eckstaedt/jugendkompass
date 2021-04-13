@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { Plugins } from '@capacitor/core';
+import { Plugins, PushNotificationToken, PushNotification } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { Utils } from './utils/utils';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
@@ -66,6 +66,7 @@ export class AppComponent {
       this.registerEvents();
       this.setupTheme();
       this.setupNetworkCheck();
+      this.setupPush();
     });
   }
 
@@ -96,18 +97,38 @@ export class AppComponent {
   }
 
   setupPush() {
-    PushNotifications.requestPermission().then((res: any) => {
-      if (res.granted) {
-        PushNotifications.register()
-          .then(() => {
-            fcm
-              .subscribeTo({ topic: 'general' })
-              .then(() => console.log('subscribed successfully'))
-              .catch(err => console.log(err));
-          })
-          .catch(err => console.log(JSON.stringify(err)));
-      }
-    });
+    if (this.platform.is('capacitor')) {
+      PushNotifications.addListener('pushNotificationReceived',
+        async (notification: PushNotification) => {
+          const alert = await this.alertController.create({
+            header: notification.title,
+            message: notification.body,
+            buttons: [{
+              text: 'Okay'
+            }]
+          });
+
+          await alert.present();
+        }
+      );
+
+      this.storage.get('oldUser').then((oldUser: boolean): void => {
+        if (oldUser) {
+          PushNotifications.requestPermission().then((res: any) => {
+            if (res.granted) {
+              PushNotifications.register()
+                .then(() => {
+                  fcm
+                    .subscribeTo({ topic: 'general' })
+                    .then(() => console.log('subscribed successfully'))
+                    .catch(err => console.log(err));
+                })
+                .catch(err => console.log(JSON.stringify(err)));
+            }
+          });
+        }
+      });
+    }
   }
 
   setupTheme() {

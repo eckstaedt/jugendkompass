@@ -7,7 +7,7 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Ausgabe {{ ausgabe?.name }}</ion-title>
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="ausgabe?.pdfUrl" slot="end">
       <ion-button (click)="downloadPdf()">
         <ion-icon slot="icon-only" name="download-outline"></ion-icon>
       </ion-button>
