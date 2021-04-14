@@ -1,19 +1,25 @@
 <ion-content fullscreen class="ion-padding" scroll-y="false">
   <ion-slides pager="true">
     <ion-slide>
-      <img src="../../../assets/App_Anleitung.png"/>
+      <div class="surround">
+        <ion-img src="../../../assets/App_Anleitung.png"></ion-img>
+      </div>
       <h2>Herzlich Willkommen</h2>
       <p>Schön das du es zum Jugendkompass geschafft hast. Hier bleibst du auf dem Laufenden, ausgewählte Artikel sowie eine Übersicht der Ausgaben inklusive Videos warten auf dich!</p>
     </ion-slide>
     <ion-slide>
-      <img src="../../../assets/FavOff.png"/>
+      <div class="surround">
+        <ion-img src="../../../assets/FavOff.png"></ion-img>
+      </div>
       <h2>Deine Favoriten auch offline verfügbar</h2>
       <p>
         Alle Artikel die du als Favoriten markierst, werden automatisch offline gespeichert, und du kannst auch ohne eine Internetverbindung deine Favoriten lesen und auch anhören.
       </p>
     </ion-slide>
     <ion-slide>
-      <img src="../../../assets/App Anleitung3.png"/>
+      <div class="surround">
+        <ion-img src="../../../assets/App Anleitung3.png"></ion-img>
+      </div>
       <h2>Wähle ein Theme aus</h2>
 
       <ion-radio-group (ionChange)="onThemeChange()" [(ngModel)]="theme">
@@ -32,7 +38,9 @@
       </ion-radio-group>
     </ion-slide>
     <ion-slide>
-      <img src="../../../assets/App Anleitung2.png"/>
+      <div class="surround">
+        <ion-img src="../../../assets/App Anleitung2.png"></ion-img>
+      </div>
       <h2>Push</h2>
       <p>
         Damit du nicht jeden Tag nach Updates schauen musst erlaube Push

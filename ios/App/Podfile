@@ -24,3 +24,7 @@ target 'App' do
   pod 'FirebaseCore'
   pod 'Firebase/Messaging'
 end
+
+target 'NotificationServiceExtension' do
+    pod 'Firebase/Messaging'
+end

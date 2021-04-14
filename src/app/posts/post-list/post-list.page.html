@@ -30,14 +30,14 @@
   >
   </ion-searchbar>
 
-  <ion-segment *ngIf="rubriken.length && online" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="onCategoryPressed()">
+  <ion-segment *ngIf="rubriken.length && online && !isSearching" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="onCategoryPressed()">
     <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
     <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
       <div class="placeholder"></div>
     </ion-segment-button>
   </ion-segment>
 
-  <ion-slides [options]="slideOpts" *ngIf="ausgaben && ausgaben.length">
+  <ion-slides [options]="slideOpts" *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all'">
     <ion-slide
       [routerLink]="['/', 'tabs', 'posts', 'ausgabe', ausgabe.id]"
       (click)="openAusgabe(ausgabe)"

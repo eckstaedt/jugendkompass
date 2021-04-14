@@ -9,7 +9,7 @@
     <ion-title>Ausgabe {{ ausgabe?.name }}</ion-title>
     <ion-buttons *ngIf="ausgabe?.pdfUrl" slot="end">
       <ion-button (click)="downloadPdf()">
-        <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        <ion-icon slot="icon-only" src="../../../assets/icons/pdf.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
