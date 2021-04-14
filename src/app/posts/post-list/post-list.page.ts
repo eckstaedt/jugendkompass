@@ -43,6 +43,7 @@ export class PostListPage implements OnInit {
   showOnlyUnread: boolean = false;
   areFiltersActive: boolean = false;
   online: boolean = true;
+  isSearching: boolean = false;
   slideOpts = {
     slidesPerView: 2.4,
     spaceBetween: 10,
@@ -129,6 +130,7 @@ export class PostListPage implements OnInit {
     this.searchTerm = event.srcElement.value;
 
     if (!this.searchTerm) {
+      this.isSearching = false;
       return;
     }
 
@@ -139,9 +141,12 @@ export class PostListPage implements OnInit {
         color: 'success',
         duration: 1000
       });
+      this.searchTerm = '';
+      this.isSearching = false;
       toast.present();
     }
 
+    this.isSearching = true;
     this.posts = this.search();
   }
 
