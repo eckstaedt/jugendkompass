@@ -6,6 +6,7 @@ import {
   Platform,
   ActionSheetController,
   IonBackButton,
+  ToastController
 } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
@@ -14,6 +15,9 @@ import { RouterService } from 'src/app/services/router.service';
 import { Plugins } from '@capacitor/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { File, FileEntry } from '@ionic-native/File/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 const { Browser, Share } = Plugins;
 
 @Component({
@@ -31,6 +35,7 @@ export class PostPage implements OnInit {
   favoritePosts: FirebasePost[] = [];
   defaultHref: string = '';
   public textSize = 15;
+  public isAdmin: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,13 +47,21 @@ export class PostPage implements OnInit {
     private appComponent: AppComponent,
     private storage: Storage,
     private routerService: RouterService,
-    private firebaseService: FirebaseService
-  ) {}
+    private firebaseService: FirebaseService,
+    private fireStorage: AngularFireStorage,
+    private toastController: ToastController,
+    private file: File,
+    private fileChooser: FileChooser
+  ) { }
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.loadData();
+
+        this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
+          this.isAdmin = isAdmin;
+        });
       }
     });
   }
@@ -178,6 +191,102 @@ export class PostPage implements OnInit {
   play() {
     this.audioService.playNew();
     this.firebaseService.incrementAudioPlays(this.post.id);
+  }
+
+  files = [];
+  uploadProgress = 0;
+
+  async addAudioToPost() {
+    this.fileChooser.open()
+      .then(async uri => {
+        this.file.resolveLocalFilesystemUrl(uri)
+          .then(async f => {
+            const path = uri.substr(0, uri.lastIndexOf('/') + 1);
+
+            const toast = await this.toastController.create({
+              duration: 3000,
+              message: 'Pfad: ' + path
+            });
+            toast.present();
+
+            const type = this.getMimeType(f.name.split('.').pop());
+            const buffer = await this.file.readAsArrayBuffer(path, f.name);
+            const fileBlob = new Blob([buffer], type);
+
+            const randomId = Math.random()
+              .toString(36)
+              .substring(2, 8);
+
+            const uploadTask = this.fireStorage.upload(
+              `audios/${new Date().getTime()}_${randomId}`,
+              fileBlob
+            );
+
+            uploadTask.percentageChanges().subscribe(change => {
+              this.uploadProgress = change;
+            });
+
+            uploadTask.then(async res => {
+              const toast = await this.toastController.create({
+                duration: 3000,
+                message: 'File upload finished!'
+              });
+              toast.present();
+            });
+
+            /*(<FileEntry>entry).file(file => {
+              const type = this.getMimeType(uri.split('.').pop());
+              const buffer = await this.file.readAsArrayBuffer(uri, uri);
+              const fileBlob = new Blob([buffer], type);
+
+              const randomId = Math.random()
+                .toString(36)
+                .substring(2, 8);
+
+              const toast = await this.toastController.create({
+                duration: 3000,
+                message: 'Start Upload'
+              });
+              toast.present();
+              const uploadTask = this.fireStorage.upload(
+                `audios/${new Date().getTime()}_${randomId}`,
+                fileBlob
+              );
+
+              uploadTask.percentageChanges().subscribe(change => {
+                this.uploadProgress = change;
+              });
+
+              uploadTask.then(async res => {
+                const toast = await this.toastController.create({
+                  duration: 3000,
+                  message: 'Datei erfolgreich hochgeladen!'
+                });
+                toast.present();
+              });
+            }
+            );*/
+          })
+          .catch(err => {
+            console.log('Error while reading file.');
+          });
+
+      })
+      .catch(async e => {
+        const toast = await this.toastController.create({
+          duration: 3000,
+          message: 'Fehler:' + e
+        });
+        toast.present();
+      });
+  }
+
+  getMimeType(fileExt) {
+    if (fileExt == 'mp3') return { type: 'audio/mp3' };
+    else if (fileExt == 'wav') return { type: 'audio/wav' };
+    else if (fileExt == 'jpg') return { type: 'image/jpg' };
+    else if (fileExt == 'mp4') return { type: 'video/mp4' };
+    else if (fileExt == 'MOV') return { type: 'video/quicktime' };
   }
 
   async setPostFavorite() {

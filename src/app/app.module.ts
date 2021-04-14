@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
@@ -20,6 +21,8 @@ import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module'
 import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/File/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,6 +36,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
     FeedbackModalPageModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+    AngularFireStorageModule,
     IonicStorageModule.forRoot(),
     ChartsModule,
   ],
@@ -41,7 +45,9 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileOpener
+    FileOpener,
+    File,
+    FileChooser
   ],
   bootstrap: [AppComponent],
 })

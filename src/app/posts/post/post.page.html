@@ -8,6 +8,12 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
+      <ion-button (click)="addAudioToPost()" [disabled]="isAdmin">
+        <ion-icon
+          slot="icon-only"
+          name="cloud-upload"
+        ></ion-icon>
+      </ion-button>
       <ion-button (click)="setPostFavorite()" [disabled]="!post?.id">
         <ion-icon
           slot="icon-only"
