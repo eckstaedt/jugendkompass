@@ -39,7 +39,7 @@ export class PostListPage implements OnInit {
   currentRubrik: string = 'all';
   ausgaben: Category[] = [];
   currentAusgabe: string = 'all';
-  readArticles: FirebasePost[] = [];
+  readArticles: string[] = [];
   showOnlyUnread: boolean = false;
   areFiltersActive: boolean = false;
   online: boolean = true;
@@ -243,11 +243,18 @@ export class PostListPage implements OnInit {
 
   // set local storage when a post is clicked
   setAsRead(post: any) {
-    if (!this.readArticles.includes(post.id)) {
+    if (!this.readArticles.includes(post.id.toString())) {
       post.articleWasRead = true;
-      this.readArticles.push(post.id);
+      this.readArticles.push(post.id.toString());
       this.storage.set('readArticles', JSON.stringify(this.readArticles));
     }
+  }
+
+  isRead(post: any) {
+    if (this.readArticles.includes(post.id.toString())) {
+      return true;
+    }
+    return false;
   }
 
   async openFilterModal(): Promise<void> {

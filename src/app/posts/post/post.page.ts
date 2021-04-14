@@ -126,6 +126,7 @@ export class PostPage implements OnInit {
       }
     } else {
       this.post = await this.firebaseService.getPost(id);
+      this.post.articleWasRead = true;
       if (this.post.audio) {
         this.audioService.loadNewAudio(
           this.post.audio.url,
@@ -144,7 +145,7 @@ export class PostPage implements OnInit {
           this.photoViewer.show((image as any).src);
         };
       }
-    }, 100);
+    }, 200);
   }
 
   async openMenu() {
@@ -200,14 +201,6 @@ export class PostPage implements OnInit {
   play() {
     this.audioService.playNew();
     this.firebaseService.incrementAudioPlays(this.post.id);
-  }
-
-  getMimeType(fileExt) {
-    if (fileExt == 'mp3') return { type: 'audio/mp3' };
-    else if (fileExt == 'wav') return { type: 'audio/wav' };
-    else if (fileExt == 'jpg') return { type: 'image/jpg' };
-    else if (fileExt == 'mp4') return { type: 'video/mp4' };
-    else if (fileExt == 'MOV') return { type: 'video/quicktime' };
   }
 
   async setPostFavorite() {

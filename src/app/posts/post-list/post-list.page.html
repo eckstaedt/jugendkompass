@@ -58,9 +58,9 @@
           size-xl="4"
         >
           <ion-card
-            [ngClass]="post.articleWasRead ? 'read' : ''"
-            [routerLink]="['/', 'tabs', 'posts', post.id]"
             (click)="setAsRead(post)"
+            [ngClass]="isRead(post) ? 'read' : ''"
+            [routerLink]="['/', 'tabs', 'posts', post.id]"
           >
             <ion-grid>
               <ion-row>
@@ -93,7 +93,7 @@
                       <ion-col size="4">
                         <ion-icon name="eye-outline"></ion-icon> {{ post.views }}
                       </ion-col>
-                      <ion-col *ngIf="post.audio" size="4">
+                      <ion-col *ngIf="post.audio && post.audio.duration" size="4">
                         <ion-icon name="volume-high-outline"></ion-icon> {{ post.audio.duration }} min
                       </ion-col>
                     </ion-row>

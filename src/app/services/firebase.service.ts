@@ -94,10 +94,10 @@ export class FirebaseService {
             cat.parent.toString() === ausgabenCategory.id && cat.count !== 0,
         )
         .sort((a: Category, b: Category) => {
-          if ( a.name < b.name ) {
+          if (a.name < b.name) {
             return -1;
           }
-          if ( a.name > b.name ) {
+          if (a.name > b.name) {
             return 1;
           }
           return 0;
@@ -140,13 +140,29 @@ export class FirebaseService {
   getPosts() {
     return new Observable((observer) => {
       this.db.collection('posts').valueChanges().subscribe((posts: FirebasePost[]) => {
-        this.posts = this.getEditedPosts(posts).sort((p1: FirebasePost, p2: FirebasePost) => {
-          if ( p1.ausgabe && p2.ausgabe && p1.ausgabe.name < p2.ausgabe.name ) {
-            return -1;
+        this.posts = this.getEditedPosts(posts).sort((a: FirebasePost, b: FirebasePost) => {
+          if (a.ausgabe && b.ausgabe) {
+            if (a.ausgabe.name > b.ausgabe.name) {
+              return 1;
+            }
+            else if (a.ausgabe.name < b.ausgabe.name) {
+              return -1;
+            }
           }
-          if ( p1.ausgabe && p2.ausgabe && p1.ausgabe.name > p2.ausgabe.name ) {
+          else if (a.ausgabe && !b.ausgabe) {
             return 1;
           }
+          else if (!a.ausgabe && b.ausgabe) {
+            return -1;
+          }
+
+          if (a.title > b.title) {
+            return -1;
+          }
+          else if (a.title < b.title) {
+            return 1;
+          }
+
           return 0;
         }).reverse();
         observer.next(this.posts);
@@ -236,14 +252,14 @@ export class FirebaseService {
       reader.addEventListener("load", () => {
         resolve(reader.result);
       });
-    });  
+    });
   }
 
   async getBase64FromUrl(url: string, redirect: boolean = true) {
     return new Promise(async (resolve, reject) => {
       const data: Blob = await this.httpClient.get(redirect ?
         `https://cors.bridged.cc/${url}`
-        : url, {responseType: 'blob'}
+        : url, { responseType: 'blob' }
       ).toPromise();
       if (data) {
         let reader = new FileReader();
@@ -270,7 +286,7 @@ export class FirebaseService {
       const path = `/audios/${Date.now()}_${file.name}`;
       const ref = this.fireStorage.ref(path);
       const task = this.fireStorage.upload(path, file.rawFile);
-  
+
       task.snapshotChanges().pipe(
         finalize(async () => {
           const url = await ref.getDownloadURL().toPromise();

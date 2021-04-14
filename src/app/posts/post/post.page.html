@@ -149,7 +149,7 @@
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button
       style="margin: auto"
-      *ngIf="(post?.audio && (!post.isFavorite || isLoading)) || post?.audio?.base64"
+      *ngIf="(post?.audio && !isLoading) || post?.audio?.base64"
       (click)="play()"
       size="small"
     >
