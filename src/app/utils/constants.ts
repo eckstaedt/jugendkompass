@@ -9,7 +9,9 @@ export enum AnalyticsField {
     INVALID_PASSWORD_PROVIDED = 'invalidPasswordProvided',
     FILTER_MODAL_APPLIED = 'filterModalApplied',
     ADMIN_LOGGED_IN = 'adminLoggedIn',
-    AUSGABE_OPENED = 'ausgabeOpened'
+    AUSGABE_OPENED = 'ausgabeOpened',
+    VIDEO_PLAYED = 'videoPlayed',
+    PDF_DOWNLOADED = 'pdfDownloaded'
 }
 
 export enum Platforms {

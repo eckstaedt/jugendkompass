@@ -12,6 +12,7 @@ import { HttpEventType } from '@angular/common/http';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 const { CapacitorVideoPlayer } = Plugins;
 import { writeFile } from 'capacitor-blob-writer'
+import { AnalyticsField } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-ausgabe',
@@ -49,12 +50,17 @@ export class AusgabePage implements OnInit {
     }
   }
 
-  async playVideo(url: string) {
+  async playVideo(video: any) {
     await this.videoPlayer.initPlayer({
       mode: 'fullscreen',
-      url: url,
+      url: video.url,
       playerId: 'fullscreen',
       componentTag: 'app-ausgabe'
+    });
+    this.firebaseService.incrementAnalyticsField(AnalyticsField.VIDEO_PLAYED, {
+      ausgabe: this.ausgabe.id,
+      ausgabenName: this.ausgabe.name,
+      video: video.name
     });
   }
 
@@ -87,11 +93,20 @@ export class AusgabePage implements OnInit {
 
           loading.dismiss();
 
+          this.firebaseService.incrementAnalyticsField(AnalyticsField.PDF_DOWNLOADED, {
+            ausgabe: this.ausgabe.id,
+            ausgabenName: this.ausgabe.name
+          });
+
           this.fileOpener.open(uri, 'application/pdf')
         }
       });
     } else {
       window.open(this.ausgabe.pdfUrl, '_blank');
+      this.firebaseService.incrementAnalyticsField(AnalyticsField.PDF_DOWNLOADED, {
+        ausgabe: this.ausgabe.id,
+        ausgabenName: this.ausgabe.name
+      });
     }
   }
 }
