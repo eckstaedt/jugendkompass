@@ -22,5 +22,9 @@ target 'App' do
   capacitor_pods
   # Add your Pods here
   pod 'FirebaseCore'
-  pod 'Firebase/Messaging'
+  pod 'Firebase/Messaging', '~> 6.3.0'
+end
+
+target 'NotificationServiceExtension' do
+    pod 'Firebase/Messaging', '~> 6.3.0'
 end
