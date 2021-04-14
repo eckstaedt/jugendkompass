@@ -247,7 +247,6 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
       title: post.title.rendered,
       excerpt: post.excerpt.rendered,
       categories: post.categories,
-      audio: post.audio,
       wpViews: parseInt(post.views, 10),
       readingTime: post.readingTime,
       postImg: post._embedded['wp:featuredmedia']
