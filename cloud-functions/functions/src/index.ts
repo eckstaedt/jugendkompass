@@ -218,6 +218,17 @@ app.delete('/oneTimeKeys', async (req: any, res: any) => {
   });
 });
 
+exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
+  const payload: admin.messaging.MessagingPayload = {
+    notification: data.notification,
+    data: data.data
+  };
+  
+  admin.messaging().sendToTopic('general', payload);
+
+  return data;
+});
+
 exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
   const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
   let posts: any[];
@@ -294,4 +305,43 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
 
   await batch.commit();
   return "Successfully updated categories";
+});
+
+exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+  const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  let pages: any[];
+
+  try {
+    const options: any = {
+      uri: `${url}posts?_embed&per_page=100`,
+    };
+    const res: any = await request.get(options);
+    pages = JSON.parse(res);
+  } catch (error) {
+    return `Could not load pages from Wordpress (${url}) ${error}`;
+  }
+
+  const batch = db.batch();
+
+  for (const page of pages) {
+    if (page.title.rendered === 'Impressum' ||
+      page.title.rendered === 'Datenschutzerkl\u00e4rung' ||
+      page.title.rendered === 'Datenschutzerklärung') {
+      const postRef = db.collection("pages").doc(
+        page.title.rendered === 'Impressum' ? 'imprint' : 'dataprot'
+      );
+      batch.set(postRef, {
+        pageId: `${page.id}`,
+        link: page.link,
+        title: page.title.rendered,
+        content: page.content.rendered,
+        modified: page.modified
+      }, {
+        merge: true
+      });
+    }
+  }
+
+  await batch.commit();
+  return "Successfully updated pages";
 });

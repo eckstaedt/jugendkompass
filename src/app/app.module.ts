@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
@@ -38,7 +39,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     AngularFireStorageModule,
     IonicStorageModule.forRoot(),
     ChartsModule,
-    FileUploadModule
+    FileUploadModule,
+    AngularFireFunctionsModule
   ],
   providers: [
     PhotoViewer,

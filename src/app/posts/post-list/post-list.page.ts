@@ -135,6 +135,7 @@ export class PostListPage implements OnInit {
     }
 
     if (this.searchTerm === 'JugendkompassAdmin$123') {
+      this.isSearching = false;
       await this.firebaseService.setAdmin();
       const toast = await this.toastController.create({
         message: 'Admin Authentifizierung erfolgreich',
@@ -142,7 +143,6 @@ export class PostListPage implements OnInit {
         duration: 1000
       });
       this.searchTerm = '';
-      this.isSearching = false;
       toast.present();
     }
 

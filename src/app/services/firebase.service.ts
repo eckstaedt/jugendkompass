@@ -13,6 +13,7 @@ import * as firebase from 'firebase/app';
 import { AnalyticsField } from '../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,8 @@ export class FirebaseService {
     private fireStorage: AngularFireStorage,
     private storage: Storage,
     private utils: Utils,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private fns: AngularFireFunctions
   ) {
     this.init();
   }
@@ -42,6 +44,17 @@ export class FirebaseService {
     if (readArticles) {
       this.readArticles = JSON.parse(readArticles);
     }
+  }
+
+  async sendTestPush() {
+    const callable: (data) => Observable<any> = this.fns.httpsCallable('sendTestPush');
+    await callable({
+      token: '', // TODO
+      data: {},
+      notification: {
+        body: "test"
+      }
+    }).toPromise();
   }
 
   incrementAnalyticsField(field: AnalyticsField, data: any = {}) {
