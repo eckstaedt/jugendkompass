@@ -6,7 +6,9 @@ import {
   Platform,
   ActionSheetController,
   IonBackButton,
-  ToastController
+  ToastController,
+  AlertController,
+  LoadingController
 } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
@@ -15,9 +17,9 @@ import { RouterService } from 'src/app/services/router.service';
 import { Plugins } from '@capacitor/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { File, FileEntry } from '@ionic-native/File/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { Howl } from 'howler';
+import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { Utils } from 'src/app/utils/utils';
 const { Browser, Share } = Plugins;
 
 @Component({
@@ -28,6 +30,7 @@ const { Browser, Share } = Plugins;
 export class PostPage implements OnInit {
   @ViewChild('backButton') backButton: IonBackButton;
 
+  private file: FileLikeObject;
   public post: FirebasePost;
   public sound: any;
   public soundReady = false;
@@ -36,6 +39,8 @@ export class PostPage implements OnInit {
   defaultHref: string = '';
   public textSize = 15;
   public isAdmin: boolean = false;
+  public fileUploader: FileUploader = new FileUploader({});
+  public isLoading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,10 +53,10 @@ export class PostPage implements OnInit {
     private storage: Storage,
     private routerService: RouterService,
     private firebaseService: FirebaseService,
-    private fireStorage: AngularFireStorage,
     private toastController: ToastController,
-    private file: File,
-    private fileChooser: FileChooser
+    private alertController: AlertController,
+    private loadingController: LoadingController,
+    private utils: Utils
   ) { }
 
   ngOnInit() {
@@ -97,21 +102,25 @@ export class PostPage implements OnInit {
       if (res) this.favoritePosts = JSON.parse(res);
     });
     let isFavorite: boolean = false;
-    if (this.favoritePosts)
+    if (this.favoritePosts) {
       isFavorite = Boolean(
         this.favoritePosts.find(post => post.id.toString() === id),
       );
+    }
 
     // if local stored favorite-post, get post information from local storage
     if (isFavorite) {
       const localPost: FirebasePost = this.favoritePosts.find(
         post => post.id.toString() == id,
       );
-      this.post = { ...localPost };
+      this.post = {
+        ...localPost,
+        isFavorite: true,
+      };
 
-      if (this.post.base64Audio) {
+      if (this.post.audio?.base64) {
         this.audioService.loadNewAudio(
-          this.post.base64Audio,
+          this.post.audio.base64,
           this.post.title,
         );
       }
@@ -119,7 +128,7 @@ export class PostPage implements OnInit {
       this.post = await this.firebaseService.getPost(id);
       if (this.post.audio) {
         this.audioService.loadNewAudio(
-          this.post.audio,
+          this.post.audio.url,
           this.post.title,
         );
       }
@@ -193,94 +202,6 @@ export class PostPage implements OnInit {
     this.firebaseService.incrementAudioPlays(this.post.id);
   }
 
-  files = [];
-  uploadProgress = 0;
-
-  async addAudioToPost() {
-    this.fileChooser.open()
-      .then(async uri => {
-        this.file.resolveLocalFilesystemUrl(uri)
-          .then(async f => {
-            const path = uri.substr(0, uri.lastIndexOf('/') + 1);
-
-            const toast = await this.toastController.create({
-              duration: 3000,
-              message: 'Pfad: ' + path
-            });
-            toast.present();
-
-            const type = this.getMimeType(f.name.split('.').pop());
-            const buffer = await this.file.readAsArrayBuffer(path, f.name);
-            const fileBlob = new Blob([buffer], type);
-
-            const randomId = Math.random()
-              .toString(36)
-              .substring(2, 8);
-
-            const uploadTask = this.fireStorage.upload(
-              `audios/${new Date().getTime()}_${randomId}`,
-              fileBlob
-            );
-
-            uploadTask.percentageChanges().subscribe(change => {
-              this.uploadProgress = change;
-            });
-
-            uploadTask.then(async res => {
-              const toast = await this.toastController.create({
-                duration: 3000,
-                message: 'File upload finished!'
-              });
-              toast.present();
-            });
-
-            /*(<FileEntry>entry).file(file => {
-              const type = this.getMimeType(uri.split('.').pop());
-              const buffer = await this.file.readAsArrayBuffer(uri, uri);
-              const fileBlob = new Blob([buffer], type);
-
-              const randomId = Math.random()
-                .toString(36)
-                .substring(2, 8);
-
-              const toast = await this.toastController.create({
-                duration: 3000,
-                message: 'Start Upload'
-              });
-              toast.present();
-              const uploadTask = this.fireStorage.upload(
-                `audios/${new Date().getTime()}_${randomId}`,
-                fileBlob
-              );
-
-              uploadTask.percentageChanges().subscribe(change => {
-                this.uploadProgress = change;
-              });
-
-              uploadTask.then(async res => {
-                const toast = await this.toastController.create({
-                  duration: 3000,
-                  message: 'Datei erfolgreich hochgeladen!'
-                });
-                toast.present();
-              });
-            }
-            );*/
-          })
-          .catch(err => {
-            console.log('Error while reading file.');
-          });
-
-      })
-      .catch(async e => {
-        const toast = await this.toastController.create({
-          duration: 3000,
-          message: 'Fehler:' + e
-        });
-        toast.present();
-      });
-  }
-
   getMimeType(fileExt) {
     if (fileExt == 'mp3') return { type: 'audio/mp3' };
     else if (fileExt == 'wav') return { type: 'audio/wav' };
@@ -291,10 +212,11 @@ export class PostPage implements OnInit {
 
   async setPostFavorite() {
     if (!this.post.isFavorite) {
+      this.isLoading = true;
       this.post.isFavorite = true;
       if (this.post.postImg && !this.post.postImg.source_url.startsWith('data')) {
         await this.firebaseService
-          .getBase64ImgFromUrl(this.post.postImg.source_url)
+          .getBase64FromUrl(this.post.postImg.source_url)
           .then((res: string) => (this.post.base64Img = res));
       }
       for (const image of Array.from(
@@ -302,19 +224,18 @@ export class PostPage implements OnInit {
       )) {
         const imageSrc: string = (image as HTMLImageElement).src;
         if (imageSrc.startsWith('data')) {
-          const base64: any = await this.firebaseService.getBase64ImgFromUrl(imageSrc);
+          const base64: any = await this.firebaseService.getBase64FromUrl(imageSrc);
           this.post.content = this.post.content.replace(
             imageSrc,
             base64,
           );
         }
       }
-      // CORS-Problem muss gelöst werden,
-      // dann funktioniert das Speichern von Audio-dateien
-      // in Favoriten mit dem unten stehenden Code
-      // if(this.post.audio && this.post.audio !== ''){
-      //   this.post.base64Audio = await this.wp.getBase64FromUrl(this.post.audio);
-      // }
+
+      if(this.post.audio){
+        this.post.audio.base64 = await this.firebaseService.getBase64FromUrl(this.post.audio.url, false) as string;
+      }
+      this.isLoading = false;
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
       this.firebaseService.incrementAnalyticsField(AnalyticsField.FAVORITE_ADDED);
@@ -334,5 +255,71 @@ export class PostPage implements OnInit {
   openFilteredList(category: Category): void {
     this.routerService.setData(category);
     this.router.navigateByUrl('tabs/posts');
+  }
+
+  async onAudioSelected() {
+    if (this.fileUploader.queue && this.fileUploader.queue.length !== 0) {
+      const file: FileLikeObject = this.fileUploader.queue[this.fileUploader.queue.length - 1].file;
+      this.file = file;
+      this.openConfirmAudioUploadDialog();
+    }
+  }
+
+  async openConfirmAudioUploadDialog() {
+    const alert = await this.alertController.create({
+      header: 'Audioupload',
+      message: `Möchtest du die Audiodatei (${this.file.name}) für diesen Artikel hochladen?`,
+      buttons: [{
+        text: 'Ja',
+        handler: async () => {
+          const loading  = await this.loadingController.create();
+          loading.present();
+          this.firebaseService.uploadAudio(this.file, this.post).then(async (res: any) => {
+            const sound = new Howl({
+              html5: true,
+              src: [res.url],
+              preload: true
+            });
+            sound.on('load', () => {
+              const audio: any = {
+                ...res,
+                duration: this.utils.getMinString(Math.round(sound.duration()))
+              };
+      
+              this.firebaseService.updatePost(this.post.id, {
+                audio: audio
+              }).then(async () => {
+                this.post.audio = audio;
+                this.audioService.loadNewAudio(
+                  this.post.audio.url,
+                  this.post.title,
+                );
+                loading.dismiss();
+                const toast = await this.toastController.create({
+                  duration: 3000,
+                  color: 'success',
+                  message: 'Datei erfolgreich hochgeladen!'
+                });
+                toast.present();
+              }).catch(async () => {
+                loading.dismiss();
+                const toast = await this.toastController.create({
+                  duration: 3000,
+                  color: 'danger',
+                  message: 'Die Datei konnte nicht hochgeladen werden!'
+                });
+                toast.present();
+              });
+            });
+          }).catch(() => {
+            loading.dismiss();
+          });
+        }
+      }, {
+        text: 'Abbrechen'
+      }]
+    })
+
+    await alert.present();
   }
 }

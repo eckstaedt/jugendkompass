@@ -8,7 +8,8 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="addAudioToPost()" [disabled]="isAdmin">
+      <input (change)="onAudioSelected()" #audioSelector style="display: none;" accept="audio/mp3" type="file" ng2FileSelect [uploader]="fileUploader"/>
+      <ion-button *ngIf="isAdmin" (click)="audioSelector.click()">
         <ion-icon
           slot="icon-only"
           name="cloud-upload"
@@ -148,7 +149,7 @@
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button
       style="margin: auto"
-      *ngIf="post && post?.audio && post?.audio !== ''"
+      *ngIf="(post?.audio && (!post.isFavorite || isLoading)) || post?.audio?.base64"
       (click)="play()"
       size="small"
     >

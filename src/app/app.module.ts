@@ -21,8 +21,7 @@ import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module'
 import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { File } from '@ionic-native/File/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,15 +38,14 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
     AngularFireStorageModule,
     IonicStorageModule.forRoot(),
     ChartsModule,
+    FileUploadModule
   ],
   providers: [
     PhotoViewer,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileOpener,
-    File,
-    FileChooser
+    FileOpener
   ],
   bootstrap: [AppComponent],
 })

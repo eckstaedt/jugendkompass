@@ -4,13 +4,15 @@ import {
 } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, finalize } from 'rxjs/operators';
 import { Category, FirebasePost, CategoryData, Ausgabe } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { AnalyticsField } from '../utils/constants';
+import { FileLikeObject } from 'ng2-file-upload';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +28,7 @@ export class FirebaseService {
 
   constructor(
     private db: AngularFirestore,
+    private fireStorage: AngularFireStorage,
     private storage: Storage,
     private utils: Utils,
     private httpClient: HttpClient
@@ -117,6 +120,10 @@ export class FirebaseService {
     }
   }
 
+  updatePost(id: string, data: any) {
+    return this.db.doc(`posts/${id}`).update(data);
+  }
+
   getPosts() {
     return new Observable((observer) => {
       this.db.collection('posts').valueChanges().subscribe((posts: FirebasePost[]) => {
@@ -187,7 +194,9 @@ export class FirebaseService {
   }
 
   async setAdmin() {
-    this.subscriber.next(true);
+    if (this.subscriber) {
+      this.subscriber.next(true);
+    }
     this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
     return await this.storage.set('isAdmin', true);
   }
@@ -217,9 +226,12 @@ export class FirebaseService {
     });  
   }
 
-  async getBase64ImgFromUrl(imageURL: any) {
+  async getBase64FromUrl(url: string, redirect: boolean = true) {
     return new Promise(async (resolve, reject) => {
-      const data: Blob = await this.httpClient.get(`https://cors.bridged.cc/${imageURL}`, {responseType: 'blob'}).toPromise();
+      const data: Blob = await this.httpClient.get(redirect ?
+        `https://cors.bridged.cc/${url}`
+        : url, {responseType: 'blob'}
+      ).toPromise();
       if (data) {
         let reader = new FileReader();
         reader.readAsDataURL(data);
@@ -227,7 +239,7 @@ export class FirebaseService {
           resolve(reader.result.toString());
         }, false);
       } else {
-        reject(imageURL);
+        reject(url);
       }
     });
   }
@@ -237,6 +249,25 @@ export class FirebaseService {
       responseType: 'blob',
       reportProgress: true,
       observe: 'events'
+    });
+  }
+
+  uploadAudio(file: FileLikeObject, post: FirebasePost) {
+    return new Promise((resolve: any) => {
+      const path = `/audios/${Date.now()}_${file.name}`;
+      const ref = this.fireStorage.ref(path);
+      const task = this.fireStorage.upload(path, file.rawFile);
+  
+      task.snapshotChanges().pipe(
+        finalize(async () => {
+          const url = await ref.getDownloadURL().toPromise();
+          resolve({
+            url,
+            path,
+            name: file.name
+          });
+        })
+      ).subscribe();
     });
   }
 }

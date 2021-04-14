@@ -33,8 +33,13 @@ export interface FirebasePost {
   views: number;
   ausgabe?: Category;
   rubrik?: Category;
-  base64Audio?: string;
-  audio?: string;
+  audio?: {
+    name: string;
+    path: string;
+    url: string;
+    duration: string;
+    base64?: string;
+  };
   pdf?: string;
   isFavorite?: boolean;
   base64Img?: string;

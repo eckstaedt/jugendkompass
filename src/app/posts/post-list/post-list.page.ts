@@ -232,7 +232,6 @@ export class PostListPage implements OnInit {
             updatedArticles.push({
               ...updatedArticle,
               base64Img: article.base64Img,
-              base64Audio: article.base64Audio
             });
           }
           }

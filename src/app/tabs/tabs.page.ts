@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { AudioService } from '../services/audio.service';
 import { IonRange } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { Utils } from '../utils/utils';
 
 @Component({
   selector: 'app-tabs',
@@ -19,7 +20,7 @@ export class TabsPage {
   movingSlider = false;
   sliderSubscription: Subscription;
 
-  constructor(private audioService: AudioService) {
+  constructor(private audioService: AudioService, private utils: Utils) {
     this.audioService.onChange().subscribe((res: any) => {
       this.playing = res.playing;
       if (this.playing) {
@@ -71,10 +72,10 @@ export class TabsPage {
         this.progress =
         (this.audioService.getSeek() / this.audioService.getDuration()) *
         1000 || 0;
-        this.curTime = this.getMinString(
+        this.curTime = this.utils.getMinString(
           Math.round(this.audioService.getSeek()),
           );
-        this.duration = this.getMinString(
+        this.duration = this.utils.getMinString(
           Math.round(this.audioService.getDuration()),
         );
       }
@@ -84,25 +85,11 @@ export class TabsPage {
     }
   }
 
-  getMinString(time: number): string {
-    const hours: number | string = Math.floor(time / 3600);
-    let minutes: number | string = Math.floor((time - hours * 3600) / 60);
-    let seconds: number | string = time - hours * 3600 - minutes * 60;
-
-    if (minutes < 10) {
-      minutes = '0' + minutes;
-    }
-    if (seconds < 10) {
-      seconds = '0' + seconds;
-    }
-    return minutes + ':' + seconds;
-  }
-
   onRangeFocus() {
     this.movingSlider = true;
     const endTime = this.audioService.getDuration();
     this.sliderSubscription = this.range.ionChange.subscribe(() => {
-      this.curTime = this.getMinString(
+      this.curTime = this.utils.getMinString(
         Math.round((+this.range.value / 1000) * endTime),
       );
     });
