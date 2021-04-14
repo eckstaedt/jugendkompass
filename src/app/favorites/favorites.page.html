@@ -67,7 +67,7 @@
                         <ion-icon name="eye-outline"></ion-icon> {{post.views}}
                       </ion-col>
                       <ion-col *ngIf="post.audio" size="4">
-                        <ion-icon name="volume-high-outline"></ion-icon> 5:52
+                        <ion-icon name="volume-high-outline"></ion-icon>{{ post.audio.duration }} min
                         min
                       </ion-col>
                     </ion-row>
