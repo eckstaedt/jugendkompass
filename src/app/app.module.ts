@@ -22,6 +22,7 @@ import { FilterModalPageModule } from './posts/filter-modal/filter-modal.module'
 import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-modal.module';
 import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { VideoPlayer } from '@ionic-native/video-player/ngx';
 import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
@@ -47,7 +48,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileOpener
+    FileOpener,
+    VideoPlayer
   ],
   bootstrap: [AppComponent],
 })
