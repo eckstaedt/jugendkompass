@@ -10,9 +10,5 @@
     <param name="android-package" value="io.github.pwlin.cordova.plugins.fileopener2.FileOpener2"/>
   </feature>
 
-  <feature name="VideoPlayer">
-    <param name="android-package" value="com.moust.cordova.videoplayer.VideoPlayer"/>
-  </feature>
-
   
 </widget>

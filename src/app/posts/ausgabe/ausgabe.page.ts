@@ -13,7 +13,6 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 const { CapacitorVideoPlayer } = Plugins;
 import { writeFile } from 'capacitor-blob-writer'
 import { AnalyticsField } from 'src/app/utils/constants';
-import { VideoPlayer, VideoOptions } from '@ionic-native/video-player/ngx';
 
 @Component({
   selector: 'app-ausgabe',
@@ -32,8 +31,7 @@ export class AusgabePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private firebaseService: FirebaseService,
     private fileOpener: FileOpener,
-    private loadingController: LoadingController,
-    private videoPlayerAnd: VideoPlayer
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -45,27 +43,20 @@ export class AusgabePage implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.platform.is('ios')) {
+    if (this.platform.is('capacitor')) {
       this.videoPlayer = CapacitorVideoPlayer;
-    } else if (!this.platform.is('capacitor')) {
+    } else {
       this.videoPlayer = PluginsLibrary.CapacitorVideoPlayer
     }
   }
 
   async playVideo(video: any) {
-    if (this.platform.is('capacitor') && this.platform.is('ios')) {
-      await this.videoPlayer.initPlayer({
-        mode: 'fullscreen',
-        url: video.url,
-        playerId: 'fullscreen',
-        componentTag: 'app-ausgabe'
-      });
-    } else if (this.platform.is('capacitor') && this.platform.is('android')) {
-      const options: VideoOptions = {
-        scalingMode: 2
-      };
-      await this.videoPlayerAnd.play(video.url, options);
-    }
+    await this.videoPlayer.initPlayer({
+      mode: 'fullscreen',
+      url: video.url,
+      playerId: 'fullscreen',
+      componentTag: 'app-ausgabe'
+    });
     this.firebaseService.incrementAnalyticsField(AnalyticsField.VIDEO_PLAYED, {
       ausgabe: this.ausgabe.id,
       ausgabenName: this.ausgabe.name,
