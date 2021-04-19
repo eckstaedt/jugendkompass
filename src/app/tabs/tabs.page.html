@@ -10,7 +10,9 @@
       <ion-button fill="clear" class="close" size="small" (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
-      <ion-label class="songLabel">{{ title }}</ion-label>
+      <div text-nowrap>
+        <ion-label class="songLabel">{{ title }}</ion-label>
+      </div>
       <ion-range
         class="songRange"
         #range
