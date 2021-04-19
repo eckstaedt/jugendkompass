@@ -51,12 +51,14 @@ export class AusgabePage implements OnInit {
   }
 
   async playVideo(video: any) {
-    await this.videoPlayer.initPlayer({
+    const data: any = {
       mode: 'fullscreen',
       url: video.url,
+      subtitle: null,
       playerId: 'fullscreen',
       componentTag: 'app-ausgabe'
-    });
+    };
+    await this.videoPlayer.initPlayer(data);
     this.firebaseService.incrementAnalyticsField(AnalyticsField.VIDEO_PLAYED, {
       ausgabe: this.ausgabe.id,
       ausgabenName: this.ausgabe.name,
