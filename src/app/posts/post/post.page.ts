@@ -14,13 +14,13 @@ import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router.service';
-import { Plugins } from '@capacitor/core';
+import { Plugins, NetworkStatus } from '@capacitor/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { Utils } from 'src/app/utils/utils';
-const { Browser, Share } = Plugins;
+const { Browser, Network, Share } = Plugins;
 
 @Component({
   selector: 'app-post',
@@ -41,6 +41,7 @@ export class PostPage implements OnInit {
   public isAdmin: boolean = false;
   public fileUploader: FileUploader = new FileUploader({});
   public isLoading: boolean = false;
+  public online: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -60,6 +61,17 @@ export class PostPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    Network.addListener("networkStatusChange", (status: NetworkStatus) => {
+      this.online = status.connected;
+      if (!this.online) {
+        if (this.post?.audio?.base64) {
+          this.audioService.loadNewAudio(
+            this.post.audio.base64,
+            this.post.title,
+          );
+        }
+      }
+    });
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.loadData();
@@ -81,6 +93,7 @@ export class PostPage implements OnInit {
     this.storage.get('text-size').then((res: number) => {
       this.textSize = res;
     });
+    this.loadData();
   }
 
   async setDivStyle() {
@@ -117,19 +130,22 @@ export class PostPage implements OnInit {
         ...localPost,
         isFavorite: true,
       };
+    } else {
+      this.post = await this.firebaseService.getPost(id);
+      this.post.articleWasRead = true;
+    }
 
-      if (this.post.audio?.base64) {
+    if (this.online) {
+      if (this.post.audio) {
         this.audioService.loadNewAudio(
-          this.post.audio.base64,
+          this.post.audio.url,
           this.post.title,
         );
       }
     } else {
-      this.post = await this.firebaseService.getPost(id);
-      this.post.articleWasRead = true;
-      if (this.post.audio) {
+      if (this.post.audio?.base64) {
         this.audioService.loadNewAudio(
-          this.post.audio.url,
+          this.post.audio.base64,
           this.post.title,
         );
       }
@@ -228,10 +244,10 @@ export class PostPage implements OnInit {
       if(this.post.audio){
         this.post.audio.base64 = await this.firebaseService.getBase64FromUrl(this.post.audio.url, false) as string;
       }
-      this.isLoading = false;
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
       this.firebaseService.incrementAnalyticsField(AnalyticsField.FAVORITE_ADDED);
+      this.isLoading = false;
     } else {
       this.post.isFavorite = false;
       this.post.base64Img = null;

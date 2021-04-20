@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { Plugins, PushNotificationToken, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
+import { Plugins, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { Utils } from './utils/utils';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
@@ -248,7 +248,7 @@ export class AppComponent {
   async setupNetworkCheck(){
     let alert = await this.createNetworkAlert();
     Network.addListener('networkStatusChange', async (status) => {
-      if (!status.connected && this.router.url !== '/tabs/favorites') {
+      if (!status.connected && this.router.url.search('/tabs/favorites') === -1) {
         alert.present();
       } else {
         if (alert) {

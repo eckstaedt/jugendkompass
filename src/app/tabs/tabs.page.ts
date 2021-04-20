@@ -3,6 +3,8 @@ import { AudioService } from '../services/audio.service';
 import { IonRange } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Utils } from '../utils/utils';
+import { Plugins, NetworkStatus } from '@capacitor/core';
+const { Network } = Plugins;
 
 @Component({
   selector: 'app-tabs',
@@ -19,6 +21,7 @@ export class TabsPage {
   duration = '00:00';
   movingSlider = false;
   sliderSubscription: Subscription;
+  online: boolean = true;
 
   constructor(private audioService: AudioService, private utils: Utils) {
     this.audioService.onChange().subscribe((res: any) => {
@@ -29,6 +32,9 @@ export class TabsPage {
       if (res.title) {
         this.title = res.title;
       }
+    });
+    Network.addListener("networkStatusChange", (status: NetworkStatus) => {
+      this.online = status.connected;
     });
   }
 

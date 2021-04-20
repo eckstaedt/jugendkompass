@@ -34,11 +34,11 @@
       <ion-icon name="star"></ion-icon>
       <ion-label>Favoriten</ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="posts">
+    <ion-tab-button [disabled]="!online" tab="posts">
       <ion-icon name="list"></ion-icon>
       <ion-label>Artikel</ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="settings">
+    <ion-tab-button [disabled]="!online" tab="settings">
       <ion-icon name="cog"></ion-icon>
       <ion-label>Einstellungen</ion-label>
     </ion-tab-button>
