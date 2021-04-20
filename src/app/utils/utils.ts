@@ -1,7 +1,6 @@
 import { ToastController, ModalController, Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { CategoryData, Category, FirebasePost } from './interfaces';
-import { FeedbackModalPage } from '../settings/feedback-modal/feedback-modal.page';
 import { Platforms } from './constants';
 
 @Injectable({
@@ -37,14 +36,6 @@ export class Utils {
       seconds = '0' + seconds;
     }
     return minutes + ':' + seconds;
-  }
-
-  async openFeedbackModal() {
-    const modal: HTMLIonModalElement = await this.modalController.create({
-      component: FeedbackModalPage
-    });
-
-    await modal.present();
   }
 
   getPlatform(): Platforms {

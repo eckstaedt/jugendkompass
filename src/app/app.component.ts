@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, AlertController, LoadingController } from '@ionic/angular';
+import { Platform, AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
@@ -9,10 +9,10 @@ import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import { Plugins, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
 import { Router } from '@angular/router';
-import { Utils } from './utils/utils';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
 import { FirebaseService } from './services/firebase.service';
 import { environment } from 'src/environments/environment';
+import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
@@ -36,7 +36,7 @@ export class AppComponent {
     private httpClient: HttpClient,
     private loadingController: LoadingController,
     private router: Router,
-    private utils: Utils,
+    private modalController: ModalController,
     private firebaseService: FirebaseService
   ) {
     this.verifyKeyUrl = environment.production ?
@@ -82,8 +82,12 @@ export class AppComponent {
           message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
           buttons: [{
             text: 'Ja gerne',
-            handler: () => {
-              this.utils.openFeedbackModal();
+            handler: async () => {
+              const modal: HTMLIonModalElement = await this.modalController.create({
+                component: FeedbackModalPage
+              });
+          
+              await modal.present();
             }
           },
           {

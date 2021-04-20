@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
 import { Platform, ActionSheetController, ModalController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { Utils } from 'src/app/utils/utils';
+import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
 const { Share } = Plugins;
 
 @Component({
@@ -22,7 +22,7 @@ export class SettingsPage implements OnInit {
     private plt: Platform,
     private actionSheetController: ActionSheetController,
     private firebaseService: FirebaseService,
-    private utils: Utils
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -36,8 +36,12 @@ export class SettingsPage implements OnInit {
     });
   }
 
-  openFeedbackModal() {
-    this.utils.openFeedbackModal();
+  async openFeedbackModal() {
+    const modal: HTMLIonModalElement = await this.modalController.create({
+      component: FeedbackModalPage
+    });
+
+    await modal.present();
   }
 
   onThemeChange() {

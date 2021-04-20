@@ -23,6 +23,7 @@ import { FeedbackModalPageModule } from './settings/feedback-modal/feedback-moda
 import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileUploadModule } from 'ng2-file-upload';
+import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     HttpClientModule,
     FilterModalPageModule,
     FeedbackModalPageModule,
+    AnswersModalPageModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,

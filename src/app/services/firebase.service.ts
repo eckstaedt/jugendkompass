@@ -72,6 +72,18 @@ export class FirebaseService {
     }, { merge: true });
   }
 
+  getFeedback() {
+    return this.db.collection('feedback').valueChanges();
+  }
+
+  submitFeedback(feedback: any[]) {
+    return this.db.collection('feedback').add({
+      feedback: feedback,
+      time: firebase.firestore.Timestamp.now(),
+      platform: this.utils.getPlatform()
+    });
+  }
+
   getAnalyticsOverview() {
     return this.db.doc('analytics/overall').valueChanges();
   }
