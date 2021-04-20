@@ -230,7 +230,7 @@ exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.Cal
 });
 
 exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let posts: any[];
 
   try {
@@ -273,7 +273,7 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
 });
 
 exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let categories: any[];
 
   try {
@@ -308,7 +308,7 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
 });
 
 exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://eckstaedt-webdesign.com/wp-json/wp/v2/`;
+  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let pages: any[];
 
   try {

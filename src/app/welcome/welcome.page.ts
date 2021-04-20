@@ -14,6 +14,7 @@ const { PushNotifications } = Plugins;
 })
 export class WelcomePage implements OnInit {
   theme = 'default';
+  isDark: boolean = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   constructor(private router: Router, private storage: Storage) {}
 
@@ -42,10 +43,13 @@ export class WelcomePage implements OnInit {
     if (this.theme === 'default') {
       const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
       var defaultTheme = prefersColor.matches;
+      this.isDark = defaultTheme;
       document.body.classList.toggle('dark', defaultTheme);
     } else if(this.theme === 'light') {
+      this.isDark = false;
       document.body.classList.toggle('dark', false);
     } else if(this.theme === 'dark') {
+      this.isDark = true;
       document.body.classList.toggle('dark', true);
     }
   }
