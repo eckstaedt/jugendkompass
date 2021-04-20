@@ -70,6 +70,15 @@
       <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
       <ion-label>Analysenauswertung</ion-label>
     </ion-item>
+    <ion-item
+      *ngIf="isAdmin"
+      detail
+      routerDirection="forward"
+      routerLink="/tabs/settings/keys"
+    >
+      <ion-icon slot="start" name="key-outline"></ion-icon>
+      <ion-label>Keyverwaltung</ion-label>
+    </ion-item>
     <ion-item>
       <ion-icon slot="start" name="information-outline"></ion-icon>
       <ion-label>Version</ion-label>

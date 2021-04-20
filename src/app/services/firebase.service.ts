@@ -72,6 +72,20 @@ export class FirebaseService {
     }, { merge: true });
   }
 
+  getKeys() {
+    return this.db.collection('oneTimeKeyCollection', (ref: any) => ref.orderBy('value')).valueChanges();
+  }
+
+  addKey(key: any) {
+    return this.db.doc(`oneTimeKeyCollection/${key.value}`).set(key);
+  }
+
+  updateKey(key: any) {
+    return this.db.doc(`oneTimeKeyCollection/${key.value}`).update({
+      remainingKeyCount: key.count
+    });
+  }
+
   getFeedback() {
     return this.db.collection('feedback').valueChanges();
   }
