@@ -9,6 +9,10 @@ ion-toolbar {
 .songLabel {
   padding: 1rem;
   position: absolute;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 83%;
+  text-overflow: ellipsis;
 }
 
 .songRange {
