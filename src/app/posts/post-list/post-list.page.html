@@ -29,13 +29,12 @@
     placeholder="Artikel suchen..."
   >
   </ion-searchbar>
-
-  <ion-segment *ngIf="rubriken.length" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
-    <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
-    <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
-      <div class="placeholder"></div>
-    </ion-segment-button>
-  </ion-segment>
+    <ion-segment *ngIf="rubriken.length" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="filter()">
+        <ion-segment-button class="ion-text-left" value = "all">Alle Kategorien</ion-segment-button>
+        <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
+       <div class="placeholder"></div>
+      </ion-segment-button>
+    </ion-segment>
 
   <div *ngIf="posts.length">
     <ion-grid>
