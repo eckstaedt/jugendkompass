@@ -79,7 +79,7 @@ export class AppComponent {
       if (!hasFeedbackSend) {
         const alert = await this.alertController.create({
           header: 'Gefällt dir die App?',
-          message: 'Vielen Dank, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns weiterhelfen, die App kontinuierlich zu verbessern. Bitte nimm dir ein paar Minuten und fülle das Feedbackformular aus. Anstonten kannst du das Formular jederzeit in den Einstellungen finden.',
+          message: 'Schön, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns helfen, die App weiter zu verbessern. Bitte nimm dir ein paar Minuten Zeit und fülle das Feedbackformular aus. Wenn du gerade keine Zeit hast: Du findest das Formular jederzeit in den Einstellungen.',
           buttons: [{
             text: 'Ja gerne',
             handler: async () => {
@@ -206,7 +206,7 @@ export class AppComponent {
           handler: async (event: any) => {
             if (!event.password) {
               this.showPasswordAlert(
-                (message = 'Bitte gebe das Passwort ein.'),
+                (message = 'Bitte gib das Passwort ein.'),
               );
               this.firebaseService.incrementAnalyticsField(AnalyticsField.INVALID_PASSWORD_PROVIDED);
               return;

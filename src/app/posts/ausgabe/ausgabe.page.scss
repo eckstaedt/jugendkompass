@@ -16,6 +16,7 @@ ion-fab-button {
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: .8;
+    pointer-events: none
 }
 
 .text {

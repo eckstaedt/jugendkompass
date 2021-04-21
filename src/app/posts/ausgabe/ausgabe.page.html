@@ -34,11 +34,11 @@
   </div>
   <h2 class="text" *ngIf="ausgabe?.videos && ausgabe.videos.length">Videos</h2>
   <ion-slides *ngIf="ausgabe?.videos && ausgabe.videos.length">
-    <ion-slide *ngFor="let video of ausgabe.videos">
+    <ion-slide (click)="playVideo(video)" *ngFor="let video of ausgabe.videos">
       <ion-card>
         <img [src]="video.image"/>
         <div id="fullscreen" slot="fixed"></div>
-        <ion-fab-button (click)="playVideo(video)" color="medium">
+        <ion-fab-button color="medium">
           <ion-icon size="medium" name="play"></ion-icon>
         </ion-fab-button>
       </ion-card>

@@ -148,10 +148,10 @@ export class PostListPage implements OnInit {
       });
       this.searchTerm = '';
       toast.present();
+    } else {
+      this.isSearching = true;
+      this.posts = this.search();
     }
-
-    this.isSearching = true;
-    this.posts = this.search();
   }
 
   onCategoryPressed() {
