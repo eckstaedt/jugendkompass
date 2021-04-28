@@ -7,7 +7,9 @@ import { Observable } from 'rxjs';
 export class AudioService {
   private sound: any;
   private loadedSound: any;
+  private loadedTitle: string;
   private observer: any;
+  private titleObserver: any;
   private title: string;
   private playing = false;
 
@@ -19,12 +21,23 @@ export class AudioService {
     });
   }
 
+  onTitleChange(): Observable<any> {
+    return new Observable(observer => {
+      this.titleObserver = observer;
+    });
+  }
+
   loadNewAudio(audioUrl: string, title: string) {
     this.loadedSound = new Howl({
       html5: true,
       src: [audioUrl],
     });
-    this.title = title;
+
+    this.loadedTitle = title;
+  }
+
+  getTitle(): string {
+    return this.title;
   }
 
   getDuration(): number {
@@ -41,18 +54,26 @@ export class AudioService {
 
   stop() {
     this.sound.stop();
+    this.title = '';
+    this.titleObserver.next({
+      title: ''
+    });
   }
 
   playNew() {
     if (this.sound) {
       this.sound.pause();
     }
+    this.title = this.loadedTitle;
     this.sound = this.loadedSound;
     this.sound.play();
     this.playing = true;
     this.observer.next({
       title: this.title,
       playing: true,
+    });
+    this.titleObserver.next({
+      title: this.title
     });
   }
 

@@ -34,13 +34,13 @@ export class PostPage implements OnInit {
   public post: FirebasePost;
   public sound: any;
   public soundReady = false;
-  public playing = false;
   favoritePosts: FirebasePost[] = [];
   defaultHref: string = '';
   public textSize = 15;
   public isAdmin: boolean = false;
   public fileUploader: FileUploader = new FileUploader({});
   public isLoading: boolean = false;
+  public isPlaying: boolean = false;
   public online: boolean = true;
 
   constructor(
@@ -81,6 +81,10 @@ export class PostPage implements OnInit {
         });
       }
     });
+
+    this.audioService.onTitleChange().subscribe((data: any) => {
+      this.isPlaying = data.title === this.post.title;
+    });
   }
 
   ionViewWillEnter() {
@@ -93,6 +97,7 @@ export class PostPage implements OnInit {
     this.storage.get('text-size').then((res: number) => {
       this.textSize = res;
     });
+
     this.loadData();
   }
 
@@ -134,6 +139,8 @@ export class PostPage implements OnInit {
       this.post = await this.firebaseService.getPost(id);
       this.post.articleWasRead = true;
     }
+
+    this.isPlaying = this.audioService.getTitle() === this.post.title;
 
     if (this.online) {
       if (this.post.audio) {
