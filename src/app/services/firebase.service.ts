@@ -159,6 +159,10 @@ export class FirebaseService {
     }
   }
 
+  updateAusgabe(id: string, data: any) {
+    return this.db.doc(`categories/${id}`).update(data);
+  }
+
   updatePost(id: string, data: any) {
     return this.db.doc(`posts/${id}`).update(data);
   }
@@ -320,6 +324,42 @@ export class FirebaseService {
             url,
             path,
             name: file.name
+          });
+        })
+      ).subscribe();
+    });
+  }
+
+  uploadPdf(file: FileLikeObject) {
+    return new Promise((resolve: any) => {
+      const path = `/pdfs/${Date.now()}_${file.name}`;
+      const ref = this.fireStorage.ref(path);
+      const task = this.fireStorage.upload(path, file.rawFile);
+
+      task.snapshotChanges().pipe(
+        finalize(async () => {
+          const url = await ref.getDownloadURL().toPromise();
+          resolve({
+            url,
+            path
+          });
+        })
+      ).subscribe();
+    });
+  }
+
+  uploadVideoFile(file: FileLikeObject) {
+    return new Promise((resolve: any) => {
+      const path = `/videos/${Date.now()}_${file.name}`;
+      const ref = this.fireStorage.ref(path);
+      const task = this.fireStorage.upload(path, file.rawFile);
+
+      task.snapshotChanges().pipe(
+        finalize(async () => {
+          const url = await ref.getDownloadURL().toPromise();
+          resolve({
+            url,
+            path
           });
         })
       ).subscribe();

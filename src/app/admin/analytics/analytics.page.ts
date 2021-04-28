@@ -110,9 +110,6 @@ export class AnalyticsPage implements OnInit {
         datasets: [{
           label: 'Sessions',
           data: days.map((d: any) => d.count),
-          backgroundColor: [
-            '#d5303f'
-          ],
         }]
       },
       options: {

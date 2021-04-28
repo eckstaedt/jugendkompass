@@ -8,6 +8,7 @@ import { AusgabePageRoutingModule } from './ausgabe-routing.module';
 
 import { AusgabePage } from './ausgabe.page';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedDirectivesModule } from 'src/app/directives/shared-directives.mod
     FormsModule,
     IonicModule,
     SharedDirectivesModule,
-    AusgabePageRoutingModule
+    AusgabePageRoutingModule,
+    FileUploadModule
   ],
   declarations: [AusgabePage]
 })

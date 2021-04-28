@@ -7,8 +7,15 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Ausgabe {{ ausgabe?.name }}</ion-title>
-    <ion-buttons *ngIf="ausgabe?.pdfUrl" slot="end">
-      <ion-button (click)="downloadPdf()">
+    <ion-buttons slot="end">
+      <input (change)="onFileSelected()" #selector style="display: none;" type="file" ng2FileSelect [uploader]="fileUploader"/>
+      <ion-button *ngIf="isAdmin" (click)="onUploadBtnClick(selector)">
+        <ion-icon
+          slot="icon-only"
+          name="cloud-upload"
+        ></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="ausgabe?.pdfUrl" (click)="downloadPdf()">
         <ion-icon slot="icon-only" src="../../../assets/icons/pdf.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
