@@ -11,7 +11,8 @@ export enum AnalyticsField {
     ADMIN_LOGGED_IN = 'adminLoggedIn',
     AUSGABE_OPENED = 'ausgabeOpened',
     VIDEO_PLAYED = 'videoPlayed',
-    PDF_DOWNLOADED = 'pdfDownloaded'
+    PDF_DOWNLOADED = 'pdfDownloaded',
+    POST_TIME = 'postTime'
 }
 
 export enum Platforms {

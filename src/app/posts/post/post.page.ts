@@ -41,6 +41,8 @@ export class PostPage implements OnInit {
   public fileUploader: FileUploader = new FileUploader({});
   public isPlaying: boolean = false;
   public online: boolean = true;
+  private counter: number = 0;
+  private intervalId: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -98,6 +100,20 @@ export class PostPage implements OnInit {
     });
 
     this.loadData();
+
+    this.intervalId = setInterval(() => {
+      this.counter = this.counter + 1;
+    }, 1000)
+  }
+
+  ionViewWillLeave() {
+    this.firebaseService.incrementAnalyticsField(AnalyticsField.POST_TIME, {
+      duration: this.counter,
+      postId: this.post.id,
+      postTitle: this.post.title
+    });
+    this.counter = 0;
+    clearInterval(this.intervalId);
   }
 
   async setDivStyle() {

@@ -4,6 +4,7 @@ import { Chart } from 'chart.js';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AnalyticsField, Platforms } from 'src/app/utils/constants';
 import * as firebase from 'firebase/app';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-analytics',
@@ -26,9 +27,11 @@ export class AnalyticsPage implements OnInit {
   filterAppliedCount: number = 0;
   favoriteAddedCount: number = 0;
   favoriteRemovedCount: number = 0;
+  postReadAverage: string = '';
 
   constructor(
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private utils: Utils
   ) { }
 
   ngOnInit() {}
@@ -44,6 +47,14 @@ export class AnalyticsPage implements OnInit {
       }
       if (data[`${AnalyticsField.ADMIN_LOGGED_IN}Count`]) {
         this.adminCount = data[`${AnalyticsField.ADMIN_LOGGED_IN}Count`];
+      }
+      if (data[`${AnalyticsField.POST_TIME}Count`]) {
+        let sum: number = 0;
+        for (const d of data[`${AnalyticsField.POST_TIME}Data`]) {
+          sum = sum + d.duration;
+        }
+        const avg: number = Math.round(sum / data[`${AnalyticsField.POST_TIME}Data`].length);
+        this.postReadAverage = this.utils.getMinString(avg);
       }
       if (data[`${AnalyticsField.CORRECT_PASSWORD_PROVIDED}Count`]) {
         this.passwordSuccesCount = data[`${AnalyticsField.CORRECT_PASSWORD_PROVIDED}Count`];
