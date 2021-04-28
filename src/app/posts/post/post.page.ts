@@ -39,7 +39,6 @@ export class PostPage implements OnInit {
   public textSize = 15;
   public isAdmin: boolean = false;
   public fileUploader: FileUploader = new FileUploader({});
-  public isLoading: boolean = false;
   public isPlaying: boolean = false;
   public online: boolean = true;
 
@@ -228,8 +227,10 @@ export class PostPage implements OnInit {
 
   async setPostFavorite() {
     if (!this.post.isFavorite) {
-      this.isLoading = true;
-      this.post.isFavorite = true;
+      const loading = await this.loadingController.create({
+        message: 'Beitrag wird offline gespeichert...'
+      });
+      loading.present();
       if (this.post.postImg && !this.post.postImg.source_url.startsWith('data')) {
         await this.firebaseService
           .getBase64FromUrl(this.post.postImg.source_url)
@@ -251,10 +252,11 @@ export class PostPage implements OnInit {
       if(this.post.audio){
         this.post.audio.base64 = await this.firebaseService.getBase64FromUrl(this.post.audio.url, false) as string;
       }
+      this.post.isFavorite = true;
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
       this.firebaseService.incrementAnalyticsField(AnalyticsField.FAVORITE_ADDED);
-      this.isLoading = false;
+      loading.dismiss();
     } else {
       this.post.isFavorite = false;
       this.post.base64Img = null;
