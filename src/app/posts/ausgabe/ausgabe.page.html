@@ -7,7 +7,7 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Ausgabe {{ ausgabe?.name }}</ion-title>
-    <ion-buttons slot="end">
+    <ion-buttons *ngIf="!editMode" slot="end">
       <input (change)="onFileSelected()" #selector style="display: none;" type="file" ng2FileSelect [uploader]="fileUploader"/>
       <ion-button *ngIf="isAdmin" (click)="onUploadBtnClick(selector)">
         <ion-icon
@@ -17,6 +17,11 @@
       </ion-button>
       <ion-button *ngIf="ausgabe?.pdfUrl" (click)="downloadPdf()">
         <ion-icon slot="icon-only" src="../../../assets/icons/pdf.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="editMode">
+      <ion-button (click)="saveVorwort()">
+        <ion-icon slot="icon-only" name="save-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -32,13 +37,28 @@
   <ion-card class="coverCard">
     <img [src]="ausgabe?.imageUrl"/>
   </ion-card>
-  <h2 class="text">{{ ausgabe?.title }}</h2>
+  <h2 *ngIf="!editMode" class="text">{{ ausgabe?.title }}</h2>
+  <ion-item *ngIf="editMode" lines="none">
+    <ion-label position="stacked">Titel</ion-label>
+    <ion-input placeholder="Title eingeben..." [(ngModel)]="ausgabe.title"></ion-input>
+  </ion-item>
   <div
+    *ngIf="!editMode"
     class="text"
     [innerHTML]="ausgabe?.content"
     [style.font-size.px]="textSize"
   >
   </div>
+  <ion-item *ngIf="editMode" lines="none">
+    <ion-label position="stacked">Vowort</ion-label>
+    <ion-textarea
+      cols="10"
+      autoGrow="true"
+      placeholder="Vorwort in HTML Format eingeben..."
+      *ngIf="editMode"
+      [(ngModel)]="ausgabe.content">
+    </ion-textarea>
+  </ion-item>
   <h2 class="text" *ngIf="ausgabe?.videos && ausgabe.videos.length">Videos</h2>
   <ion-slides *ngIf="ausgabe?.videos && ausgabe.videos.length">
     <ion-slide (click)="playVideo(video)" *ngFor="let video of ausgabe.videos">

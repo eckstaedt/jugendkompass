@@ -29,6 +29,7 @@ export class AusgabePage implements OnInit {
   private file2: FileLikeObject;
   public fileUploader: FileUploader = new FileUploader({});
   private uploadItem: string;
+  public editMode: boolean = false;
 
   constructor(
     private platform: Platform,
@@ -85,6 +86,10 @@ export class AusgabePage implements OnInit {
     });
   }
 
+  ionViewWillLeave() {
+    this.editMode = false;
+  }
+
   async loadData() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.firebaseService.loadCategories();
@@ -128,6 +133,14 @@ export class AusgabePage implements OnInit {
   async onUploadBtnClick(selector: HTMLInputElement) {
     const actionSheet: HTMLIonActionSheetElement = await this.actionSheetController.create({
       buttons: [{
+        text: 'Cover uploaden',
+        handler: () => {
+          this.uploadItem = 'cover';
+          selector.accept = 'image/png, image/jpeg';
+          selector.multiple = false;
+          selector.click();
+        }
+      }, {
         text: 'PDF uploaden',
         handler: () => {
           this.uploadItem = 'pdf';
@@ -142,6 +155,11 @@ export class AusgabePage implements OnInit {
           selector.accept = 'video/mp4, image/png, image/jpeg';
           selector.multiple = true;
           selector.click();
+        }
+      }, {
+        text: 'Vorwort anpassen',
+        handler: () => {
+          this.editMode = true;
         }
       }, {
         text: 'Abbrechen'
@@ -173,6 +191,15 @@ export class AusgabePage implements OnInit {
           this.fileUploader.queue = [];
           return;
         }
+      } else if (this.uploadItem === 'cover') {
+        const file: FileLikeObject = this.fileUploader.queue[this.fileUploader.queue.length - 1].file;
+        if (file.size > 300000) {
+          this.showCoverUploadError();
+          this.fileUploader.queue = [];
+        } else {
+          this.file = file;
+          this.openConfirmCoverUploadDialog();
+        }
       } else {
         const file: FileLikeObject = this.fileUploader.queue[this.fileUploader.queue.length - 1].file;
         this.file = file;
@@ -185,6 +212,15 @@ export class AusgabePage implements OnInit {
     const toast = await this.toastController.create({
       duration: 3000,
       message: 'Wähle ein Video und das Frontbild dazu aus...',
+      color: 'danger'
+    });
+    toast.present();
+  }
+
+  async showCoverUploadError() {
+    const toast = await this.toastController.create({
+      duration: 3000,
+      message: 'Wähle ein Cover mit maximal 300kb aus',
       color: 'danger'
     });
     toast.present();
@@ -220,6 +256,53 @@ export class AusgabePage implements OnInit {
                 duration: 3000,
                 color: 'danger',
                 message: 'Die Pdf konnte nicht hochgeladen werden!'
+              });
+              toast.present();
+            });
+          }).catch(() => {
+            loading.dismiss();
+            this.fileUploader.queue = [];
+          });
+        }
+      }, {
+        text: 'Abbrechen'
+      }]
+    })
+
+    await alert.present();
+  }
+
+  async openConfirmCoverUploadDialog() {
+    const alert = await this.alertController.create({
+      header: 'Cover-Upload',
+      message: `Möchtest du die Cover-Datei (${this.file.name}) für diese Ausgabe hochladen?`,
+      buttons: [{
+        text: 'Ja',
+        handler: async () => {
+          const loading  = await this.loadingController.create();
+          loading.present();
+          this.firebaseService.uploadPdf(this.file).then(async (res: any) => {
+            this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
+              imageUrl: res.url,
+              imagePath: res.path,
+            }).then(async () => {
+              this.ausgabe.imageUrl = res.url;
+              this.ausgabe.imagePath = res.path;
+              loading.dismiss();
+              this.fileUploader.queue = [];
+              const toast = await this.toastController.create({
+                duration: 3000,
+                color: 'success',
+                message: 'Das Cover wurde erfolgreich hochgeladen!'
+              });
+              toast.present();
+            }).catch(async () => {
+              loading.dismiss();
+              this.fileUploader.queue = [];
+              const toast = await this.toastController.create({
+                duration: 3000,
+                color: 'danger',
+                message: 'Das Cover konnte nicht hochgeladen werden!'
               });
               toast.present();
             });
@@ -298,5 +381,28 @@ export class AusgabePage implements OnInit {
     })
 
     await alert.present();
+  }
+
+  saveVorwort() {
+    this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
+      title: this.ausgabe.title,
+      content: this.ausgabe.content
+    }).then(async () => {
+      this.editMode = false;
+      const toast = await this.toastController.create({
+        duration: 3000,
+        color: 'success',
+        message: 'Das Vorwort wurde erfolgreich aktualisiert!'
+      });
+      toast.present();
+    }).catch(async () => {
+      this.editMode = false;
+      const toast = await this.toastController.create({
+        duration: 3000,
+        color: 'danger',
+        message: 'Das Vorwort konnte nicht aktualisiert werden!'
+      });
+      toast.present();
+    });
   }
 }

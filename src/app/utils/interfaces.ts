@@ -62,6 +62,7 @@ export interface Category {
 export interface Ausgabe extends Category {
   title: string;
   imageUrl: string;
+  imagePath?: string;
   content: string;
   pushSend?: boolean;
   pdfUrl?: string;
