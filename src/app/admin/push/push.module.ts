@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { PushPageRoutingModule } from './push-routing.module';
 
 import { PushPage } from './push.page';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PushPageRoutingModule
+    PushPageRoutingModule,
+    FileUploadModule
   ],
   declarations: [PushPage]
 })

@@ -382,4 +382,22 @@ export class FirebaseService {
       ).subscribe();
     });
   }
+
+  uploadImageFile(file: FileLikeObject) {
+    return new Promise((resolve: any) => {
+      const path = `/other/${Date.now()}_${file.name}`;
+      const ref = this.fireStorage.ref(path);
+      const task = this.fireStorage.upload(path, file.rawFile);
+
+      task.snapshotChanges().pipe(
+        finalize(async () => {
+          const url = await ref.getDownloadURL().toPromise();
+          resolve({
+            url,
+            path
+          });
+        })
+      ).subscribe();
+    });
+  }
 }

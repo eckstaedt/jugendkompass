@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { Ausgabe } from 'src/app/utils/interfaces';
 import { Utils } from 'src/app/utils/utils';
+import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 
 @Component({
   selector: 'app-push',
@@ -17,11 +18,14 @@ export class PushPage implements OnInit {
   public ausgaben: Ausgabe[] = [];
   public ausgabe: Ausgabe;
   public noAusgabe: boolean = false;
+  public file: FileLikeObject;
+  public fileUploader: FileUploader = new FileUploader({});
 
   constructor(
     private firebaseService: FirebaseService,
     private alertController: AlertController,
-    private utils: Utils
+    private utils: Utils,
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -39,41 +43,71 @@ export class PushPage implements OnInit {
     }
   }
 
-  async showConfirmAlert(isTest: boolean) {
-    const alert: any = await this.alertController.create({
-      header: isTest ? 'Testnachricht senden?' : 'Nachricht senden?',
-      message: `Titel: ${this.title}\nBody: ${this.body}`,
-      buttons: [, {
-        text: 'Abbrechen'
-      }, {
-        text: 'Senden',
-        handler: () => {
-          if (isTest) {
-            this.sendTestPush();
-          } else {
-            this.sendPush();
-          }
-        }
-      }]
-    });
-
-    await alert.present();
+  onImageSelected() {
+    if (this.fileUploader.queue && this.fileUploader.queue.length !== 0) {
+      const file: FileLikeObject = this.fileUploader.queue[this.fileUploader.queue.length - 1].file;
+      if (file.size > 300000) {
+        this.showImageUploadError();
+        this.fileUploader.queue = [];
+      } else {
+        this.file = file;
+      }
+    }
   }
 
-  sendTestPush() {
+  async showImageUploadError() {
+    const toast = await this.toastController.create({
+      duration: 3000,
+      message: 'Wähle ein Cover mit maximal 300kb aus',
+      color: 'danger'
+    });
+    toast.present();
+  }
+
+  async showConfirmAlert(isTest: boolean) {
+    if (this.body !== '') {
+      const alert: any = await this.alertController.create({
+        header: isTest ? 'Testnachricht senden?' : 'Nachricht senden?',
+        message: `<p>Titel: ${this.title}</p><p>Body: ${this.body}</p>`,
+        buttons: [, {
+          text: 'Abbrechen'
+        }, {
+          text: 'Senden',
+          handler: async () => {
+            let res: any;
+            if (this.file) {
+              res = await this.firebaseService.uploadImageFile(this.file);
+            }
+            if (isTest) {
+              this.sendTestPush(res);
+            } else {
+              this.sendPush(res);
+            }
+          }
+        }]
+      });
+  
+      await alert.present();
+    } else {
+      this.utils.showToast('Bitte gebe min. ein Text im Nachricht-Feld ein...', 'danger');
+    }
+  }
+
+  sendTestPush(res?: any) {
     this.firebaseService.sendTestPush({
       title: this.title,
       body: this.body,
-      image: this.isAusgabe ? this.ausgabe?.imageUrl : ''
+      image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url
     }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
     this.utils.showToast('Die Test Push Mitteilung wurde erfolgreich versendet', 'success');
+    this.resetData();
   }
 
-  sendPush() {
+  sendPush(res?: any) {
     this.firebaseService.sendPush({
       title: this.title,
       body: this.body,
-      image: this.isAusgabe ? this.ausgabe?.imageUrl : ''
+      image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url
     }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
     if (this.isAusgabe) {
       this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
@@ -81,6 +115,14 @@ export class PushPage implements OnInit {
       });
     }
     this.utils.showToast('Die Push Mitteilung wurde erfolgreich versendet', 'success');
+    this.resetData();
+  }
+
+  resetData(): void {
+    this.file = undefined;
+    this.fileUploader.queue = [];
+    this.title = '';
+    this.body = '';
   }
 
 }
