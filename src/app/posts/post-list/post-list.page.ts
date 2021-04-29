@@ -138,12 +138,13 @@ export class PostListPage implements OnInit {
       return;
     }
 
-    if (this.searchTerm === 'JugendkompassAdmin$123') {
+    if (this.searchTerm.length > 10 && (this.searchTerm.match(/:/g) || []).length === 3) {
       this.isSearching = false;
-      await this.firebaseService.setAdmin();
+      const authenticated = await this.firebaseService.login(this.searchTerm.split(':')[1], this.searchTerm.split(':')[2]);
+      // await this.firebaseService.setAdmin();
       const toast = await this.toastController.create({
-        message: 'Admin Authentifizierung erfolgreich',
-        color: 'success',
+        message: authenticated ? 'Admin Authentifizierung erfolgreich' : 'Fehler beim Login...',
+        color: authenticated ? 'success' : 'danger',
         duration: 1000
       });
       this.searchTerm = '';

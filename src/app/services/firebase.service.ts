@@ -4,7 +4,7 @@ import {
 } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
-import { take, finalize } from 'rxjs/operators';
+import { take, finalize, first } from 'rxjs/operators';
 import { Category, FirebasePost, CategoryData, Ausgabe } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,7 @@ import { AnalyticsField } from '../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,8 @@ export class FirebaseService {
     private storage: Storage,
     private utils: Utils,
     private httpClient: HttpClient,
-    private fns: AngularFireFunctions
+    private fns: AngularFireFunctions,
+    private afAuth: AngularFireAuth,
   ) {
     this.init();
   }
@@ -252,20 +254,26 @@ export class FirebaseService {
     return this.legalPages.find((page: any) => page.id === 'dataprot');
   }
 
-  async setAdmin() {
-    if (this.subscriber) {
-      this.subscriber.next(true);
-    }
-    this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
-    return await this.storage.set('isAdmin', true);
+  login(email: string, password: string) {
+    return new Promise((resolve: any) => {
+      this.afAuth.signInWithEmailAndPassword(email, password).then(() => {
+        this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
+        if (this.subscriber) {
+          this.subscriber.next(true);
+        }
+        resolve(true);
+      }).catch(() => {
+        resolve(false);
+      });
+    });
   }
 
   async isAdmin(): Promise<boolean> {
-    const isAdmin: boolean = Boolean(await this.storage.get('isAdmin'));
+    const user: any = await this.afAuth.authState.pipe(first()).toPromise();
     if (this.subscriber) {
-      this.subscriber.next(isAdmin);
+      this.subscriber.next(Boolean(user));
     }
-    return isAdmin;
+    return Boolean(user);
   }
 
   subscribeToAdmin(): Observable<boolean> {

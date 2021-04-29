@@ -24,6 +24,7 @@ import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.module';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +40,7 @@ import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.m
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,
+    AngularFireAuthModule,
     IonicStorageModule.forRoot(),
     ChartsModule,
     FileUploadModule,
