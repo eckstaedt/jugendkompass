@@ -77,10 +77,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
-      // {
-      //   path: 'dates',
-      //   loadChildren: () => import('./../dates/dates/dates.module').then( m => m.DatesPageModule)
-      // },
       {
         path: '',
         redirectTo: '/tabs/posts',

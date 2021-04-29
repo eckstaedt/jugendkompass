@@ -63,6 +63,7 @@ export interface Ausgabe extends Category {
   title: string;
   imageUrl: string;
   content: string;
+  pushSend?: boolean;
   pdfUrl?: string;
   pdfPath?: string;
   videos: { name: string, url: string, image: string, videoPath?: string, imagePath?: string }[];

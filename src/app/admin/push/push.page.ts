@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AlertController } from '@ionic/angular';
 import { Ausgabe } from 'src/app/utils/interfaces';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-push',
@@ -15,10 +16,12 @@ export class PushPage implements OnInit {
   public isAusgabe: boolean = true;
   public ausgaben: Ausgabe[] = [];
   public ausgabe: Ausgabe;
+  public noAusgabe: boolean = false;
 
   constructor(
     private firebaseService: FirebaseService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private utils: Utils
   ) { }
 
   ngOnInit() {
@@ -27,8 +30,13 @@ export class PushPage implements OnInit {
 
   async getCategories() {
     await this.firebaseService.getAusgaben();
-    this.ausgaben = this.firebaseService.getAusgaben();
-    this.ausgabe = this.ausgaben[0];
+    this.ausgaben = this.firebaseService.getAusgaben().filter((a: Ausgabe) => !a.pushSend);
+    if (this.ausgaben?.length) {
+      this.ausgabe = this.ausgaben[0];
+    } else {
+      this.isAusgabe = false;
+      this.noAusgabe = true;
+    }
   }
 
   async showConfirmAlert(isTest: boolean) {
@@ -58,6 +66,7 @@ export class PushPage implements OnInit {
       body: this.body,
       image: this.isAusgabe ? this.ausgabe?.imageUrl : ''
     }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
+    this.utils.showToast('Die Test Push Mitteilung wurde erfolgreich versendet', 'success');
   }
 
   sendPush() {
@@ -66,6 +75,12 @@ export class PushPage implements OnInit {
       body: this.body,
       image: this.isAusgabe ? this.ausgabe?.imageUrl : ''
     }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
+    if (this.isAusgabe) {
+      this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
+        pushSend: true
+      });
+    }
+    this.utils.showToast('Die Push Mitteilung wurde erfolgreich versendet', 'success');
   }
 
 }
