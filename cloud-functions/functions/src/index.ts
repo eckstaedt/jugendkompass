@@ -223,7 +223,18 @@ exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.Cal
     notification: data.notification,
     data: data.data
   };
-  
+
+  admin.messaging().sendToTopic('admin', payload);
+
+  return data;
+});
+
+exports.sendPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
+  const payload: admin.messaging.MessagingPayload = {
+    notification: data.notification,
+    data: data.data
+  };
+
   admin.messaging().sendToTopic('general', payload);
 
   return data;

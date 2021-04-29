@@ -8,6 +8,7 @@ import { take, finalize, first } from 'rxjs/operators';
 import { Category, FirebasePost, CategoryData, Ausgabe } from '../utils/interfaces';
 import { Utils } from '../utils/utils';
 import { HttpClient } from '@angular/common/http';
+import { FCM } from '@capacitor-community/fcm';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
 import { AnalyticsField } from '../utils/constants';
@@ -15,6 +16,8 @@ import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
+
+const fcm = new FCM();
 
 @Injectable({
   providedIn: 'root',
@@ -48,14 +51,19 @@ export class FirebaseService {
     }
   }
 
-  async sendTestPush() {
-    const callable: (data) => Observable<any> = this.fns.httpsCallable('sendTestPush');
+  async sendTestPush(notification, data) {
+    const callable: (res: any) => Observable<any> = this.fns.httpsCallable('sendTestPush');
     await callable({
-      token: '', // TODO
-      data: {},
-      notification: {
-        body: "test"
-      }
+      data: data,
+      notification: notification
+    }).toPromise();
+  }
+
+  async sendPush(notification, data) {
+    const callable: (res: any) => Observable<any> = this.fns.httpsCallable('sendPush');
+    await callable({
+      data: data,
+      notification: notification
     }).toPromise();
   }
 
@@ -257,10 +265,11 @@ export class FirebaseService {
   login(email: string, password: string) {
     return new Promise((resolve: any) => {
       this.afAuth.signInWithEmailAndPassword(email, password).then(() => {
-        this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
+        fcm.subscribeTo({ topic: 'admin' });
         if (this.subscriber) {
           this.subscriber.next(true);
         }
+        this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
         resolve(true);
       }).catch(() => {
         resolve(false);
