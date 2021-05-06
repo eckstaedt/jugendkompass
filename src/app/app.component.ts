@@ -81,6 +81,8 @@ export class AppComponent {
           header: 'Gefällt dir die App?',
           message: 'Schön, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns helfen, die App weiter zu verbessern. Bitte nimm dir ein paar Minuten Zeit und fülle das Feedbackformular aus. Wenn du gerade keine Zeit hast: Du findest das Formular jederzeit in den Einstellungen.',
           buttons: [{
+              text: 'Nein danke'
+            }, {
             text: 'Ja gerne',
             handler: async () => {
               const modal: HTMLIonModalElement = await this.modalController.create({
@@ -89,9 +91,6 @@ export class AppComponent {
           
               await modal.present();
             }
-          },
-          {
-            text: 'Nein danke'
           }]
         });
 

@@ -121,7 +121,7 @@ export class AusgabePage implements OnInit {
             ausgabenName: this.ausgabe.name
           });
 
-          this.fileOpener.open(uri, 'application/pdf')
+          this.fileOpener.open(uri, 'application/pdf');
         }
       });
     } else {
