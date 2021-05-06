@@ -54,3 +54,11 @@ ion-footer {
         }
     }
 }
+
+.header-md::after {
+    background-image: none;
+}
+
+.footer-md::before {
+    background-image: none;
+}

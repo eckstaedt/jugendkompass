@@ -19,6 +19,10 @@ const options: cors.CorsOptions = {
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
 };
+// const url: string = 'https://jugendkompass.com/wp-json/wp/v2/';
+// const impulsesId: number = 9;
+const url: string = 'https://eckstaedt-webdesign.com/wp-json/wp/v2/';
+const impulsesId: number = 19;
 
 //initialize firebase inorder to access its services
 admin.initializeApp(functions.config().firebase);
@@ -241,7 +245,6 @@ exports.sendPush = functions.https.onCall((data: any, _: functions.https.Callabl
 });
 
 exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let posts: any[];
 
   try {
@@ -257,7 +260,12 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
   const batch = db.batch();
 
   for (const post of posts) {
-    const postRef = db.collection("posts").doc(`${post.id}`);
+    let postRef: any;
+    if (post.categories.find((cat: number) => cat === impulsesId)) {
+      postRef = db.collection("impulses").doc(`${post.id}`);
+    } else {
+      postRef = db.collection("posts").doc(`${post.id}`);
+    }
     batch.set(postRef, {
       id: `${post.id}`,
       date: post.date,
@@ -272,7 +280,9 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
       wpViews: parseInt(post.views, 10),
       readingTime: post.readingTime,
       postImg: post._embedded['wp:featuredmedia']
-        ? post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
+        ? post._embedded['wp:featuredmedia'][0].media_details.sizes.large
+          ? post._embedded['wp:featuredmedia'][0].media_details.sizes.large
+          : post._embedded['wp:featuredmedia'][0].media_details.sizes.medium
         : ""
     }, {
       merge: true
@@ -284,7 +294,6 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
 });
 
 exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let categories: any[];
 
   try {
@@ -319,7 +328,6 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
 });
 
 exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const url: string = `https://jugendkompass.com/wp-json/wp/v2/`;
   let pages: any[];
 
   try {
