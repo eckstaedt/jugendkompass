@@ -14,6 +14,7 @@ const { CapacitorVideoPlayer } = Plugins;
 import { writeFile } from 'capacitor-blob-writer'
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { AudioService } from 'src/app/services/audio.service';
 
 @Component({
   selector: 'app-ausgabe',
@@ -41,7 +42,8 @@ export class AusgabePage implements OnInit {
     private loadingController: LoadingController,
     private actionSheetController: ActionSheetController,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private audioService: AudioService
   ) { }
 
   ngOnInit() {
@@ -65,6 +67,7 @@ export class AusgabePage implements OnInit {
   }
 
   async playVideo(video: any) {
+    this.audioService.pause();
     const data: any = {
       mode: 'fullscreen',
       url: video.url,

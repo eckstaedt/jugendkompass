@@ -44,23 +44,27 @@
           <ion-col size="8">
             <p class="title">{{ post.title }}</p>
             <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">
-              <a (click)="openFilteredList(post.ausgabe)"
+              <a *ngIf="online" (click)="openFilteredList(post.ausgabe)"
                 >{{ post.ausgabe.name }}</a
               >
+              <a class="offline" *ngIf="!online">{{ post.ausgabe.name }}</a>
             </p>
             <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
-              <a (click)="openFilteredList(post.rubrik)"
+              <a *ngIf="online" (click)="openFilteredList(post.rubrik)"
                 >{{ post.rubrik.name }}</a
               >
+              <a class="offline" *ngIf="!online">{{ post.rubrik.name }}</a>
             </p>
             <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
-              <a (click)="openFilteredList(post.ausgabe)"
+              <a *ngIf="online" (click)="openFilteredList(post.ausgabe)"
                 >{{ post.ausgabe.name }}</a
               >
+              <a class="offline" *ngIf="!online">{{ post.ausgabe.name }}</a>
               |
-              <a (click)="openFilteredList(post.rubrik)"
+              <a *ngIf="online" (click)="openFilteredList(post.rubrik)"
                 >{{post.rubrik.name }}</a
               >
+              <a class="offline" *ngIf="!online">{{ post.rubrik.name }}</a>
             </p>
           </ion-col>
           <ion-col size="4">

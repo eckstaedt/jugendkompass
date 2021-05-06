@@ -11,6 +11,10 @@ ion-content {
         .subTitle {
             color: var(--ion-color-dark) !important;
             padding-bottom: 2rem;
+
+            .offline {
+                color: var(--ion-card-dark);
+            }
         }
         img {
             height: 7rem;

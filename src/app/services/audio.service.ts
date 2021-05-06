@@ -92,4 +92,14 @@ export class AudioService {
       });
     }
   }
+
+  pause() {
+    if (this.playing) {
+      this.sound.pause();
+      this.playing = false;
+      this.observer.next({
+        playing: false,
+      });
+    }
+  }
 }
