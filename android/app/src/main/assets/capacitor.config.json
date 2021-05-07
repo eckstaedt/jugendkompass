@@ -16,9 +16,5 @@
       "splashImmersive": false
     }
   },
-  "cordova": {},
-  "server": {
-    "url": "http://192.168.178.22:8100",
-    "cleartext": true
-  }
+  "cordova": {}
 }
