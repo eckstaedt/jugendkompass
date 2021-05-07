@@ -25,8 +25,13 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
+@font-face {
+  font-family: 'JugendkompassFont';
+  src: url('./assets/fonts/BAHNSCHRIFT.TTF');
+}
+
 :root {
-  --ion-font-family: 'Bahnschrift';
+  --ion-font-family: 'JugendkompassFont';
 }
 
 ion-toggle {

@@ -332,7 +332,7 @@ exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europ
 
   try {
     const options: any = {
-      uri: `${url}posts?_embed&per_page=100`,
+      uri: `${url}pages?_embed&per_page=100`,
     };
     const res: any = await request.get(options);
     pages = JSON.parse(res);
