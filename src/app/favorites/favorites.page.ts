@@ -24,6 +24,7 @@ export class FavoritesPage implements OnInit {
   categories = [];
   items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   count = null;
+  isSearching: boolean = false;
 
   constructor(
     private appComponent: AppComponent,
@@ -72,6 +73,7 @@ export class FavoritesPage implements OnInit {
     this.searchTerm = event.srcElement.value;
 
     if (!this.searchTerm) {
+      this.isSearching = false;
       return;
     }
 
@@ -123,8 +125,10 @@ export class FavoritesPage implements OnInit {
 
   filter() {
     if (this.searchTerm === '') {
+      this.isSearching = false;
       return this.filteredPosts;
     } else {
+      this.isSearching = true;
       return this.filteredPosts.filter((post: any) => {
         if (post.rubrik) {
           if (

@@ -80,7 +80,7 @@ export class FeedbackModalPage implements OnInit {
     
         toast.present();
         await this.storage.set('hasFeedbackSend', true);
-        this.close();
+        this.close(true);
       }).catch(async () => {
         const toast = await this.toastController.create({
           message: 'Fehler beim Senden des Feedbacks. Probiere es später erneut.',
@@ -115,8 +115,8 @@ export class FeedbackModalPage implements OnInit {
     return false;
   }
 
-  close() {
-    this.modalController.dismiss();
+  close(feedbackSend: boolean = false) {
+    this.modalController.dismiss(feedbackSend);
   }
 
 }

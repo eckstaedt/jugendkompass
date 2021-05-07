@@ -25,6 +25,7 @@
   </ion-searchbar>
 
   <div *ngIf="posts.length">
+    <ion-list-header *ngIf="!isSearching" mode="ios">Favoriten</ion-list-header>
     <ion-grid>
       <ion-row>
         <ion-col
@@ -37,10 +38,10 @@
           <ion-card [routerLink]="['/', 'tabs', 'favorites', post.id]">
             <ion-grid>
               <ion-row>
-                <ion-col class="cardColumn" size="4">
+                <ion-col class="cardColumn image" size="4">
                   <img *ngIf="post.base64Img" [src]="post.base64Img" />
                 </ion-col>
-                <ion-col class="cardColumn" size="8">
+                <ion-col class="cardColumn text" size="8">
                   <div class="postHeader">
                     <ion-card-header>
                       <p class="subTitle" *ngIf="!post.ausgabe">

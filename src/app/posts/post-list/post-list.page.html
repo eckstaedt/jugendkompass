@@ -37,6 +37,10 @@
     </ion-segment-button>
   </ion-segment>
 
+  <ion-list-header
+    mode="ios"
+    *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'"
+  >Alle Ausgaben</ion-list-header>
   <ion-slides [options]="slideOpts" *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'">
     <ion-slide
       [routerLink]="['/', 'tabs', 'posts', 'ausgabe', ausgabe.id]"
@@ -48,6 +52,7 @@
   </ion-slides>
 
   <div *ngIf="posts.length">
+    <ion-list-header *ngIf="!isSearching" mode="ios">Alle Artikel</ion-list-header>
     <ion-grid>
       <ion-row>
         <ion-col
@@ -64,10 +69,10 @@
           >
             <ion-grid>
               <ion-row>
-                <ion-col class="cardColumn" size="4">
+                <ion-col class="cardColumn image" size="4">
                   <img *ngIf="post.postImg" [src]="post.postImg.source_url" />
                 </ion-col>
-                <ion-col class="cardColumn" size="8">
+                <ion-col class="cardColumn text" size="8">
                   <div class="postHeader">
                     <ion-card-header>
                       <p class="subTitle" *ngIf="!post.ausgabe">
@@ -108,6 +113,12 @@
   </div>
 
   <div *ngIf="!posts.length && !allPosts.length && online">
+    <ion-list-header mode="ios">
+      <ion-skeleton-text
+      animated
+      style="width: 40%"
+      ></ion-skeleton-text>
+    </ion-list-header>
     <ion-grid>
       <ion-row>
         <ion-col

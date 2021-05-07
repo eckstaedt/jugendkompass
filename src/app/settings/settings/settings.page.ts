@@ -16,6 +16,7 @@ export class SettingsPage implements OnInit {
   public version: string = version;
   public theme: string = 'default';
   public isAdmin: boolean = false;
+  public feedbackProvided: boolean = false;
 
   constructor(
     private storage: Storage,
@@ -25,20 +26,25 @@ export class SettingsPage implements OnInit {
     private modalController: ModalController
   ) {}
 
-  ngOnInit() {
-    this.storage.get('theme')
-      .then((res: string) => {
-        this.theme = res;
-      });
+  async ngOnInit() {
+    this.theme = await this.storage.get('theme');
 
     this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
       this.isAdmin = isAdmin;
     });
   }
 
+  async ionViewWillEnter() {
+    this.feedbackProvided = await this.storage.get('hasFeedbackSend');
+  }
+
   async openFeedbackModal() {
     const modal: HTMLIonModalElement = await this.modalController.create({
       component: FeedbackModalPage
+    });
+
+    modal.onDidDismiss().then((res: any) => {
+      this.feedbackProvided = res.data;
     });
 
     await modal.present();

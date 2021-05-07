@@ -50,8 +50,8 @@ export class PostListPage implements OnInit {
     freeMode: true,
     breakpoints: {
       320: {
-        slidesPerView: 2.4,
-        spaceBetween: 10
+        slidesPerView: 2.2,
+        spaceBetween: 20
       },
       480: {
         slidesPerView: 3.4,
