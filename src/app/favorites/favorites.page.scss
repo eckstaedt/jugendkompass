@@ -50,9 +50,11 @@ ion-card {
       height: 7rem;
 
       &.image {
+        box-shadow: rgb(0 0 0 / 12%) 0px 4px 4px;
+        border-radius: .4rem;
+
         img {
           border-radius: .4rem;
-          box-shadow: rgb(0 0 0 / 12%) 0px 4px 4px;
         }
       }
 
