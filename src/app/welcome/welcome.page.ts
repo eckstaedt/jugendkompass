@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 const fcm = new FCM();
 import { Plugins, PushNotificationToken, PushNotification } from '@capacitor/core';
+import { ThemeService } from '../services/theme/theme.service';
 
 const { PushNotifications } = Plugins;
 
@@ -16,7 +17,10 @@ export class WelcomePage implements OnInit {
   theme = 'default';
   isDark: boolean = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  constructor(private router: Router, private storage: Storage) {}
+  constructor(
+    private router: Router, 
+    private storage: Storage,
+    private themeService: ThemeService) {}
 
   ngOnInit() {}
 
@@ -39,18 +43,6 @@ export class WelcomePage implements OnInit {
   }
 
   onThemeChange() {
-    this.storage.set('theme', this.theme);
-    if (this.theme === 'default') {
-      const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
-      var defaultTheme = prefersColor.matches;
-      this.isDark = defaultTheme;
-      document.body.classList.toggle('dark', defaultTheme);
-    } else if(this.theme === 'light') {
-      this.isDark = false;
-      document.body.classList.toggle('dark', false);
-    } else if(this.theme === 'dark') {
-      this.isDark = true;
-      document.body.classList.toggle('dark', true);
-    }
+    this.isDark = this.themeService.themeChange(this.theme);
   }
 }

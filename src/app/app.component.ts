@@ -10,9 +10,10 @@ import { FCM } from '@capacitor-community/fcm';
 import { Plugins, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
 import { Router } from '@angular/router';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
-import { FirebaseService } from './services/firebase.service';
+import { FirebaseService } from './services/firebase/firebase.service';
 import { environment } from 'src/environments/environment';
 import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page';
+import { ThemeService } from './services/theme/theme.service';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
@@ -37,7 +38,8 @@ export class AppComponent {
     private loadingController: LoadingController,
     private router: Router,
     private modalController: ModalController,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private themeService: ThemeService
   ) {
     this.verifyKeyUrl = environment.production ?
       'https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
@@ -64,7 +66,7 @@ export class AppComponent {
         });
       });
       this.registerEvents();
-      this.setupTheme();
+      this.themeService.setAppTheme();
       this.setupNetworkCheck();
       this.setupPush();
     });
@@ -154,32 +156,6 @@ export class AppComponent {
         }
       });
     }
-  }
-
-  setupTheme() {
-    this.storage.get('theme').then((theme: string) => {
-      if (theme) {
-        if (theme === 'default') {
-          const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
-          var defaultTheme = prefersColor.matches;
-          document.body.classList.toggle('dark', defaultTheme);
-        } else if (theme === 'light') {
-          document.body.classList.toggle('dark', false);
-        } else if (theme === 'dark') {
-          document.body.classList.toggle('dark', true);
-        }
-      } else {
-        const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
-        var defaultTheme = prefersColor.matches;
-        document.body.classList.toggle('dark', defaultTheme);
-        this.storage.set('theme', 'default');
-      }
-    });
-
-  }
-
-  toggleDarkTheme(shouldAdd: boolean): void {
-    document.body.classList.toggle('dark', shouldAdd);
   }
 
   public getObservable() {
