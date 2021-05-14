@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
-import { AdminGuardService } from '../services/admin-guard.service';
+import { AdminGuardService } from '../services/admin-guard/admin-guard.service';
 
 const routes: Routes = [
   {

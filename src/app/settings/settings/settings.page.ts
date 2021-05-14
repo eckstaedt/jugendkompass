@@ -3,8 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
 import { Platform, ActionSheetController, ModalController } from '@ionic/angular';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
+import { ThemeService } from 'src/app/services/theme/theme.service';
 const { Share } = Plugins;
 
 @Component({
@@ -23,11 +24,12 @@ export class SettingsPage implements OnInit {
     private plt: Platform,
     private actionSheetController: ActionSheetController,
     private firebaseService: FirebaseService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit() {
-    this.theme = await this.storage.get('theme');
+    this.theme = await this.themeService.getThemeInStorage();
 
     this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
       this.isAdmin = isAdmin;
@@ -51,16 +53,7 @@ export class SettingsPage implements OnInit {
   }
 
   onThemeChange() {
-    this.storage.set('theme', this.theme);
-    if (this.theme === 'default') {
-      const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');
-      var defaultTheme = prefersColor.matches;
-      document.body.classList.toggle('dark', defaultTheme);
-    } else if(this.theme === 'light') {
-      document.body.classList.toggle('dark', false);
-    } else if(this.theme === 'dark') {
-      document.body.classList.toggle('dark', true);
-    }
+    this.themeService.themeChange(this.theme);
   }
 
   async openContactActionSheet() {
