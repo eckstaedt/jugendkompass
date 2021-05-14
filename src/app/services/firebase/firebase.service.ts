@@ -5,13 +5,13 @@ import {
 import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
 import { take, finalize, first } from 'rxjs/operators';
-import { Category, FirebasePost, CategoryData, Ausgabe } from '../utils/interfaces';
-import { Utils } from '../utils/utils';
+import { Category, FirebasePost, CategoryData, Ausgabe } from '../../utils/interfaces';
+import { Utils } from '../../utils/utils';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
-import { AnalyticsField } from '../utils/constants';
+import { AnalyticsField } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AudioService } from 'src/app/services/audio.service';
+import { AudioService } from 'src/app/services/audio/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import {
   Platform,
@@ -13,9 +13,9 @@ import {
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
-import { RouterService } from 'src/app/services/router.service';
+import { RouterService } from 'src/app/services/router/router.service';
 import { Plugins, NetworkStatus } from '@capacitor/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';

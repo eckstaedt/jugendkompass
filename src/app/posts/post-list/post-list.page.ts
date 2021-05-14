@@ -9,10 +9,10 @@ import {
 import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
-import { RouterService } from 'src/app/services/router.service';
+import { RouterService } from 'src/app/services/router/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
 import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 import { Plugins } from '@capacitor/core';
 import { AnalyticsField } from 'src/app/utils/constants';

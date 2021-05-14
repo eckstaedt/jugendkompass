@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { AnswersModalPage } from 'src/app/settings/answers-modal/answers-modal.page';

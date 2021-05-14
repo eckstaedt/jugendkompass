@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { WelcomeGuardService } from './services/welcome-guard.service';
+import { WelcomeGuardService } from './services/welcome-guard/welcome-guard.service';
 
 const routes: Routes = [
   {

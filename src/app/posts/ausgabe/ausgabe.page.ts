@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponent } from 'src/app/app.component';
 import { ActivatedRoute } from '@angular/router';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { Ausgabe } from 'src/app/utils/interfaces';
 import { Storage } from '@ionic/storage';
 
@@ -14,7 +14,7 @@ const { CapacitorVideoPlayer } = Plugins;
 import { writeFile } from 'capacitor-blob-writer'
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
-import { AudioService } from 'src/app/services/audio.service';
+import { AudioService } from 'src/app/services/audio/audio.service';
 
 @Component({
   selector: 'app-ausgabe',

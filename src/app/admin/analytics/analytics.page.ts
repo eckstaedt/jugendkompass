@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as dayjs from 'dayjs'
 import { Chart } from 'chart.js';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField, Platforms } from 'src/app/utils/constants';
 import * as firebase from 'firebase/app';
 import { Utils } from 'src/app/utils/utils';

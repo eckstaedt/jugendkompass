@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { AudioService } from '../services/audio.service';
+import { AudioService } from '../services/audio/audio.service';
 import { IonRange } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Utils } from '../utils/utils';

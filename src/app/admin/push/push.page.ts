@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Ausgabe } from 'src/app/utils/interfaces';
 import { Utils } from 'src/app/utils/utils';
