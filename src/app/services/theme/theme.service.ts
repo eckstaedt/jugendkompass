@@ -68,7 +68,7 @@ export class ThemeService {
   }
 
   private setDefaultTheme(): boolean {
-    if (this.plt.platforms().find((x) => x === 'android')) {
+    if (this.plt.platforms() && this.plt.platforms().find((x) => x === 'android') && !this.plt.platforms().find((x) => x === 'pwa')) {
       const isDark = window.navigator.userAgent.includes("AndroidDarkMode");
       return this.toggleDarkTheme(isDark);
     } else {
