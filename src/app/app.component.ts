@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 import { Platform, AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
@@ -17,6 +16,7 @@ import { ThemeService } from './services/theme/theme.service';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
+const { SplashScreen } = Plugins;
 
 @Component({
   selector: 'app-root',
@@ -30,7 +30,6 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private storage: Storage,
     private alertController: AlertController,
@@ -52,7 +51,7 @@ export class AppComponent {
       this.handleSessionCount();
       this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      SplashScreen.hide();
       this.observable = new Observable(observer => {
         this.observer = observer;
         this.storage.get('isLoggedIn').then((isLoggedIn: boolean) => {
