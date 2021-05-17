@@ -79,7 +79,7 @@ export class PostListPage implements OnInit {
     private modalController: ModalController,
     private toastController: ToastController,
     private firebaseService: FirebaseService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
@@ -206,7 +206,7 @@ export class PostListPage implements OnInit {
       return this.filteredPosts.filter((post: any) => {
         if (
           post.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
-            -1 ||
+          -1 ||
           (post.rubrik &&
             post.rubrik.name
               .toLowerCase()
@@ -318,17 +318,31 @@ export class PostListPage implements OnInit {
 
   onSwipeLeft($event) {
     if (this.rubriken.findIndex((b) => b.id === this.currentRubrik) > 0) {
-      this.currentRubrik = this.rubriken[this.rubriken.findIndex((b) => b.id === this.currentRubrik) - 1].id;
-    } else if(this.rubriken.findIndex((b) => b.id === this.currentRubrik) === 0) {
+      let segmentIndex = this.rubriken.findIndex((b) => b.id === this.currentRubrik);
+      this.currentRubrik = this.rubriken[segmentIndex - 1].id;
+      this.scrollSegment(segmentIndex);
+    } else if (this.rubriken.findIndex((b) => b.id === this.currentRubrik) === 0) {
       this.currentRubrik = 'all';
+      this.scrollSegment(0);
     }
   }
 
   onSwipeRight($event) {
     if (this.rubriken.findIndex((b) => b.id === this.currentRubrik) < this.rubriken.length - 1) {
-      this.currentRubrik = this.rubriken[this.rubriken.findIndex((b) => b.id === this.currentRubrik) + 1].id;
-    } else if(this.currentRubrik === 'all') {
+      let segmentIndex = this.rubriken.findIndex((b) => b.id === this.currentRubrik) + 1;
+      this.currentRubrik = this.rubriken[segmentIndex].id;
+      this.scrollSegment(segmentIndex);
+    } else if (this.currentRubrik === 'all') {
       this.currentRubrik = this.rubriken[0];
+      this.scrollSegment(0);
     }
+  }
+
+  async scrollSegment(segmentIndex) {
+    var segment = document.querySelector('ion-segment');
+    segment.value = this.currentRubrik;
+    var active = segment.querySelectorAll('ion-segment-button')[segmentIndex];
+    active.scrollIntoView({ inline: "center" });
+    this.content.scrollToPoint(0, 60, 0);
   }
 }
