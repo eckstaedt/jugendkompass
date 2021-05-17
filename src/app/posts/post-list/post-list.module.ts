@@ -8,6 +8,7 @@ import { PostListPageRoutingModule } from './post-list-routing.module';
 
 import { PostListPage } from './post-list.page';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
+import { SwipeModule } from 'src/app/services/swipe/swipe.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { SharedDirectivesModule } from 'src/app/directives/shared-directives.mod
     IonicModule,
     PostListPageRoutingModule,
     SharedDirectivesModule,
+    SwipeModule
   ],
   declarations: [PostListPage],
 })

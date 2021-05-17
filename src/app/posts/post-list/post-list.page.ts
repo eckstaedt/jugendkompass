@@ -293,4 +293,16 @@ export class PostListPage implements OnInit {
       ausgabenName: ausgabe.name
     });
   }
+
+  onSwipeLeft($event) {
+    if (this.rubriken.findIndex((b) => b === this.currentRubrik) > 0) {
+      this.currentRubrik = this.rubriken[this.rubriken.findIndex((b) => b === this.currentRubrik) - 1];
+    }
+  }
+
+  onSwipeRight($event) {
+    if (this.rubriken.findIndex((b) => b === this.currentRubrik) < this.rubriken.length - 1) {
+      this.currentRubrik = this.rubriken[this.rubriken.findIndex((b) => b === this.currentRubrik) + 1];
+    }
+  }
 }

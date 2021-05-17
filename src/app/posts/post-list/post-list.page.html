@@ -16,6 +16,9 @@
   appHideHeader
   [header]="header"
   [isList]="true"
+  appSwipe
+  (swipeLeft)="onSwipeLeft($event)" 
+  (swipeRight)="onSwipeRight($event)"
 >
   <ion-searchbar
     #searchbar
