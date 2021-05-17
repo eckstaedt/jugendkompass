@@ -9,8 +9,8 @@ describe('FeedbackSummaryPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FeedbackSummaryPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [FeedbackSummaryPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FeedbackSummaryPage);

@@ -10,16 +10,15 @@ export class AnswersModalPage implements OnInit {
   @Input() answer: any;
   selected;
 
-  constructor(
-    private modalController: ModalController
-  ) { }
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {
-    this.selected = this.answer.feedback[5].options.find((opts: any) => opts.selected).id;
+    this.selected = this.answer.feedback[5].options.find(
+      (opts: any) => opts.selected,
+    ).id;
   }
 
   close() {
     this.modalController.dismiss();
   }
-
 }

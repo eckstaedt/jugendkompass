@@ -1,10 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        defaultHref="/tabs/settings"
-      ></ion-back-button>
+      <ion-back-button text="" defaultHref="/tabs/settings"></ion-back-button>
     </ion-buttons>
     <ion-title>Keyverwaltung</ion-title>
   </ion-toolbar>
@@ -15,8 +12,12 @@
     <ion-item (click)="openUpdateSheet(key)" *ngFor="let key of keys$ | async">
       <ion-label>
         <h2>{{ key.value }}</h2>
-        <h2 *ngIf="!key.usedKeys">Benutzt: 0 | Verfügbar: {{ key.remainingKeyCount }}</h2>
-        <h2 *ngIf="key.usedKeys">Benutzt: {{ key.usedKeys }} | Verfügbar: {{ key.remainingKeyCount }}</h2>
+        <h2 *ngIf="!key.usedKeys">
+          Benutzt: 0 | Verfügbar: {{ key.remainingKeyCount }}
+        </h2>
+        <h2 *ngIf="key.usedKeys">
+          Benutzt: {{ key.usedKeys }} | Verfügbar: {{ key.remainingKeyCount }}
+        </h2>
       </ion-label>
     </ion-item>
   </ion-list>

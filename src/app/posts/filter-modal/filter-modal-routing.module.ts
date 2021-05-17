@@ -6,8 +6,8 @@ import { FilterModalPage } from './filter-modal.page';
 const routes: Routes = [
   {
     path: '',
-    component: FilterModalPage
-  }
+    component: FilterModalPage,
+  },
 ];
 
 @NgModule({

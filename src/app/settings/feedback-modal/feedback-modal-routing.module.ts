@@ -6,8 +6,8 @@ import { FeedbackModalPage } from './feedback-modal.page';
 const routes: Routes = [
   {
     path: '',
-    component: FeedbackModalPage
-  }
+    component: FeedbackModalPage,
+  },
 ];
 
 @NgModule({

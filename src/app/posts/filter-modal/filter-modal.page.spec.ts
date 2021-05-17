@@ -9,8 +9,8 @@ describe('FilterModalPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterModalPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [FilterModalPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilterModalPage);

@@ -11,7 +11,6 @@ import { FileUploader, FileLikeObject } from 'ng2-file-upload';
   styleUrls: ['./push.page.scss'],
 })
 export class PushPage implements OnInit {
-
   public title: string = '';
   public body: string = '';
   public isAusgabe: boolean = true;
@@ -25,8 +24,8 @@ export class PushPage implements OnInit {
     private firebaseService: FirebaseService,
     private alertController: AlertController,
     private utils: Utils,
-    private toastController: ToastController
-  ) { }
+    private toastController: ToastController,
+  ) {}
 
   ngOnInit() {
     this.getCategories();
@@ -34,8 +33,10 @@ export class PushPage implements OnInit {
 
   async getCategories() {
     await this.firebaseService.getAusgaben();
-    this.ausgaben = this.firebaseService.getAusgaben().filter((a: Ausgabe) => !a.pushSend);
-    if (this.ausgaben?.length) {
+    this.ausgaben = this.firebaseService
+      .getAusgaben()
+      .filter((a: Ausgabe) => !a.pushSend);
+    if (this.ausgaben?.length) {
       this.ausgabe = this.ausgaben[0];
     } else {
       this.isAusgabe = false;
@@ -45,7 +46,9 @@ export class PushPage implements OnInit {
 
   onImageSelected() {
     if (this.fileUploader.queue && this.fileUploader.queue.length !== 0) {
-      const file: FileLikeObject = this.fileUploader.queue[this.fileUploader.queue.length - 1].file;
+      const file: FileLikeObject = this.fileUploader.queue[
+        this.fileUploader.queue.length - 1
+      ].file;
       if (file.size > 300000) {
         this.showImageUploadError();
         this.fileUploader.queue = [];
@@ -59,62 +62,81 @@ export class PushPage implements OnInit {
     const toast = await this.toastController.create({
       duration: 3000,
       message: 'Wähle ein Cover mit maximal 300kb aus',
-      color: 'danger'
+      color: 'danger',
     });
     toast.present();
   }
 
   async showConfirmAlert(isTest: boolean) {
-    if (this.body !== '') {
+    if (this.body !== '') {
       const alert: any = await this.alertController.create({
         header: isTest ? 'Testnachricht senden?' : 'Nachricht senden?',
         message: `<p>Titel: ${this.title}</p><p>Body: ${this.body}</p>`,
-        buttons: [, {
-          text: 'Abbrechen'
-        }, {
-          text: 'Senden',
-          handler: async () => {
-            let res: any;
-            if (this.file) {
-              res = await this.firebaseService.uploadImageFile(this.file);
-            }
-            if (isTest) {
-              this.sendTestPush(res);
-            } else {
-              this.sendPush(res);
-            }
-          }
-        }]
+        buttons: [
+          ,
+          {
+            text: 'Abbrechen',
+          },
+          {
+            text: 'Senden',
+            handler: async () => {
+              let res: any;
+              if (this.file) {
+                res = await this.firebaseService.uploadImageFile(this.file);
+              }
+              if (isTest) {
+                this.sendTestPush(res);
+              } else {
+                this.sendPush(res);
+              }
+            },
+          },
+        ],
       });
-  
+
       await alert.present();
     } else {
-      this.utils.showToast('Bitte gebe min. ein Text im Nachricht-Feld ein...', 'danger');
+      this.utils.showToast(
+        'Bitte gebe min. ein Text im Nachricht-Feld ein...',
+        'danger',
+      );
     }
   }
 
   sendTestPush(res?: any) {
-    this.firebaseService.sendTestPush({
-      title: this.title,
-      body: this.body,
-      image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url
-    }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
-    this.utils.showToast('Die Test Push Mitteilung wurde erfolgreich versendet', 'success');
+    this.firebaseService.sendTestPush(
+      {
+        title: this.title,
+        body: this.body,
+        image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url,
+      },
+      this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {},
+    );
+    this.utils.showToast(
+      'Die Test Push Mitteilung wurde erfolgreich versendet',
+      'success',
+    );
     this.resetData();
   }
 
   sendPush(res?: any) {
-    this.firebaseService.sendPush({
-      title: this.title,
-      body: this.body,
-      image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url
-    }, this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {});
+    this.firebaseService.sendPush(
+      {
+        title: this.title,
+        body: this.body,
+        image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url,
+      },
+      this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {},
+    );
     if (this.isAusgabe) {
       this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
-        pushSend: true
+        pushSend: true,
       });
     }
-    this.utils.showToast('Die Push Mitteilung wurde erfolgreich versendet', 'success');
+    this.utils.showToast(
+      'Die Push Mitteilung wurde erfolgreich versendet',
+      'success',
+    );
     this.resetData();
   }
 
@@ -124,5 +146,4 @@ export class PushPage implements OnInit {
     this.title = '';
     this.body = '';
   }
-
 }

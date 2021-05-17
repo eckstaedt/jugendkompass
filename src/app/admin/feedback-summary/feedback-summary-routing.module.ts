@@ -6,8 +6,8 @@ import { FeedbackSummaryPage } from './feedback-summary.page';
 const routes: Routes = [
   {
     path: '',
-    component: FeedbackSummaryPage
-  }
+    component: FeedbackSummaryPage,
+  },
 ];
 
 @NgModule({

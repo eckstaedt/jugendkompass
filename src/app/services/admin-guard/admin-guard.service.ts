@@ -3,14 +3,13 @@ import { CanLoad, Router } from '@angular/router';
 import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminGuardService implements CanLoad {
-
   constructor(
     private firebaseService: FirebaseService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   async canLoad(): Promise<boolean> {
     const isAdmin: boolean = await this.firebaseService.isAdmin();

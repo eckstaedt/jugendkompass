@@ -10,9 +10,9 @@ ion-toolbar {
 }
 
 ion-slides {
-  margin: .6rem 0 .4rem 0;
-  padding-left: .9rem;
-  padding-right: .9rem;
+  margin: 0.6rem 0 0.4rem 0;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
 
   ion-slide {
     border: 2px solid var(--ion-color-light);
@@ -38,8 +38,8 @@ ion-segment {
 
   ion-segment-button {
     text-transform: none;
-    --padding-end: .4rem;
-    --padding-start: .4rem;
+    --padding-end: 0.4rem;
+    --padding-start: 0.4rem;
   }
 }
 
@@ -68,7 +68,7 @@ ion-card {
     .title {
       color: var(--ion-color-medium) !important;
     }
-  
+
     .subTitle {
       color: var(--ion-color-medium) !important;
     }
@@ -91,15 +91,15 @@ ion-card {
 
       &.image {
         box-shadow: rgb(0 0 0 / 12%) 0px 4px 4px;
-        border-radius: .4rem;
+        border-radius: 0.4rem;
 
         img {
-          border-radius: .4rem;
+          border-radius: 0.4rem;
         }
       }
 
       &.text {
-        padding-left: .2rem;
+        padding-left: 0.2rem;
       }
 
       &:first-of-type {
@@ -144,11 +144,11 @@ ion-card {
         font-size: 0.8rem;
 
         &:first-of-type {
-          padding-left: .8rem;
+          padding-left: 0.8rem;
         }
 
         &:nth-of-type(2) {
-          padding-left: .2rem;
+          padding-left: 0.2rem;
         }
 
         ion-icon {

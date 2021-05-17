@@ -13,8 +13,8 @@ import { FeedbackSummaryPage } from './feedback-summary.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    FeedbackSummaryPageRoutingModule
+    FeedbackSummaryPageRoutingModule,
   ],
-  declarations: [FeedbackSummaryPage]
+  declarations: [FeedbackSummaryPage],
 })
 export class FeedbackSummaryPageModule {}

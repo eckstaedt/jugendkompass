@@ -3,7 +3,11 @@
     <img class="logo" />
     <ion-buttons slot="end">
       <ion-button (click)="openFilterModal()" [disabled]="!allPosts.length">
-        <ion-icon [color]="areFiltersActive ? 'primary' : 'dark'" size="small" name="funnel"></ion-icon>
+        <ion-icon
+          [color]="areFiltersActive ? 'primary' : 'dark'"
+          size="small"
+          name="funnel"
+        ></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -30,9 +34,16 @@
   >
   </ion-searchbar>
 
-  <ion-segment *ngIf="rubriken.length && online && !isSearching" [(ngModel)]="currentRubrik" mode="md" scrollable="true" (ionChange)="onCategoryPressed()">
-    <ion-segment-button value = "all">Alle Kategorien</ion-segment-button>
-    <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id">{{ rubrik.name }}
+  <ion-segment
+    *ngIf="rubriken.length && online && !isSearching"
+    [(ngModel)]="currentRubrik"
+    mode="md"
+    scrollable="true"
+    (ionChange)="onCategoryPressed()"
+  >
+    <ion-segment-button value="all">Alle Kategorien</ion-segment-button>
+    <ion-segment-button *ngFor="let rubrik of rubriken" [value]="rubrik.id"
+      >{{ rubrik.name }}
       <div class="placeholder"></div>
     </ion-segment-button>
   </ion-segment>
@@ -40,14 +51,18 @@
   <ion-list-header
     mode="ios"
     *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'"
-  >Alle Ausgaben</ion-list-header>
-  <ion-slides [options]="slideOpts" *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'">
+    >Alle Ausgaben</ion-list-header
+  >
+  <ion-slides
+    [options]="slideOpts"
+    *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'"
+  >
     <ion-slide
       [routerLink]="['/', 'tabs', 'posts', 'ausgabe', ausgabe.id]"
       (click)="openAusgabe(ausgabe)"
       *ngFor="let ausgabe of ausgaben"
     >
-      <img [src]="ausgabe.imageUrl"/>
+      <img [src]="ausgabe.imageUrl" />
     </ion-slide>
   </ion-slides>
 
@@ -96,13 +111,19 @@
                   <div class="postFooter">
                     <ion-row>
                       <ion-col size="4">
-                        <ion-icon name="book-outline"></ion-icon> {{ post.readingTime }} min
+                        <ion-icon name="book-outline"></ion-icon> {{
+                        post.readingTime }} min
                       </ion-col>
                       <ion-col size="3">
-                        <ion-icon name="eye-outline"></ion-icon> {{ post.views }}
+                        <ion-icon name="eye-outline"></ion-icon> {{ post.views
+                        }}
                       </ion-col>
-                      <ion-col *ngIf="post.audio && post.audio.duration" size="5">
-                        <ion-icon name="volume-high-outline"></ion-icon> {{ post.audio.duration }} min
+                      <ion-col
+                        *ngIf="post.audio && post.audio.duration"
+                        size="5"
+                      >
+                        <ion-icon name="volume-high-outline"></ion-icon> {{
+                        post.audio.duration }} min
                       </ion-col>
                     </ion-row>
                   </div>
@@ -120,10 +141,7 @@
   (swipeLeft)="onSwipeLeft($event)" 
   (swipeRight)="onSwipeRight($event)">
     <ion-list-header mode="ios">
-      <ion-skeleton-text
-      animated
-      style="width: 40%"
-      ></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
     </ion-list-header>
     <ion-grid>
       <ion-row>
@@ -189,7 +207,10 @@
     </ion-grid>
   </div>
 
-  <div class="noResultContainer" *ngIf="(!posts.length && allPosts.length && online) || !online">
+  <div
+    class="noResultContainer"
+    *ngIf="(!posts.length && allPosts.length && online) || !online"
+  >
     <ion-grid>
       <ion-row class="noItemsIcon">
         <ion-col>
@@ -197,8 +218,14 @@
         </ion-col>
       </ion-row>
       <ion-row class="noItemsLabel">
-        <ion-label *ngIf="!posts.length && allPosts.length && online" color="medium">Keine Artikel gefunden</ion-label>
-        <ion-label *ngIf="!online" color="medium">Keine Internetverbindung vorhanden</ion-label>
+        <ion-label
+          *ngIf="!posts.length && allPosts.length && online"
+          color="medium"
+          >Keine Artikel gefunden</ion-label
+        >
+        <ion-label *ngIf="!online" color="medium"
+          >Keine Internetverbindung vorhanden</ion-label
+        >
       </ion-row>
     </ion-grid>
   </div>

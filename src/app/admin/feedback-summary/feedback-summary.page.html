@@ -1,20 +1,25 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        defaultHref="/tabs/settings"
-      ></ion-back-button>
+      <ion-back-button text="" defaultHref="/tabs/settings"></ion-back-button>
     </ion-buttons>
     <ion-title>Feedbackauswertung</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list-header *ngIf="(feedback$ | async) as f">Anzahl: {{ f.length }}</ion-list-header>
-  <ion-item (click)="openModal(feedback)" button *ngFor="let feedback of feedback$ | async">
+  <ion-list-header *ngIf="(feedback$ | async) as f"
+    >Anzahl: {{ f.length }}</ion-list-header
+  >
+  <ion-item
+    (click)="openModal(feedback)"
+    button
+    *ngFor="let feedback of feedback$ | async"
+  >
     <ion-label>
-      <h2>{{ feedback.time.seconds * 1000 | date: 'dd.MM.yyyy, HH:mm' }} Uhr</h2>
+      <h2>
+        {{ feedback.time.seconds * 1000 | date: 'dd.MM.yyyy, HH:mm' }} Uhr
+      </h2>
       <h3>Platform: {{ feedback.platform }}</h3>
     </ion-label>
   </ion-item>

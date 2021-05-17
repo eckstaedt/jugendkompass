@@ -6,8 +6,8 @@ import { PushPage } from './push.page';
 const routes: Routes = [
   {
     path: '',
-    component: PushPage
-  }
+    component: PushPage,
+  },
 ];
 
 @NgModule({

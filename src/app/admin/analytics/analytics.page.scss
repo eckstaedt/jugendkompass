@@ -1,15 +1,15 @@
 ion-card {
-    margin: 0;
+  margin: 0;
 
-    ion-card-content {
-        text-align: center;
+  ion-card-content {
+    text-align: center;
 
-        ion-label {
-            font-size: 6rem;
+    ion-label {
+      font-size: 6rem;
 
-            &.multiline {
-                font-size: 2rem;
-            }
-        }
+      &.multiline {
+        font-size: 2rem;
+      }
     }
+  }
 }

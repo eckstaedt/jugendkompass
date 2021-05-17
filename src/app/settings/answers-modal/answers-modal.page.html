@@ -1,10 +1,11 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ answer.time.seconds * 1000 | date: 'dd.MM.yyyy, HH:mm' }} Uhr</ion-title>
+    <ion-title
+      >{{ answer.time.seconds * 1000 | date: 'dd.MM.yyyy, HH:mm' }}
+      Uhr</ion-title
+    >
     <ion-buttons slot="end">
-      <ion-button
-        (click)="close()"
-      >
+      <ion-button (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -13,10 +14,21 @@
 
 <ion-content>
   <ion-item *ngFor="let f of answer.feedback">
-    <ion-label class="ion-text-wrap" position="stacked">{{ f.question }}</ion-label>
-    <ion-textarea readonly=true [(ngModel)]="f.answer" *ngIf="f.answer === '' || f.answer?.length"></ion-textarea>
+    <ion-label class="ion-text-wrap" position="stacked"
+      >{{ f.question }}</ion-label
+    >
+    <ion-textarea
+      readonly="true"
+      [(ngModel)]="f.answer"
+      *ngIf="f.answer === '' || f.answer?.length"
+    ></ion-textarea>
     <ion-select [(ngModel)]="selected" *ngIf="f.options">
-      <ion-select-option disabled=true [value]="a.id" *ngFor="let a of f.options">{{ a.value }}</ion-select-option>
+      <ion-select-option
+        disabled="true"
+        [value]="a.id"
+        *ngFor="let a of f.options"
+        >{{ a.value }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 </ion-content>

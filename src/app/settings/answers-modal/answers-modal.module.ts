@@ -13,8 +13,8 @@ import { AnswersModalPage } from './answers-modal.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AnswersModalPageRoutingModule
+    AnswersModalPageRoutingModule,
   ],
-  declarations: [AnswersModalPage]
+  declarations: [AnswersModalPage],
 })
 export class AnswersModalPageModule {}

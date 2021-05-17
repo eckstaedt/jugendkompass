@@ -2,7 +2,11 @@ import { version } from '../../../../package.json';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
-import { Platform, ActionSheetController, ModalController } from '@ionic/angular';
+import {
+  Platform,
+  ActionSheetController,
+  ModalController,
+} from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
 import { ThemeService } from 'src/app/services/theme/theme.service';
@@ -25,7 +29,7 @@ export class SettingsPage implements OnInit {
     private actionSheetController: ActionSheetController,
     private firebaseService: FirebaseService,
     private modalController: ModalController,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   async ngOnInit() {
@@ -42,7 +46,7 @@ export class SettingsPage implements OnInit {
 
   async openFeedbackModal() {
     const modal: HTMLIonModalElement = await this.modalController.create({
-      component: FeedbackModalPage
+      component: FeedbackModalPage,
     });
 
     modal.onDidDismiss().then((res: any) => {
@@ -58,19 +62,28 @@ export class SettingsPage implements OnInit {
 
   async openContactActionSheet() {
     const actionSheet = await this.actionSheetController.create({
-      buttons: [{
-        text: 'E-Mail',
-        handler: () => this.openContactSource('mailto:entwickler@jugendkompass.de')
-      }, {
-        text: 'Telegram',
-        handler: () => this.openContactSource('https://t.me/JugendKompass')
-      }, {
-        text: 'Whatsapp',
-        handler: () => this.openContactSource('https://api.whatsapp.com/send?phone=4915737855537')
-      }, {
-        text: 'Abbrechen',
-        role: 'cancel'
-      }]
+      buttons: [
+        {
+          text: 'E-Mail',
+          handler: () =>
+            this.openContactSource('mailto:entwickler@jugendkompass.de'),
+        },
+        {
+          text: 'Telegram',
+          handler: () => this.openContactSource('https://t.me/JugendKompass'),
+        },
+        {
+          text: 'Whatsapp',
+          handler: () =>
+            this.openContactSource(
+              'https://api.whatsapp.com/send?phone=4915737855537',
+            ),
+        },
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+        },
+      ],
     });
 
     await actionSheet.present();

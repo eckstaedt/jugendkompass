@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
 
-import { Platform, AlertController, LoadingController, ModalController } from '@ionic/angular';
+import {
+  Platform,
+  AlertController,
+  LoadingController,
+  ModalController,
+} from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { Plugins, PushNotification, PushNotificationActionPerformed } from '@capacitor/core';
+import {
+  Plugins,
+  PushNotification,
+  PushNotificationActionPerformed,
+} from '@capacitor/core';
 import { Router } from '@angular/router';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
 import { FirebaseService } from './services/firebase/firebase.service';
@@ -38,11 +47,11 @@ export class AppComponent {
     private router: Router,
     private modalController: ModalController,
     private firebaseService: FirebaseService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {
-    this.verifyKeyUrl = environment.production ?
-      'https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
-      : 'https://us-central1-jugendkompasstest.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
+    this.verifyKeyUrl = environment.production
+      ? 'https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
+      : 'https://us-central1-jugendkompasstest.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey';
     this.initializeApp();
   }
 
@@ -76,23 +85,31 @@ export class AppComponent {
     await this.storage.set('sessions', count ? count + 1 : 1);
 
     if (count === SESSION_FEEDBACK_THRESHOLD) {
-      const hasFeedbackSend: boolean = await this.storage.get('hasFeedbackSend');
+      const hasFeedbackSend: boolean = await this.storage.get(
+        'hasFeedbackSend',
+      );
       if (!hasFeedbackSend) {
         const alert = await this.alertController.create({
           header: 'Gefällt dir die App?',
-          message: 'Schön, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns helfen, die App weiter zu verbessern. Bitte nimm dir ein paar Minuten Zeit und fülle das Feedbackformular aus. Wenn du gerade keine Zeit hast: Du findest das Formular jederzeit in den Einstellungen.',
-          buttons: [{
-              text: 'Nein danke'
-            }, {
-            text: 'Ja gerne',
-            handler: async () => {
-              const modal: HTMLIonModalElement = await this.modalController.create({
-                component: FeedbackModalPage
-              });
-          
-              await modal.present();
-            }
-          }]
+          message:
+            'Schön, dass du die Jugendkompass App nutzt. Ein kleines Feedback von dir würde uns helfen, die App weiter zu verbessern. Bitte nimm dir ein paar Minuten Zeit und fülle das Feedbackformular aus. Wenn du gerade keine Zeit hast: Du findest das Formular jederzeit in den Einstellungen.',
+          buttons: [
+            {
+              text: 'Nein danke',
+            },
+            {
+              text: 'Ja gerne',
+              handler: async () => {
+                const modal: HTMLIonModalElement = await this.modalController.create(
+                  {
+                    component: FeedbackModalPage,
+                  },
+                );
+
+                await modal.present();
+              },
+            },
+          ],
         });
 
         alert.present();
@@ -106,7 +123,8 @@ export class AppComponent {
 
   setupPush() {
     if (this.platform.is('capacitor')) {
-      PushNotifications.addListener('pushNotificationReceived',
+      PushNotifications.addListener(
+        'pushNotificationReceived',
         async (notification: PushNotification) => {
           const buttons: any[] = [];
           if (notification?.data?.ausgabe) {
@@ -114,28 +132,29 @@ export class AppComponent {
               text: 'Ausgabe anzeigen',
               handler: () => {
                 this.navigateToAusgabe(notification.data.ausgabe);
-              }
+              },
             });
           }
           buttons.push({
-            text: 'Okay'
+            text: 'Okay',
           });
           const alert = await this.alertController.create({
             header: notification.title,
             message: notification.body,
-            buttons: buttons
+            buttons: buttons,
           });
 
           await alert.present();
-        }
+        },
       );
 
-      PushNotifications.addListener('pushNotificationActionPerformed',
+      PushNotifications.addListener(
+        'pushNotificationActionPerformed',
         (notification: PushNotificationActionPerformed) => {
           if (notification.notification?.data?.ausgabe) {
             this.navigateToAusgabe(notification.notification.data.ausgabe);
           }
-        }
+        },
       );
 
       this.storage.get('oldUser').then((oldUser: boolean): void => {
@@ -179,10 +198,10 @@ export class AppComponent {
           text: 'Okay',
           handler: async (event: any) => {
             if (!event.password) {
-              this.showPasswordAlert(
-                (message = 'Bitte gib das Passwort ein.'),
+              this.showPasswordAlert((message = 'Bitte gib das Passwort ein.'));
+              this.firebaseService.incrementAnalyticsField(
+                AnalyticsField.INVALID_PASSWORD_PROVIDED,
               );
-              this.firebaseService.incrementAnalyticsField(AnalyticsField.INVALID_PASSWORD_PROVIDED);
               return;
             }
             const loading = await this.loadingController.create();
@@ -196,14 +215,18 @@ export class AppComponent {
                   this.observer.complete();
                   this.storage.set('isLoggedIn', true);
                   alert.dismiss();
-                  this.firebaseService.incrementAnalyticsField(AnalyticsField.CORRECT_PASSWORD_PROVIDED);
+                  this.firebaseService.incrementAnalyticsField(
+                    AnalyticsField.CORRECT_PASSWORD_PROVIDED,
+                  );
                 }
               })
               .catch(() => {
                 this.showPasswordAlert(
                   (message = 'Bitte gebe das richtige Passwort ein.'),
                 );
-                this.firebaseService.incrementAnalyticsField(AnalyticsField.INVALID_PASSWORD_PROVIDED);
+                this.firebaseService.incrementAnalyticsField(
+                  AnalyticsField.INVALID_PASSWORD_PROVIDED,
+                );
               });
             loading.dismiss();
           },
@@ -216,17 +239,24 @@ export class AppComponent {
 
   registerEvents(): void {
     this.platform.backButton.subscribeWithPriority(-1, () => {
-      if (this.router.url === '/tabs/posts' || this.router.url === '/tabs/favorites'
-        || this.router.url === '/tabs/settings' || this.router.url === '/') {
+      if (
+        this.router.url === '/tabs/posts' ||
+        this.router.url === '/tabs/favorites' ||
+        this.router.url === '/tabs/settings' ||
+        this.router.url === '/'
+      ) {
         App.exitApp();
       }
     });
   }
 
-  async setupNetworkCheck(){
+  async setupNetworkCheck() {
     let alert = await this.createNetworkAlert();
-    Network.addListener('networkStatusChange', async (status) => {
-      if (!status.connected && this.router.url.search('/tabs/favorites') === -1) {
+    Network.addListener('networkStatusChange', async status => {
+      if (
+        !status.connected &&
+        this.router.url.search('/tabs/favorites') === -1
+      ) {
         alert.present();
       } else {
         if (alert) {
@@ -235,7 +265,6 @@ export class AppComponent {
         alert = await this.createNetworkAlert();
       }
     });
-
   }
 
   async createNetworkAlert() {
@@ -248,11 +277,12 @@ export class AppComponent {
           text: 'Zu meinen Favoriten',
           handler: () => {
             this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
-          }
+          },
         },
         {
-          text: 'Abbrechen'
-        }],
+          text: 'Abbrechen',
+        },
+      ],
     });
     return alert;
   }

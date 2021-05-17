@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage';
 export class TextSizePage implements OnInit {
   public textSize = 15;
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage) {}
 
   ngOnInit() {
     this.storage
@@ -17,8 +17,7 @@ export class TextSizePage implements OnInit {
       .then((textSize: number) => {
         if (textSize) {
           this.textSize = textSize;
-        }
-        else {
+        } else {
           this.textSize = 15;
         }
       })

@@ -2,9 +2,7 @@
   <ion-toolbar>
     <ion-title>Feedback</ion-title>
     <ion-buttons slot="end">
-      <ion-button
-        (click)="close()"
-      >
+      <ion-button (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -13,11 +11,20 @@
 
 <ion-content>
   <ion-item *ngFor="let f of feedback">
-    <ion-label class="ion-text-wrap" position="stacked">{{ f.question }}</ion-label>
-    <ion-textarea [(ngModel)]="f.answer" *ngIf="f.answer === '' || f.answer?.length"></ion-textarea>
+    <ion-label class="ion-text-wrap" position="stacked"
+      >{{ f.question }}</ion-label
+    >
+    <ion-textarea
+      [(ngModel)]="f.answer"
+      *ngIf="f.answer === '' || f.answer?.length"
+    ></ion-textarea>
     <ion-select [(ngModel)]="selected" *ngIf="f.options">
-      <ion-select-option [value]="a.id" *ngFor="let a of f.options">{{ a.value }}</ion-select-option>
+      <ion-select-option [value]="a.id" *ngFor="let a of f.options"
+        >{{ a.value }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
-  <ion-button color="success" expand="block" (click)="submit()">Feedback einreichen</ion-button>
+  <ion-button color="success" expand="block" (click)="submit()"
+    >Feedback einreichen</ion-button
+  >
 </ion-content>

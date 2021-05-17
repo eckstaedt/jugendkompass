@@ -1,64 +1,64 @@
 ion-header {
-    ion-toolbar {
-        height: 8vh;
-        --background: transparent;
-        --border-style: none;
-    }
+  ion-toolbar {
+    height: 8vh;
+    --background: transparent;
+    --border-style: none;
+  }
 }
 
 ion-row {
-    padding-bottom: 30px;
+  padding-bottom: 30px;
 
-    ion-col {
-        margin-bottom: 30px;
-        color: #fff;
-        padding-top: 1rem;
+  ion-col {
+    margin-bottom: 30px;
+    color: #fff;
+    padding-top: 1rem;
 
-        &.selected {
-            transform: scale(1.2);
-            transition: transform .4s;
-        }
-
-        img {
-            height: 5rem;
-        }
-
-        p {
-            margin-top: .5rem;
-        }
+    &.selected {
+      transform: scale(1.2);
+      transition: transform 0.4s;
     }
+
+    img {
+      height: 5rem;
+    }
+
+    p {
+      margin-top: 0.5rem;
+    }
+  }
 }
 
 ion-footer {
-    max-width: 50rem;
-    margin: auto;
-    margin-top: 2rem;
+  max-width: 50rem;
+  margin: auto;
+  margin-top: 2rem;
 
-    ion-item {
-        --background: transparent;
-        color: #fff;
+  ion-item {
+    --background: transparent;
+    color: #fff;
+  }
+
+  ion-toolbar {
+    --background: transparent;
+    --border-style: none;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+
+    ion-button {
+      height: 3rem;
+
+      ion-icon {
+        font-size: 50px;
+      }
     }
-
-    ion-toolbar {
-        --background: transparent;
-        --border-style: none;
-        margin-bottom: 1.5rem;
-        margin-top: 1.5rem;
-    
-        ion-button {
-            height: 3rem;
-
-            ion-icon {
-                font-size: 50px;
-            }
-        }
-    }
+  }
 }
 
 .header-md::after {
-    background-image: none;
+  background-image: none;
 }
 
 .footer-md::before {
-    background-image: none;
+  background-image: none;
 }

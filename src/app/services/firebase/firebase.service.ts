@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFirestore
-} from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
 import { take, finalize, first } from 'rxjs/operators';
-import { Category, FirebasePost, CategoryData, Ausgabe } from '../../utils/interfaces';
+import {
+  Category,
+  FirebasePost,
+  CategoryData,
+  Ausgabe,
+} from '../../utils/interfaces';
 import { Utils } from '../../utils/utils';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
@@ -52,18 +55,22 @@ export class FirebaseService {
   }
 
   async sendTestPush(notification, data) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable('sendTestPush');
+    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+      'sendTestPush',
+    );
     await callable({
       data: data,
-      notification: notification
+      notification: notification,
     }).toPromise();
   }
 
   async sendPush(notification, data) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable('sendPush');
+    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+      'sendPush',
+    );
     await callable({
       data: data,
-      notification: notification
+      notification: notification,
     }).toPromise();
   }
 
@@ -73,17 +80,22 @@ export class FirebaseService {
     const analyticsData: any = firestore.FieldValue.arrayUnion({
       ...data,
       timestamp: firebase.firestore.Timestamp.fromDate(now),
-      platform: this.utils.getPlatform()
+      platform: this.utils.getPlatform(),
     });
 
-    this.db.doc('analytics/overall').set({
-      [`${field}Count`]: increment,
-      [`${field}Data`]: analyticsData
-    }, { merge: true });
+    this.db.doc('analytics/overall').set(
+      {
+        [`${field}Count`]: increment,
+        [`${field}Data`]: analyticsData,
+      },
+      { merge: true },
+    );
   }
 
   getKeys() {
-    return this.db.collection('oneTimeKeyCollection', (ref: any) => ref.orderBy('value')).valueChanges();
+    return this.db
+      .collection('oneTimeKeyCollection', (ref: any) => ref.orderBy('value'))
+      .valueChanges();
   }
 
   addKey(key: any) {
@@ -92,7 +104,7 @@ export class FirebaseService {
 
   updateKey(key: any) {
     return this.db.doc(`oneTimeKeyCollection/${key.value}`).update({
-      remainingKeyCount: key.count
+      remainingKeyCount: key.count,
     });
   }
 
@@ -104,7 +116,7 @@ export class FirebaseService {
     return this.db.collection('feedback').add({
       feedback: feedback,
       time: firebase.firestore.Timestamp.now(),
-      platform: this.utils.getPlatform()
+      platform: this.utils.getPlatform(),
     });
   }
 
@@ -116,8 +128,11 @@ export class FirebaseService {
     if (this.ausgaben && this.rubrics) {
       return Promise.resolve();
     } else {
-      const categories: any = await this.db.collection<Category[]>('categories')
-        .valueChanges().pipe(take(1)).toPromise();
+      const categories: any = await this.db
+        .collection<Category[]>('categories')
+        .valueChanges()
+        .pipe(take(1))
+        .toPromise();
       const ausgabenCategory = categories.find(
         (cat: any) => cat.name === 'Ausgaben',
       );
@@ -178,49 +193,50 @@ export class FirebaseService {
   }
 
   getPosts() {
-    return new Observable((observer) => {
-      this.db.collection('posts').valueChanges().subscribe((posts: FirebasePost[]) => {
-        this.posts = this.getEditedPosts(posts).sort((a: FirebasePost, b: FirebasePost) => {
-          if (a.ausgabe && b.ausgabe) {
-            if (a.ausgabe.name > b.ausgabe.name) {
-              return 1;
-            }
-            else if (a.ausgabe.name < b.ausgabe.name) {
-              return -1;
-            }
-          }
-          else if (a.ausgabe && !b.ausgabe) {
-            return 1;
-          }
-          else if (!a.ausgabe && b.ausgabe) {
-            return -1;
-          }
+    return new Observable(observer => {
+      this.db
+        .collection('posts')
+        .valueChanges()
+        .subscribe((posts: FirebasePost[]) => {
+          this.posts = this.getEditedPosts(posts)
+            .sort((a: FirebasePost, b: FirebasePost) => {
+              if (a.ausgabe && b.ausgabe) {
+                if (a.ausgabe.name > b.ausgabe.name) {
+                  return 1;
+                } else if (a.ausgabe.name < b.ausgabe.name) {
+                  return -1;
+                }
+              } else if (a.ausgabe && !b.ausgabe) {
+                return 1;
+              } else if (!a.ausgabe && b.ausgabe) {
+                return -1;
+              }
 
-          if (a.title > b.title) {
-            return -1;
-          }
-          else if (a.title < b.title) {
-            return 1;
-          }
+              if (a.title > b.title) {
+                return -1;
+              } else if (a.title < b.title) {
+                return 1;
+              }
 
-          return 0;
-        }).reverse();
-        observer.next(this.posts);
-      });
+              return 0;
+            })
+            .reverse();
+          observer.next(this.posts);
+        });
     });
   }
 
   incrementPostViews(id: string) {
     const increment = firestore.FieldValue.increment(1);
     this.db.doc(`posts/${id}`).update({
-      views: increment
+      views: increment,
     });
   }
 
   incrementAudioPlays(id: string) {
     const increment = firestore.FieldValue.increment(1);
     this.db.doc(`posts/${id}`).update({
-      audioPlays: increment
+      audioPlays: increment,
     });
   }
 
@@ -248,8 +264,11 @@ export class FirebaseService {
     if (this.legalPages) {
       return;
     }
-    this.legalPages = await this.db.collection<any[]>('pages')
-      .valueChanges().pipe(take(1)).toPromise();
+    this.legalPages = await this.db
+      .collection<any[]>('pages')
+      .valueChanges()
+      .pipe(take(1))
+      .toPromise();
   }
 
   async getImprint() {
@@ -264,16 +283,19 @@ export class FirebaseService {
 
   login(email: string, password: string) {
     return new Promise((resolve: any) => {
-      this.afAuth.signInWithEmailAndPassword(email, password).then(() => {
-        fcm.subscribeTo({ topic: 'admin' });
-        if (this.subscriber) {
-          this.subscriber.next(true);
-        }
-        this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
-        resolve(true);
-      }).catch(() => {
-        resolve(false);
-      });
+      this.afAuth
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          fcm.subscribeTo({ topic: 'admin' });
+          if (this.subscriber) {
+            this.subscriber.next(true);
+          }
+          this.incrementAnalyticsField(AnalyticsField.ADMIN_LOGGED_IN);
+          resolve(true);
+        })
+        .catch(() => {
+          resolve(false);
+        });
     });
   }
 
@@ -296,7 +318,7 @@ export class FirebaseService {
     return new Promise((resolve: any) => {
       let reader = new FileReader();
       reader.readAsDataURL(data);
-      reader.addEventListener("load", () => {
+      reader.addEventListener('load', () => {
         resolve(reader.result);
       });
     });
@@ -304,16 +326,21 @@ export class FirebaseService {
 
   async getBase64FromUrl(url: string, redirect: boolean = true) {
     return new Promise(async (resolve, reject) => {
-      const data: Blob = await this.httpClient.get(redirect ?
-        `https://cors.bridged.cc/${url}`
-        : url, { responseType: 'blob' }
-      ).toPromise();
+      const data: Blob = await this.httpClient
+        .get(redirect ? `https://cors.bridged.cc/${url}` : url, {
+          responseType: 'blob',
+        })
+        .toPromise();
       if (data) {
         let reader = new FileReader();
         reader.readAsDataURL(data);
-        reader.addEventListener("load", () => {
-          resolve(reader.result.toString());
-        }, false);
+        reader.addEventListener(
+          'load',
+          () => {
+            resolve(reader.result.toString());
+          },
+          false,
+        );
       } else {
         reject(url);
       }
@@ -324,7 +351,7 @@ export class FirebaseService {
     return this.httpClient.get(url, {
       responseType: 'blob',
       reportProgress: true,
-      observe: 'events'
+      observe: 'events',
     });
   }
 
@@ -334,16 +361,19 @@ export class FirebaseService {
       const ref = this.fireStorage.ref(path);
       const task = this.fireStorage.upload(path, file.rawFile);
 
-      task.snapshotChanges().pipe(
-        finalize(async () => {
-          const url = await ref.getDownloadURL().toPromise();
-          resolve({
-            url,
-            path,
-            name: file.name
-          });
-        })
-      ).subscribe();
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(async () => {
+            const url = await ref.getDownloadURL().toPromise();
+            resolve({
+              url,
+              path,
+              name: file.name,
+            });
+          }),
+        )
+        .subscribe();
     });
   }
 
@@ -353,15 +383,18 @@ export class FirebaseService {
       const ref = this.fireStorage.ref(path);
       const task = this.fireStorage.upload(path, file.rawFile);
 
-      task.snapshotChanges().pipe(
-        finalize(async () => {
-          const url = await ref.getDownloadURL().toPromise();
-          resolve({
-            url,
-            path
-          });
-        })
-      ).subscribe();
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(async () => {
+            const url = await ref.getDownloadURL().toPromise();
+            resolve({
+              url,
+              path,
+            });
+          }),
+        )
+        .subscribe();
     });
   }
 
@@ -371,15 +404,18 @@ export class FirebaseService {
       const ref = this.fireStorage.ref(path);
       const task = this.fireStorage.upload(path, file.rawFile);
 
-      task.snapshotChanges().pipe(
-        finalize(async () => {
-          const url = await ref.getDownloadURL().toPromise();
-          resolve({
-            url,
-            path
-          });
-        })
-      ).subscribe();
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(async () => {
+            const url = await ref.getDownloadURL().toPromise();
+            resolve({
+              url,
+              path,
+            });
+          }),
+        )
+        .subscribe();
     });
   }
 
@@ -389,15 +425,18 @@ export class FirebaseService {
       const ref = this.fireStorage.ref(path);
       const task = this.fireStorage.upload(path, file.rawFile);
 
-      task.snapshotChanges().pipe(
-        finalize(async () => {
-          const url = await ref.getDownloadURL().toPromise();
-          resolve({
-            url,
-            path
-          });
-        })
-      ).subscribe();
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(async () => {
+            const url = await ref.getDownloadURL().toPromise();
+            resolve({
+              url,
+              path,
+            });
+          }),
+        )
+        .subscribe();
     });
   }
 }

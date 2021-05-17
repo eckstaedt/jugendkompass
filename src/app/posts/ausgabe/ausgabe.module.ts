@@ -17,8 +17,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     IonicModule,
     SharedDirectivesModule,
     AusgabePageRoutingModule,
-    FileUploadModule
+    FileUploadModule,
   ],
-  declarations: [AusgabePage]
+  declarations: [AusgabePage],
 })
 export class AusgabePageModule {}

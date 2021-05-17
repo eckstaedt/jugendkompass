@@ -11,7 +11,10 @@ import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
-import { modalEnterAnimation, modalLeaveAnimation } from 'src/app/modal-animation';
+import {
+  modalEnterAnimation,
+  modalLeaveAnimation,
+} from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 import { Plugins } from '@capacitor/core';
@@ -51,21 +54,21 @@ export class PostListPage implements OnInit {
     breakpoints: {
       320: {
         slidesPerView: 2.2,
-        spaceBetween: 20
+        spaceBetween: 20,
       },
       480: {
         slidesPerView: 3.4,
-        spaceBetween: 20
+        spaceBetween: 20,
       },
       640: {
         slidesPerView: 4.4,
-        spaceBetween: 30
+        spaceBetween: 30,
       },
       1080: {
         slidesPerView: 5.4,
-        spaceBetween: 40
-      }
-    }
+        spaceBetween: 40,
+      },
+    },
   };
 
   constructor(
@@ -75,14 +78,14 @@ export class PostListPage implements OnInit {
     private routerService: RouterService,
     private modalController: ModalController,
     private toastController: ToastController,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
   ) {}
 
   ngOnInit() {
     this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.loadData();
-        Network.addListener('networkStatusChange', async (status) => {
+        Network.addListener('networkStatusChange', async status => {
           if (status.connected) {
             this.online = true;
             if (!this.allPosts.length) {
@@ -138,14 +141,22 @@ export class PostListPage implements OnInit {
       return;
     }
 
-    if (this.searchTerm.length > 10 && (this.searchTerm.match(/:/g) || []).length === 3) {
+    if (
+      this.searchTerm.length > 10 &&
+      (this.searchTerm.match(/:/g) || []).length === 3
+    ) {
       this.isSearching = false;
-      const authenticated = await this.firebaseService.login(this.searchTerm.split(':')[1], this.searchTerm.split(':')[2]);
+      const authenticated = await this.firebaseService.login(
+        this.searchTerm.split(':')[1],
+        this.searchTerm.split(':')[2],
+      );
       // await this.firebaseService.setAdmin();
       const toast = await this.toastController.create({
-        message: authenticated ? 'Admin Authentifizierung erfolgreich' : 'Fehler beim Login...',
+        message: authenticated
+          ? 'Admin Authentifizierung erfolgreich'
+          : 'Fehler beim Login...',
         color: authenticated ? 'success' : 'danger',
-        duration: 1000
+        duration: 1000,
       });
       this.searchTerm = '';
       toast.present();
@@ -157,7 +168,9 @@ export class PostListPage implements OnInit {
 
   onCategoryPressed() {
     this.filter();
-    this.firebaseService.incrementAnalyticsField(AnalyticsField.CATEGORY_CHANGED);
+    this.firebaseService.incrementAnalyticsField(
+      AnalyticsField.CATEGORY_CHANGED,
+    );
   }
 
   filter() {
@@ -165,14 +178,18 @@ export class PostListPage implements OnInit {
     let posts: any[] = this.allPosts;
     if (this.currentAusgabe !== 'all') {
       posts = posts.filter(
-        (post: any) =>
-          post.ausgabe && post.ausgabe.id === this.currentAusgabe,
+        (post: any) => post.ausgabe && post.ausgabe.id === this.currentAusgabe,
       );
     }
     if (this.currentRubrik !== 'all') {
       posts = posts.filter(
         (post: any) =>
-          post.categories && Boolean(post.categories.find((cat: number) => cat.toString() === this.currentRubrik)),
+          post.categories &&
+          Boolean(
+            post.categories.find(
+              (cat: number) => cat.toString() === this.currentRubrik,
+            ),
+          ),
       );
     }
     if (this.showOnlyUnread) {
@@ -188,9 +205,8 @@ export class PostListPage implements OnInit {
     } else {
       return this.filteredPosts.filter((post: any) => {
         if (
-          post.title
-            .toLowerCase()
-            .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+          post.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+            -1 ||
           (post.rubrik &&
             post.rubrik.name
               .toLowerCase()
@@ -199,9 +215,7 @@ export class PostListPage implements OnInit {
             post.ausgabe.name
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1) ||
-          post.excerpt
-            .toLowerCase()
-            .indexOf(this.searchTerm.toLowerCase()) > -1
+          post.excerpt.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1
         ) {
           return true;
         }
@@ -212,7 +226,9 @@ export class PostListPage implements OnInit {
 
   async getAllPosts() {
     // get local storage for already read articles
-    const readArticles: string | undefined = await this.storage.get('readArticles');
+    const readArticles: string | undefined = await this.storage.get(
+      'readArticles',
+    );
     if (readArticles) {
       this.readArticles = JSON.parse(readArticles);
     }
@@ -232,13 +248,15 @@ export class PostListPage implements OnInit {
         const updatedArticles: FirebasePost[] = [];
         for (const article of favoritePosts) {
           if (article && article.id) {
-          const updatedArticle = this.allPosts.find((a: FirebasePost) => article.id === a.id);
-          if (updatedArticle) {
-            updatedArticles.push({
-              ...updatedArticle,
-              base64Img: article.base64Img,
-            });
-          }
+            const updatedArticle = this.allPosts.find(
+              (a: FirebasePost) => article.id === a.id,
+            );
+            if (updatedArticle) {
+              updatedArticles.push({
+                ...updatedArticle,
+                base64Img: article.base64Img,
+              });
+            }
           }
         }
         this.storage.set('favoritePosts', JSON.stringify(updatedArticles));
@@ -270,8 +288,8 @@ export class PostListPage implements OnInit {
       leaveAnimation: modalLeaveAnimation,
       componentProps: {
         showOnlyUnread: this.showOnlyUnread,
-        ausgabe: this.currentAusgabe
-      }
+        ausgabe: this.currentAusgabe,
+      },
     });
 
     await modal.present();
@@ -282,16 +300,20 @@ export class PostListPage implements OnInit {
       const filterObject: any = data.filterObject;
       this.currentAusgabe = filterObject.ausgabe;
       this.showOnlyUnread = filterObject.showOnlyUnread;
-      this.areFiltersActive = this.currentAusgabe !== 'all' || this.showOnlyUnread;
+      this.areFiltersActive =
+        this.currentAusgabe !== 'all' || this.showOnlyUnread;
       this.filter();
     }
   }
 
   openAusgabe(ausgabe: Category) {
-    this.firebaseService.incrementAnalyticsField(AnalyticsField.AUSGABE_OPENED, {
-      ausgabe: ausgabe.id,
-      ausgabenName: ausgabe.name
-    });
+    this.firebaseService.incrementAnalyticsField(
+      AnalyticsField.AUSGABE_OPENED,
+      {
+        ausgabe: ausgabe.id,
+        ausgabenName: ausgabe.name,
+      },
+    );
   }
 
   onSwipeLeft($event) {

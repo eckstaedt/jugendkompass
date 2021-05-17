@@ -51,15 +51,15 @@ ion-card {
 
       &.image {
         box-shadow: rgb(0 0 0 / 12%) 0px 4px 4px;
-        border-radius: .4rem;
+        border-radius: 0.4rem;
 
         img {
-          border-radius: .4rem;
+          border-radius: 1.4rem;
         }
       }
 
       &.text {
-        padding-left: .2rem;
+        padding-left: 0.2rem;
       }
 
       &:first-of-type {
@@ -104,11 +104,11 @@ ion-card {
         font-size: 0.8rem;
 
         &:first-of-type {
-          padding-left: .8rem;
+          padding-left: 0.8rem;
         }
 
         &:nth-of-type(2) {
-          padding-left: .2rem;
+          padding-left: 0.2rem;
         }
 
         ion-icon {

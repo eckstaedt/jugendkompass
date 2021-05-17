@@ -9,8 +9,8 @@ describe('PushPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PushPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [PushPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PushPage);
