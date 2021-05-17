@@ -16,9 +16,6 @@
   appHideHeader
   [header]="header"
   [isList]="true"
-  appSwipe
-  (swipeLeft)="onSwipeLeft($event)" 
-  (swipeRight)="onSwipeRight($event)"
 >
   <ion-searchbar
     #searchbar
@@ -54,7 +51,10 @@
     </ion-slide>
   </ion-slides>
 
-  <div *ngIf="posts.length">
+  <div *ngIf="posts.length"
+  appSwipe
+  (swipeLeft)="onSwipeLeft($event)" 
+  (swipeRight)="onSwipeRight($event)">
     <ion-list-header *ngIf="!isSearching" mode="ios">Alle Artikel</ion-list-header>
     <ion-grid>
       <ion-row>
@@ -115,7 +115,10 @@
     </ion-grid>
   </div>
 
-  <div *ngIf="!posts.length && !allPosts.length && online">
+  <div *ngIf="!posts.length && !allPosts.length && online"
+  appSwipe
+  (swipeLeft)="onSwipeLeft($event)" 
+  (swipeRight)="onSwipeRight($event)">
     <ion-list-header mode="ios">
       <ion-skeleton-text
       animated
