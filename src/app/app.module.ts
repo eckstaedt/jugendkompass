@@ -44,14 +44,14 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     IonicStorageModule.forRoot(),
     ChartsModule,
     FileUploadModule,
-    AngularFireFunctionsModule
+    AngularFireFunctionsModule,
   ],
   providers: [
     PhotoViewer,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileOpener
+    FileOpener,
   ],
   bootstrap: [AppComponent],
 })

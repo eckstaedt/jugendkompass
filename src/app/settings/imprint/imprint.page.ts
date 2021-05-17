@@ -9,9 +9,7 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 export class ImprintPage implements OnInit {
   public imprint: any;
 
-  constructor(
-    private firebaseService: FirebaseService,
-  ) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
     this.getImprint();

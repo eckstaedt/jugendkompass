@@ -16,8 +16,8 @@ export class KeysPage implements OnInit {
     private firebaseService: FirebaseService,
     private alertController: AlertController,
     private actionSheetController: ActionSheetController,
-    private utils: Utils
-  ) { }
+    private utils: Utils,
+  ) {}
 
   ngOnInit() {
     this.keys$ = this.firebaseService.getKeys();
@@ -30,32 +30,40 @@ export class KeysPage implements OnInit {
         {
           placeholder: 'Key',
           name: 'key',
-          type: 'text'
+          type: 'text',
         },
         {
           placeholder: 'Anzahl',
           name: 'count',
           type: 'number',
           min: 1,
-          max: 9999
+          max: 9999,
         },
       ],
-      buttons: [{
-        text: 'Abbrechen'
-      }, {
-        text: 'Hinzufügen',
-        handler: (values: any) => {
-          this.firebaseService.addKey({
-            value: values.key,
-            usedKeys: 0,
-            remainingKeyCount: parseInt(values.count, 10)
-          }).then(() => {
-            this.utils.showToast('Key erfolgreich hinzugefügt', 'success');
-          }).catch(() => {
-            this.utils.showToast('Fehler beim hinzufügen, probiere es erneut');
-          });
-        }
-      }]
+      buttons: [
+        {
+          text: 'Abbrechen',
+        },
+        {
+          text: 'Hinzufügen',
+          handler: (values: any) => {
+            this.firebaseService
+              .addKey({
+                value: values.key,
+                usedKeys: 0,
+                remainingKeyCount: parseInt(values.count, 10),
+              })
+              .then(() => {
+                this.utils.showToast('Key erfolgreich hinzugefügt', 'success');
+              })
+              .catch(() => {
+                this.utils.showToast(
+                  'Fehler beim hinzufügen, probiere es erneut',
+                );
+              });
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -64,29 +72,35 @@ export class KeysPage implements OnInit {
   async openUpdateSheet(key: any) {
     const sheet: any = await this.actionSheetController.create({
       header: 'Wähle eine Anzahl',
-      buttons: [{
-        text: '5',
-        handler: () => {
-          this.updateKey(key.value, key.remainingKeyCount + 5);
-        }
-      }, {
-        text: '10',
-        handler: () => {
-          this.updateKey(key.value, key.remainingKeyCount + 10);
-        }
-      }, {
-        text: '35',
-        handler: () => {
-          this.updateKey(key.value, key.remainingKeyCount + 35);
-        }
-      }, {
-        text: 'Andere...',
-        handler: () => {
-          this.openInputAlert(key);
-        }
-      }, {
-        text: 'Abbrechen'
-      }]
+      buttons: [
+        {
+          text: '5',
+          handler: () => {
+            this.updateKey(key.value, key.remainingKeyCount + 5);
+          },
+        },
+        {
+          text: '10',
+          handler: () => {
+            this.updateKey(key.value, key.remainingKeyCount + 10);
+          },
+        },
+        {
+          text: '35',
+          handler: () => {
+            this.updateKey(key.value, key.remainingKeyCount + 35);
+          },
+        },
+        {
+          text: 'Andere...',
+          handler: () => {
+            this.openInputAlert(key);
+          },
+        },
+        {
+          text: 'Abbrechen',
+        },
+      ],
     });
 
     await sheet.present();
@@ -101,31 +115,39 @@ export class KeysPage implements OnInit {
           name: 'count',
           type: 'number',
           min: 1,
-          max: 9999
+          max: 9999,
         },
       ],
-      buttons: [{
-        text: 'Abbrechen'
-      }, {
-        text: 'Hinzufügen',
-        handler: (values: any) => {
-          this.updateKey(key.value, key.remainingKeyCount + parseInt(values.count))
-        }
-      }]
+      buttons: [
+        {
+          text: 'Abbrechen',
+        },
+        {
+          text: 'Hinzufügen',
+          handler: (values: any) => {
+            this.updateKey(
+              key.value,
+              key.remainingKeyCount + parseInt(values.count),
+            );
+          },
+        },
+      ],
     });
 
     await alert.present();
   }
 
   updateKey(value: string, count: number) {
-    this.firebaseService.updateKey({
-      count: count,
-      value: value
-    }).then(() => {
-      this.utils.showToast('Key erfolgreich geupdated', 'success');
-    }).catch(() => {
-      this.utils.showToast('Fehler beim updaten, probiere es erneut');
-    });
+    this.firebaseService
+      .updateKey({
+        count: count,
+        value: value,
+      })
+      .then(() => {
+        this.utils.showToast('Key erfolgreich geupdated', 'success');
+      })
+      .catch(() => {
+        this.utils.showToast('Fehler beim updaten, probiere es erneut');
+      });
   }
-
 }

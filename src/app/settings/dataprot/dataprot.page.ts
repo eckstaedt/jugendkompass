@@ -9,9 +9,7 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 export class DataprotPage implements OnInit {
   public dataProt: any;
 
-  constructor(
-    private firebaseService: FirebaseService
-  ) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
     this.getImprint();

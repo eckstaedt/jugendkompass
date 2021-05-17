@@ -12,7 +12,7 @@ export interface CalendarDate {
 }
 
 export enum PostStatus {
-  PUBLISH = 'publish'
+  PUBLISH = 'publish',
 }
 
 export interface FirebasePost {
@@ -67,7 +67,13 @@ export interface Ausgabe extends Category {
   pushSend?: boolean;
   pdfUrl?: string;
   pdfPath?: string;
-  videos: { name: string, url: string, image: string, videoPath?: string, imagePath?: string }[];
+  videos: {
+    name: string;
+    url: string;
+    image: string;
+    videoPath?: string;
+    imagePath?: string;
+  }[];
 }
 
 export interface CategoryData {

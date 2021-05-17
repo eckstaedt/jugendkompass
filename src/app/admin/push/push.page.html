@@ -1,10 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        defaultHref="/tabs/settings"
-      ></ion-back-button>
+      <ion-back-button text="" defaultHref="/tabs/settings"></ion-back-button>
     </ion-buttons>
     <ion-title>Push</ion-title>
   </ion-toolbar>
@@ -26,14 +23,30 @@
   <ion-item *ngIf="isAusgabe" lines="full">
     <ion-label>Ausgabe auswählen</ion-label>
     <ion-select [(ngModel)]="ausgabe">
-      <ion-select-option [value]="ausgabe" *ngFor="let ausgabe of ausgaben">{{ ausgabe.name }}</ion-select-option>
+      <ion-select-option [value]="ausgabe" *ngFor="let ausgabe of ausgaben"
+        >{{ ausgabe.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
   <ion-item *ngIf="!isAusgabe" lines="full">
-    <input (change)="onImageSelected()" accept="image/png, image/jpeg" #selector style="display: none;" type="file" ng2FileSelect [uploader]="fileUploader"/>
-    <ion-button (click)="selector.click()" color="medium">Bild auswählen (max. 300 Kb)</ion-button>
+    <input
+      (change)="onImageSelected()"
+      accept="image/png, image/jpeg"
+      #selector
+      style="display: none"
+      type="file"
+      ng2FileSelect
+      [uploader]="fileUploader"
+    />
+    <ion-button (click)="selector.click()" color="medium"
+      >Bild auswählen (max. 300 Kb)</ion-button
+    >
     <ion-label *ngIf="file">{{ file.name }}</ion-label>
   </ion-item>
-  <ion-button color="medium" expand="full" (click)="showConfirmAlert(true)">Testnachricht senden</ion-button>
-  <ion-button color="success" expand="full" (click)="showConfirmAlert(false)">Push Benachrichtigung an alle User senden</ion-button>
+  <ion-button color="medium" expand="full" (click)="showConfirmAlert(true)"
+    >Testnachricht senden</ion-button
+  >
+  <ion-button color="success" expand="full" (click)="showConfirmAlert(false)"
+    >Push Benachrichtigung an alle User senden</ion-button
+  >
 </ion-content>

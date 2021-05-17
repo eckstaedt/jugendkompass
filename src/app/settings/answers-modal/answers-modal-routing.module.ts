@@ -6,8 +6,8 @@ import { AnswersModalPage } from './answers-modal.page';
 const routes: Routes = [
   {
     path: '',
-    component: AnswersModalPage
-  }
+    component: AnswersModalPage,
+  },
 ];
 
 @NgModule({

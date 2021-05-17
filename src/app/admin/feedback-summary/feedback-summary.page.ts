@@ -10,13 +10,12 @@ import { AnswersModalPage } from 'src/app/settings/answers-modal/answers-modal.p
   styleUrls: ['./feedback-summary.page.scss'],
 })
 export class FeedbackSummaryPage implements OnInit {
-
-  public feedback$: Observable<any[]>;;
+  public feedback$: Observable<any[]>;
 
   constructor(
     private firebaseService: FirebaseService,
-    private modalController: ModalController
-  ) { }
+    private modalController: ModalController,
+  ) {}
 
   ngOnInit() {
     this.feedback$ = this.firebaseService.getFeedback();
@@ -26,11 +25,10 @@ export class FeedbackSummaryPage implements OnInit {
     const modal: any = await this.modalController.create({
       component: AnswersModalPage,
       componentProps: {
-        answer: feedback
-      }
+        answer: feedback,
+      },
     });
 
     modal.present();
   }
-
 }

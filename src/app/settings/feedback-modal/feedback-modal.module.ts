@@ -13,8 +13,8 @@ import { FeedbackModalPage } from './feedback-modal.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    FeedbackModalPageRoutingModule
+    FeedbackModalPageRoutingModule,
   ],
-  declarations: [FeedbackModalPage]
+  declarations: [FeedbackModalPage],
 })
 export class FeedbackModalPageModule {}

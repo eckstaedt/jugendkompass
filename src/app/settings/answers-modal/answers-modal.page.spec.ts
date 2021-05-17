@@ -9,8 +9,8 @@ describe('AnswersModalPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnswersModalPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [AnswersModalPage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnswersModalPage);

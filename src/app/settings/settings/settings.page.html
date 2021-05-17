@@ -45,11 +45,7 @@
       <ion-icon slot="start" name="send-outline"></ion-icon>
       <ion-label>Push Benachrichtigungen</ion-label>
     </ion-item>
-    <ion-item
-      *ngIf="!feedbackProvided"
-      (click)="openFeedbackModal()"
-      detail
-    >
+    <ion-item *ngIf="!feedbackProvided" (click)="openFeedbackModal()" detail>
       <ion-icon slot="start" name="clipboard-outline"></ion-icon>
       <ion-label>Feedback</ion-label>
     </ion-item>
@@ -91,7 +87,11 @@
     <ion-item lines="inset">
       <ion-icon slot="start" name="contrast-outline"></ion-icon>
       <ion-label class="theme-label">Theme</ion-label>
-      <ion-select class="theme-select" [(ngModel)]="theme" (ionChange)='onThemeChange()'>
+      <ion-select
+        class="theme-select"
+        [(ngModel)]="theme"
+        (ionChange)="onThemeChange()"
+      >
         <ion-select-option value="default">Systemeinstellung</ion-select-option>
         <ion-select-option value="light">Hell</ion-select-option>
         <ion-select-option value="dark">Dunkel</ion-select-option>

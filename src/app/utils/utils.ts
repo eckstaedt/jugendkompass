@@ -10,7 +10,7 @@ export class Utils {
   constructor(
     private toastController: ToastController,
     private modalController: ModalController,
-    private platform: Platform
+    private platform: Platform,
   ) {}
 
   async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
@@ -43,7 +43,9 @@ export class Utils {
       if (this.platform.is('ios')) {
         return this.platform.is('ipad') ? Platforms.IPAD : Platforms.IPHONE;
       } else if (this.platform.is('android')) {
-        return this.platform.is('tablet') ? Platforms.ANDROID_TABLET : Platforms.ANDROID_PHONE;
+        return this.platform.is('tablet')
+          ? Platforms.ANDROID_TABLET
+          : Platforms.ANDROID_PHONE;
       } else {
         return Platforms.OTHER;
       }

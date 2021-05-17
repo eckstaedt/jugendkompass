@@ -6,8 +6,8 @@ import { AnalyticsPage } from './analytics.page';
 const routes: Routes = [
   {
     path: '',
-    component: AnalyticsPage
-  }
+    component: AnalyticsPage,
+  },
 ];
 
 @NgModule({

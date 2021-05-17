@@ -9,12 +9,7 @@ import { KeysPageRoutingModule } from './keys-routing.module';
 import { KeysPage } from './keys.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    KeysPageRoutingModule
-  ],
-  declarations: [KeysPage]
+  imports: [CommonModule, FormsModule, IonicModule, KeysPageRoutingModule],
+  declarations: [KeysPage],
 })
 export class KeysPageModule {}

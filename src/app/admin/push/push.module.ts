@@ -15,8 +15,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     FormsModule,
     IonicModule,
     PushPageRoutingModule,
-    FileUploadModule
+    FileUploadModule,
   ],
-  declarations: [PushPage]
+  declarations: [PushPage],
 })
 export class PushPageModule {}

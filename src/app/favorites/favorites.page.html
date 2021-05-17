@@ -62,13 +62,15 @@
                   <div class="postFooter">
                     <ion-row>
                       <ion-col size="4">
-                        <ion-icon name="book-outline"></ion-icon> {{post.readingTime}} min
+                        <ion-icon name="book-outline"></ion-icon>
+                        {{post.readingTime}} min
                       </ion-col>
                       <ion-col size="3">
                         <ion-icon name="eye-outline"></ion-icon> {{post.views}}
                       </ion-col>
                       <ion-col *ngIf="post.audio" size="5">
-                        <ion-icon name="volume-high-outline"></ion-icon>{{ post.audio.duration }} min
+                        <ion-icon name="volume-high-outline"></ion-icon>{{
+                        post.audio.duration }} min
                       </ion-col>
                     </ion-row>
                   </div>

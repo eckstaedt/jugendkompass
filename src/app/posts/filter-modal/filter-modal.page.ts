@@ -10,16 +10,16 @@ import { AnalyticsField } from 'src/app/utils/constants';
   styleUrls: ['./filter-modal.page.scss'],
 })
 export class FilterModalPage implements OnInit {
-  @Input("showOnlyUnread") showOnlyUnread;
-  @Input("ausgabe") ausgabe;
+  @Input('showOnlyUnread') showOnlyUnread;
+  @Input('ausgabe') ausgabe;
 
   public ausgaben: Category[] = [];
-  public selectedAusgabe: string = "all";
+  public selectedAusgabe: string = 'all';
 
   constructor(
     private modalController: ModalController,
-    private firebaseService: FirebaseService
-  ) { }
+    private firebaseService: FirebaseService,
+  ) {}
 
   ngOnInit() {
     this.ausgaben = this.firebaseService.getAusgaben();
@@ -33,15 +33,16 @@ export class FilterModalPage implements OnInit {
   async apply(): Promise<void> {
     this.dismiss({
       showOnlyUnread: this.showOnlyUnread,
-      ausgabe: this.selectedAusgabe
+      ausgabe: this.selectedAusgabe,
     });
-    this.firebaseService.incrementAnalyticsField(AnalyticsField.FILTER_MODAL_APPLIED);
+    this.firebaseService.incrementAnalyticsField(
+      AnalyticsField.FILTER_MODAL_APPLIED,
+    );
   }
 
   dismiss(filterObject?: any): void {
     this.modalController.dismiss({
-      filterObject: filterObject
+      filterObject: filterObject,
     });
   }
-
 }

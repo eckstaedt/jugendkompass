@@ -56,7 +56,7 @@ export class AudioService {
     this.sound.stop();
     this.title = '';
     this.titleObserver.next({
-      title: ''
+      title: '',
     });
   }
 
@@ -73,7 +73,7 @@ export class AudioService {
       playing: true,
     });
     this.titleObserver.next({
-      title: this.title
+      title: this.title,
     });
   }
 

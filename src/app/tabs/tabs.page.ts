@@ -33,7 +33,7 @@ export class TabsPage {
         this.title = res.title;
       }
     });
-    Network.addListener("networkStatusChange", (status: NetworkStatus) => {
+    Network.addListener('networkStatusChange', (status: NetworkStatus) => {
       this.online = status.connected;
     });
   }
@@ -43,7 +43,7 @@ export class TabsPage {
     this.movingSlider = false;
     const newValue: number = +this.range.value;
     const endTime: number = this.audioService.getDuration();
-    if(endTime * (newValue / 1000) === endTime) {
+    if (endTime * (newValue / 1000) === endTime) {
       this.close();
       return;
     }
@@ -70,17 +70,20 @@ export class TabsPage {
     if (this.playing && !this.movingSlider) {
       if (!isNaN(this.audioService.getSeek())) {
         const newValue: number = +this.range.value;
-        const endTime:number = this.audioService.getDuration();
-        if((endTime * (newValue / 1000) + 0.1) > endTime && this.curTime !== '00:00') {
+        const endTime: number = this.audioService.getDuration();
+        if (
+          endTime * (newValue / 1000) + 0.1 > endTime &&
+          this.curTime !== '00:00'
+        ) {
           this.close();
           return;
         }
         this.progress =
-        (this.audioService.getSeek() / this.audioService.getDuration()) *
-        1000 || 0;
+          (this.audioService.getSeek() / this.audioService.getDuration()) *
+            1000 || 0;
         this.curTime = this.utils.getMinString(
           Math.round(this.audioService.getSeek()),
-          );
+        );
         this.duration = this.utils.getMinString(
           Math.round(this.audioService.getDuration()),
         );

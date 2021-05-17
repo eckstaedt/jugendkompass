@@ -22,7 +22,10 @@ const routes: Routes = [
       },
       {
         path: 'posts/ausgabe/:id',
-        loadChildren: () => import('./../posts/ausgabe/ausgabe.module').then( m => m.AusgabePageModule)
+        loadChildren: () =>
+          import('./../posts/ausgabe/ausgabe.module').then(
+            m => m.AusgabePageModule,
+          ),
       },
       {
         path: 'settings',
@@ -47,23 +50,31 @@ const routes: Routes = [
       },
       {
         path: 'settings/push',
-        loadChildren: () => import('./../admin/push/push.module').then( m => m.PushPageModule),
-        canLoad: [AdminGuardService]
+        loadChildren: () =>
+          import('./../admin/push/push.module').then(m => m.PushPageModule),
+        canLoad: [AdminGuardService],
       },
       {
         path: 'settings/feedback-summary',
-        loadChildren: () => import('./../admin/feedback-summary/feedback-summary.module').then( m => m.FeedbackSummaryPageModule),
-        canLoad: [AdminGuardService]
+        loadChildren: () =>
+          import('./../admin/feedback-summary/feedback-summary.module').then(
+            m => m.FeedbackSummaryPageModule,
+          ),
+        canLoad: [AdminGuardService],
       },
       {
         path: 'settings/analytics',
-        loadChildren: () => import('./../admin/analytics/analytics.module').then( m => m.AnalyticsPageModule),
-        canLoad: [AdminGuardService]
+        loadChildren: () =>
+          import('./../admin/analytics/analytics.module').then(
+            m => m.AnalyticsPageModule,
+          ),
+        canLoad: [AdminGuardService],
       },
       {
         path: 'settings/keys',
-        loadChildren: () => import('./../admin/keys/keys.module').then( m => m.KeysPageModule),
-        canLoad: [AdminGuardService]
+        loadChildren: () =>
+          import('./../admin/keys/keys.module').then(m => m.KeysPageModule),
+        canLoad: [AdminGuardService],
       },
       {
         path: 'favorites',

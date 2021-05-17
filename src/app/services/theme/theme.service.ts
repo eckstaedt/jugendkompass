@@ -3,15 +3,12 @@ import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
-
   private readonly THEME_KEY = 'theme';
 
-  constructor(
-    private storage: Storage,
-    private plt: Platform) { }
+  constructor(private storage: Storage, private plt: Platform) {}
 
   public static isThemeDark(): boolean {
     if (document.body.classList.value === 'dark') {
@@ -68,8 +65,12 @@ export class ThemeService {
   }
 
   private setDefaultTheme(): boolean {
-    if (this.plt.platforms() && this.plt.platforms().find((x) => x === 'android') && !this.plt.platforms().find((x) => x === 'pwa')) {
-      const isDark = window.navigator.userAgent.includes("AndroidDarkMode");
+    if (
+      this.plt.platforms() &&
+      this.plt.platforms().find(x => x === 'android') &&
+      !this.plt.platforms().find(x => x === 'pwa')
+    ) {
+      const isDark = window.navigator.userAgent.includes('AndroidDarkMode');
       return this.toggleDarkTheme(isDark);
     } else {
       const prefersColor = window.matchMedia('(prefers-color-scheme: dark)');

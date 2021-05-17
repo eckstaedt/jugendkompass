@@ -132,27 +132,23 @@ export class FavoritesPage implements OnInit {
       return this.filteredPosts.filter((post: any) => {
         if (post.rubrik) {
           if (
-            post.title
-              .toLowerCase()
-              .indexOf(this.searchTerm.toLowerCase()) > -1 ||
+            post.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+              -1 ||
             post.rubrik.name
               .toLowerCase()
               .indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt
-              .toLowerCase()
-              .indexOf(this.searchTerm.toLowerCase()) > -1
+            post.excerpt.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+              -1
           ) {
             return true;
           }
           return false;
         } else {
           if (
-            post.title
-              .toLowerCase()
-              .indexOf(this.searchTerm.toLowerCase()) > -1 ||
-            post.excerpt
-              .toLowerCase()
-              .indexOf(this.searchTerm.toLowerCase()) > -1
+            post.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+              -1 ||
+            post.excerpt.toLowerCase().indexOf(this.searchTerm.toLowerCase()) >
+              -1
           ) {
             return true;
           }

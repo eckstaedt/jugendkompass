@@ -17,7 +17,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     IonicModule,
     PostPageRoutingModule,
     SharedDirectivesModule,
-    FileUploadModule
+    FileUploadModule,
   ],
   declarations: [PostPage],
 })
