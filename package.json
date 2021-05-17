@@ -1,6 +1,6 @@
 {
   "name": "jugendkompass",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "author": "FECG Jugend Speyer",
   "homepage": "https://jugend-speyer.org/",
   "prettier": "@ionic/prettier-config",
