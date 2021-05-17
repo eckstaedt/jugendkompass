@@ -70,7 +70,7 @@
   appSwipe
   (swipeLeft)="onSwipeLeft($event)" 
   (swipeRight)="onSwipeRight($event)">
-    <ion-list-header *ngIf="!isSearching" mode="ios">Alle Artikel</ion-list-header>
+    <ion-list-header *ngIf="!isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel</ion-list-header>
     <ion-grid>
       <ion-row>
         <ion-col
