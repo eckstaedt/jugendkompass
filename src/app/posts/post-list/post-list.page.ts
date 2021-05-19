@@ -82,8 +82,9 @@ export class PostListPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
+    this.appComponent.getObservable().subscribe(async (loggedIn: boolean) => {
       if (loggedIn) {
+        await this.getReadArticles();
         this.loadData();
         Network.addListener('networkStatusChange', async status => {
           if (status.connected) {
@@ -102,7 +103,7 @@ export class PostListPage implements OnInit {
     });
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.domCtrl.read(() => {
       this.content.scrollToPoint(0, 60);
     });
@@ -119,7 +120,19 @@ export class PostListPage implements OnInit {
         this.currentRubrik = filterData.id.toString();
         this.currentAusgabe = 'all';
       }
-      this.filter();
+    }
+    if (this.showOnlyUnread) {
+      this.areFiltersActive = true;
+    }
+    this.filter();
+  }
+
+  async getReadArticles() {
+    const readArticles: string | undefined = await this.storage.get(
+      'readArticles',
+    );
+    if (readArticles) {
+      this.readArticles = JSON.parse(readArticles);
     }
   }
 
@@ -127,7 +140,7 @@ export class PostListPage implements OnInit {
     await this.firebaseService.loadCategories();
     this.ausgaben = this.firebaseService.getAusgaben();
     this.rubriken = this.firebaseService.getRubrics();
-    await this.getAllPosts();
+    this.getAllPosts();
   }
 
   async onSearch(event: any) {
@@ -224,16 +237,15 @@ export class PostListPage implements OnInit {
     }
   }
 
-  async getAllPosts() {
-    // get local storage for already read articles
-    const readArticles: string | undefined = await this.storage.get(
-      'readArticles',
-    );
-    if (readArticles) {
-      this.readArticles = JSON.parse(readArticles);
-    }
-    this.firebaseService.getPosts().subscribe((posts: FirebasePost[]) => {
-      this.allPosts = posts;
+  getAllPosts() {
+    this.firebaseService.getPosts().subscribe(async (posts: FirebasePost[]) => {
+      await this.getReadArticles();
+      this.allPosts = posts.map((post: FirebasePost) => {
+        return {
+          ...post,
+          articleWasRead: Boolean(this.readArticles?.includes(post.id))
+        }
+      });
       this.updateFavoritePosts();
       this.filter();
       this.filteredPosts = this.allPosts;
@@ -295,6 +307,8 @@ export class PostListPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
+
+    await this.getReadArticles();
 
     if (data.filterObject) {
       const filterObject: any = data.filterObject;

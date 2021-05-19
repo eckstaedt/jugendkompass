@@ -45,7 +45,7 @@
       <ion-icon slot="start" name="send-outline"></ion-icon>
       <ion-label>Push Benachrichtigungen</ion-label>
     </ion-item>
-    <ion-item *ngIf="!feedbackProvided" (click)="openFeedbackModal()" detail>
+    <ion-item button *ngIf="!feedbackProvided" (click)="openFeedbackModal()" detail>
       <ion-icon slot="start" name="clipboard-outline"></ion-icon>
       <ion-label>Feedback</ion-label>
     </ion-item>

@@ -70,7 +70,8 @@
   appSwipe
   (swipeLeft)="onSwipeLeft($event)" 
   (swipeRight)="onSwipeRight($event)">
-    <ion-list-header *ngIf="!isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel</ion-list-header>
+    <ion-list-header *ngIf="!showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel</ion-list-header>
+    <ion-list-header *ngIf="showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Ungelesene Artikel</ion-list-header>
     <ion-grid>
       <ion-row>
         <ion-col
@@ -115,7 +116,7 @@
                         post.readingTime }} min
                       </ion-col>
                       <ion-col size="3">
-                        <ion-icon name="eye-outline"></ion-icon> {{ post.views
+                        <ion-icon name="eye-outline"></ion-icon> {{ post.views || "0"
                         }}
                       </ion-col>
                       <ion-col

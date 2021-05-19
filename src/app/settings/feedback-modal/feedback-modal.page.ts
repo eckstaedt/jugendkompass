@@ -93,7 +93,7 @@ export class FeedbackModalPage implements OnInit {
         .submitFeedback(this.feedback)
         .then(async () => {
           const toast = await this.toastController.create({
-            message: 'Vielen dank für dein Feedback!',
+            message: 'Vielen Dank für dein Feedback!',
             color: 'success',
             position: 'bottom',
             duration: 2000,

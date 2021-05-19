@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Storage } from '@ionic/storage';
 import { Observable, Subscriber } from 'rxjs';
 import { take, finalize, first } from 'rxjs/operators';
 import {
@@ -37,7 +36,6 @@ export class FirebaseService {
   constructor(
     private db: AngularFirestore,
     private fireStorage: AngularFireStorage,
-    private storage: Storage,
     private utils: Utils,
     private httpClient: HttpClient,
     private fns: AngularFireFunctions,
@@ -48,10 +46,6 @@ export class FirebaseService {
 
   async init() {
     await this.loadCategories();
-    const readArticles = await this.storage.get('readArticles');
-    if (readArticles) {
-      this.readArticles = JSON.parse(readArticles);
-    }
   }
 
   async sendTestPush(notification, data) {
@@ -247,15 +241,10 @@ export class FirebaseService {
         this.rubrics,
         this.ausgaben,
       );
-      let articleWasRead: boolean = false;
-      if (this.readArticles) {
-        articleWasRead = this.readArticles.includes(post.id);
-      }
       return {
         ...post,
         rubrik: categroyData.rubrik,
-        ausgabe: categroyData.ausgabe,
-        articleWasRead: articleWasRead,
+        ausgabe: categroyData.ausgabe
       };
     });
   }
