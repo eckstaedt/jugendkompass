@@ -99,7 +99,7 @@ export class SettingsPage implements OnInit {
         title: 'Artikel teilen',
         text: 'Jugendkompass',
         url: this.plt.is('ios')
-          ? 'https://apps.apple.com/us/app/jugendkompass/id1559123537'
+          ? 'https://apps.apple.com/de/app/jugendkompass/id1559123537'
           : 'https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass',
         dialogTitle: 'App weiterempfehlen',
       });
@@ -116,7 +116,7 @@ export class SettingsPage implements OnInit {
           icon: 'logo-apple',
           handler: () => {
             window.open(
-              'https://apps.apple.com/us/app/stephanus-jugendkompass/id1529600025?ign-mpt=uo%3D2',
+              'https://apps.apple.com/de/app/jugendkompass/id1559123537',
               '_blank',
             ); // URL anpassen sobald im App Store
           },
@@ -126,7 +126,7 @@ export class SettingsPage implements OnInit {
           icon: 'logo-android',
           handler: () => {
             window.open(
-              'https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass&hl=gsw&gl=DE',
+              'https://play.google.com/store/apps/details?id=io.stephanus.jugendkompass',
               '_blank',
             ); // URL anpassen sobald im Play Store
           },
