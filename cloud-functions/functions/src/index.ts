@@ -19,10 +19,10 @@ const options: cors.CorsOptions = {
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
 };
-// const url: string = 'https://jugendkompass.com/wp-json/wp/v2/';
-// const impulsesId: number = 9;
-const url: string = 'https://eckstaedt-webdesign.com/wp-json/wp/v2/';
-const impulsesId: number = 19;
+const url: string = 'https://jugendkompass.com/wp-json/wp/v2/';
+const impulsesId: number = 9;
+// const url: string = 'https://eckstaedt-webdesign.com/wp-json/wp/v2/';
+// const impulsesId: number = 19;
 
 //initialize firebase inorder to access its services
 admin.initializeApp(functions.config().firebase);
@@ -224,7 +224,11 @@ app.delete('/oneTimeKeys', async (req: any, res: any) => {
 
 exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
   const payload: admin.messaging.MessagingPayload = {
-    notification: data.notification,
+    notification: {
+      ...data.notification,
+      notification: data.notification ? data.notification : '',
+      title: data.title ? data.title : ''
+    },
     data: data.data
   };
 
@@ -235,7 +239,11 @@ exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.Cal
 
 exports.sendPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
   const payload: admin.messaging.MessagingPayload = {
-    notification: data.notification,
+    notification: {
+      ...data.notification,
+      notification: data.notification ? data.notification : '',
+      title: data.title ? data.title : ''
+    },
     data: data.data
   };
 

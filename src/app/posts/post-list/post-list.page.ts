@@ -110,7 +110,7 @@ export class PostListPage implements OnInit {
 
     const filterData: Category | undefined = this.routerService.getData();
 
-    this.areFiltersActive = false;
+    this.areFiltersActive = this.currentAusgabe !== 'all' || this.currentRubrik !== 'all';
     if (filterData) {
       if (this.ausgaben.find((aus: Category) => aus.id === filterData.id)) {
         this.currentAusgabe = filterData.id.toString();
