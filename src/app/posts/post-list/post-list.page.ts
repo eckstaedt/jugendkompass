@@ -82,6 +82,9 @@ export class PostListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.domCtrl.read(() => {
+      this.content.scrollToPoint(0, 60);
+    });
     this.appComponent.getObservable().subscribe(async (loggedIn: boolean) => {
       if (loggedIn) {
         await this.getReadArticles();
@@ -104,10 +107,6 @@ export class PostListPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    this.domCtrl.read(() => {
-      this.content.scrollToPoint(0, 60);
-    });
-
     const filterData: Category | undefined = this.routerService.getData();
 
     this.areFiltersActive = this.currentAusgabe !== 'all' || this.currentRubrik !== 'all';
