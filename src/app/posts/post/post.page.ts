@@ -121,18 +121,6 @@ export class PostPage implements OnInit {
     clearInterval(this.intervalId);
   }
 
-  async setDivStyle() {
-    var fontSize = 15;
-
-    await this.storage.get('text-size').then((res: number) => {
-      fontSize = res;
-    });
-
-    return {
-      'font-size': fontSize + 'px',
-    };
-  }
-
   async loadData() {
     await this.firebaseService.loadCategories();
     const id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -174,7 +162,7 @@ export class PostPage implements OnInit {
 
     setTimeout(() => {
       for (const image of Array.from(
-        document.querySelectorAll('.postContent img'),
+        document.querySelectorAll('img'),
       )) {
         (image as any).onclick = () => {
           this.photoViewer.show((image as any).src);

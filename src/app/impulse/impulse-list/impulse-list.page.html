@@ -1,0 +1,57 @@
+<ion-header #header class="ion-no-border">
+  <ion-toolbar>
+    <img class="logo" />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list-header
+    mode="ios"
+    >Impulse</ion-list-header
+  >
+  <ion-grid>
+    <ion-row>
+      <ion-col
+        class="overallColumn"
+        *ngFor="let impulse of impulses"
+        size="12"
+        size-md="6"
+        size-xl="4"
+      >
+        <ion-card
+          [routerLink]="['/', 'tabs', 'impulse', impulse.id]"
+        >
+          <ion-grid>
+            <ion-row>
+              <ion-col class="cardColumn image" size="4">
+                <img *ngIf="impulse.postImg" [src]="impulse.postImg.source_url" />
+              </ion-col>
+              <ion-col class="cardColumn text" size="8">
+                <div class="postHeader">
+                  <ion-card-header>
+                    <p class="subTitle">
+                      {{ impulse.date | date: 'dd.MM.yyyy' }}
+                    </p>
+                    <p class="title" [innerHTML]="impulse.title"></p>
+                  </ion-card-header>
+                </div>
+                <div class="postFooter">
+                  <ion-row>
+                    <ion-col size="4">
+                      <ion-icon name="book-outline"></ion-icon> {{
+                      impulse.readingTime }} min
+                    </ion-col>
+                    <ion-col size="3">
+                      <ion-icon name="eye-outline"></ion-icon> {{ impulse.views || "0"
+                      }}
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

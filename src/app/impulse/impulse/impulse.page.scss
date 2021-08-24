@@ -1,0 +1,42 @@
+ion-content {
+    --padding-bottom: 2.5rem;
+  
+    ion-card {
+      overflow: visible;
+      margin: 2.5rem 1rem 2rem 1rem;
+      position: relative;
+      padding-top: 60px;
+  
+      ion-card-content {
+        padding-bottom: 1rem;
+        padding-top: 1.8rem;
+      }
+  
+      .img-wrapper {
+        background: var(--ion-color-dark-contrast);
+        width: 6rem;
+        height: 6rem;
+        position: absolute;
+        left: 50%;
+        top: -30px;
+        transform: translateX(-50%);
+        box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
+        border-radius: 10px;
+  
+        img {
+          border-radius: 10px;
+          width: 6rem;
+          height: 6rem;
+        }
+      }
+  
+      .subTitle {
+        padding-top: 0.3rem;
+      }
+    }
+  
+    .text {
+      padding: 0 1rem;
+    }
+  }
+  

@@ -3,35 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button
         text=""
-        [defaultHref]="defaultHref"
+        defaultHref="/tabs/impulse"
         #backButton
       ></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      <input
-        (change)="onAudioSelected()"
-        #audioSelector
-        style="display: none"
-        accept="audio/mp3"
-        type="file"
-        ng2FileSelect
-        [uploader]="fileUploader"
-      />
-      <ion-button *ngIf="isAdmin" (click)="audioSelector.click()">
-        <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
-      </ion-button>
-      <ion-button (click)="setPostFavorite()" [disabled]="!post?.id">
-        <ion-icon
-          slot="icon-only"
-          [name]="post?.isFavorite ? 'star' : 'star-outline'"
-        ></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <!-- <ion-buttons slot="end">
-      <ion-button (click)="openMenu()">
-        <ion-icon name="ellipsis-horizontal"></ion-icon>
-      </ion-button>
-    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
@@ -42,41 +17,21 @@
   [header]="header"
   [isList]="false"
 >
-  <div *ngIf="post">
+  <div *ngIf="impulse">
     <ion-card>
       <div class="img-wrapper">
         <img
           id="headerImage"
-          *ngIf="post.postImg || post.base64Img"
-          [src]="post.base64Img ? post.base64Img : post.postImg.source_url"
+          *ngIf="impulse.postImg || impulse.base64Img"
+          [src]="impulse.base64Img ? impulse.base64Img : impulse.postImg.source_url"
         />
       </div>
       <ion-card-content class="ion-text-center">
-        <h2>{{ post.title }}</h2>
-        <ion-text color="medium">
+        <h2>{{ impulse.title }}</h2>
+        <ion-text>
           <div style="display: flex" class="ion-justify-content-center">
-            <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">
-              <a *ngIf="online" (click)="openFilteredList(post.ausgabe)"
-                >{{ post.ausgabe.name }}</a
-              >
-              <a class="offline" *ngIf="!online">{{ post.ausgabe.name }}</a>
-            </p>
-            <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
-              <a *ngIf="online" (click)="openFilteredList(post.rubrik)"
-                >{{ post.rubrik.name }}</a
-              >
-              <a class="offline" *ngIf="!online">{{ post.rubrik.name }}</a>
-            </p>
-            <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
-              <a *ngIf="online" (click)="openFilteredList(post.ausgabe)"
-                >{{ post.ausgabe.name }}</a
-              >
-              <a class="offline" *ngIf="!online">{{ post.ausgabe.name }}</a>
-              |
-              <a *ngIf="online" (click)="openFilteredList(post.rubrik)"
-                >{{post.rubrik.name }}</a
-              >
-              <a class="offline" *ngIf="!online">{{ post.rubrik.name }}</a>
+            <p class="subTitle">
+              {{ impulse.date | date: 'dd.MM.yyyy' }}
             </p>
           </div>
         </ion-text>
@@ -84,12 +39,12 @@
     </ion-card>
     <div
       class="text postContent"
-      [innerHTML]="post.content"
+      [innerHTML]="impulse.content"
       [style.font-size.px]="textSize"
     ></div>
   </div>
 
-  <div *ngIf="!post">
+  <div *ngIf="!impulse">
     <div class="text">
       <p>
         <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
@@ -149,14 +104,4 @@
       </p>
     </div>
   </div>
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button
-      style="margin: auto"
-      *ngIf="!isPlaying && ((post?.audio && online) || (post?.audio?.base64 && !online))"
-      (click)="play()"
-      size="small"
-    >
-      <ion-icon size="medium" name="play"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

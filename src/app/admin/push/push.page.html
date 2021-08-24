@@ -17,10 +17,16 @@
     <ion-input [(ngModel)]="body"></ion-input>
   </ion-item>
   <ion-item lines="full">
-    <ion-label>Neue Ausgabe</ion-label>
-    <ion-toggle [disabled]="noAusgabe" [(ngModel)]="isAusgabe"></ion-toggle>
+    <ion-label>Typ</ion-label>
+    <ion-select
+      [(ngModel)]="type"
+    >
+      <ion-select-option value="general">Allgemein</ion-select-option>
+      <ion-select-option [disabled]="!ausgaben.length" value="ausgabe">Neue Ausgabe</ion-select-option>
+      <ion-select-option [disabled]="!impulses.length" value="impulse">Neuer Impuls</ion-select-option>
+    </ion-select>
   </ion-item>
-  <ion-item *ngIf="isAusgabe" lines="full">
+  <ion-item *ngIf="type === 'ausgabe'" lines="full">
     <ion-label>Ausgabe auswählen</ion-label>
     <ion-select [(ngModel)]="ausgabe">
       <ion-select-option [value]="ausgabe" *ngFor="let ausgabe of ausgaben"
@@ -28,7 +34,15 @@
       >
     </ion-select>
   </ion-item>
-  <ion-item *ngIf="!isAusgabe" lines="full">
+  <ion-item *ngIf="type === 'impulse'" lines="full">
+    <ion-label>Impuls auswählen</ion-label>
+    <ion-select [(ngModel)]="impulse">
+      <ion-select-option [value]="impulse" *ngFor="let impulse of impulses"
+        >{{ impulse.title }}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="type === 'general'" lines="full">
     <input
       (change)="onImageSelected()"
       accept="image/png, image/jpeg"

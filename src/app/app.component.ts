@@ -121,6 +121,10 @@ export class AppComponent {
     this.router.navigateByUrl(`/tabs/posts/ausgabe/${id}`);
   }
 
+  navigateToImpulse(id: string) {
+    this.router.navigateByUrl(`/tabs/impulse/${id}`);
+  }
+
   setupPush() {
     if (this.platform.is('capacitor')) {
       PushNotifications.addListener(
@@ -132,6 +136,13 @@ export class AppComponent {
               text: 'Ausgabe anzeigen',
               handler: () => {
                 this.navigateToAusgabe(notification.data.ausgabe);
+              },
+            });
+          } else if (notification?.data?.impulse) {
+            buttons.push({
+              text: 'Impuls anzeigen',
+              handler: () => {
+                this.navigateToImpulse(notification.data.impulse);
               },
             });
           }
@@ -153,6 +164,8 @@ export class AppComponent {
         (notification: PushNotificationActionPerformed) => {
           if (notification.notification?.data?.ausgabe) {
             this.navigateToAusgabe(notification.notification.data.ausgabe);
+          } else if (notification.notification?.data?.impulse) {
+            this.navigateToImpulse(notification.notification.data.impulse);
           }
         },
       );

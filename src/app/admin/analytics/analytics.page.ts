@@ -103,7 +103,7 @@ export class AnalyticsPage implements OnInit {
   prepareSessionsChart(
     data: { timestamp: firebase.firestore.Timestamp; platform: Platforms }[],
   ) {
-    const days: any[] = [];
+    let days: any[] = [];
     for (const entry of data) {
       const date: dayjs.Dayjs = dayjs(entry.timestamp.toDate());
       const index: number = days.findIndex((d: any) =>
@@ -122,6 +122,7 @@ export class AnalyticsPage implements OnInit {
         });
       }
     }
+    days = days.slice(-30);
     new Chart(this.sessionsChart.nativeElement, {
       type: 'bar',
       data: {

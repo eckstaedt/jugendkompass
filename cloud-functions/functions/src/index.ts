@@ -226,8 +226,8 @@ exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.Cal
   const payload: admin.messaging.MessagingPayload = {
     notification: {
       ...data.notification,
-      notification: data.notification ? data.notification : '',
-      title: data.title ? data.title : ''
+      image: data.notification.image ? data.notification.image : '',
+      title: data.notification.title ? data.notification.title : ''
     },
     data: data.data
   };
@@ -241,8 +241,8 @@ exports.sendPush = functions.https.onCall((data: any, _: functions.https.Callabl
   const payload: admin.messaging.MessagingPayload = {
     notification: {
       ...data.notification,
-      notification: data.notification ? data.notification : '',
-      title: data.title ? data.title : ''
+      image: data.notification.image ? data.notification.image : '',
+      title: data.notification.title ? data.notification.title : ''
     },
     data: data.data
   };
@@ -253,16 +253,26 @@ exports.sendPush = functions.https.onCall((data: any, _: functions.https.Callabl
 });
 
 exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  let posts: any[];
+  let posts: any[] = [];
+  let page: number = 1;
+
+  const getPosts: Function = async () => {
+      const options: any = {
+          uri: `${url}posts?_embed&per_page=100&page=${page.toString()}`,
+      };
+      const res: any = await request.get(options);
+      const newPosts: any[] = JSON.parse(res);
+      posts = posts.concat(newPosts);
+      if (newPosts.length === 100) {
+          page += 1
+          await getPosts(page);
+      }
+  };
 
   try {
-    const options: any = {
-      uri: `${url}posts?_embed&per_page=100`,
-    };
-    const res: any = await request.get(options);
-    posts = JSON.parse(res);
+      await getPosts();
   } catch (error) {
-    return `Could not load posts from Wordpress (${url}) ${error}`;
+      return `Could not load posts from Wordpress (${url}) ${error}`;
   }
 
   const batch = db.batch();
@@ -358,6 +368,7 @@ exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europ
         page.title.rendered === 'Impressum' ? 'imprint' : 'dataprot'
       );
       batch.set(postRef, {
+        id: page.title.rendered === 'Impressum' ? 'imprint' : 'dataprot',
         pageId: `${page.id}`,
         link: page.link,
         title: page.title.rendered,

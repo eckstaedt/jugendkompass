@@ -30,6 +30,7 @@ export class FirebaseService {
   ausgaben: Ausgabe[];
   readArticles: FirebasePost[] = [];
   posts: FirebasePost[];
+  impulses: FirebasePost[];
   categories: Category[];
   legalPages: any[];
 
@@ -178,8 +179,21 @@ export class FirebaseService {
     }
   }
 
+  async getImpulse(id: string) {
+    if (this.impulses) {
+      return this.impulses.find((impulse: FirebasePost) => impulse.id === id);
+    } else {
+      await this.getImpulses().pipe(take(1)).toPromise();
+      return this.impulses.find((impulse: FirebasePost) => impulse.id === id);
+    }
+  }
+
   updateAusgabe(id: string, data: any) {
     return this.db.doc(`categories/${id}`).update(data);
+  }
+
+  updateImpulse(id: string, data: any) {
+    return this.db.doc(`impulses/${id}`).update(data);
   }
 
   updatePost(id: string, data: any) {
@@ -220,9 +234,28 @@ export class FirebaseService {
     });
   }
 
+  getImpulses() {
+    return new Observable(observer => {
+      this.db
+        .collection('impulses', (ref: any) => ref.orderBy('date', 'desc'))
+        .valueChanges()
+        .subscribe((impulses: FirebasePost[]) => {
+          this.impulses = impulses;
+          observer.next(this.impulses);
+        });
+    });
+  }
+
   incrementPostViews(id: string) {
     const increment = firestore.FieldValue.increment(1);
     this.db.doc(`posts/${id}`).update({
+      views: increment,
+    });
+  }
+
+  incrementImpulseViews(id: string) {
+    const increment = firestore.FieldValue.increment(1);
+    this.db.doc(`impulses/${id}`).update({
       views: increment,
     });
   }

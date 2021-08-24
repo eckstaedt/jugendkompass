@@ -45,6 +45,7 @@ export interface FirebasePost {
   base64Img?: string;
   articleWasRead: boolean;
   audioPlays?: number;
+  pushSend?: boolean;
 }
 
 export interface Category {

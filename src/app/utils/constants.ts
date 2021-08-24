@@ -14,6 +14,7 @@ export enum AnalyticsField {
   VIDEO_PLAYED = 'videoPlayed',
   PDF_DOWNLOADED = 'pdfDownloaded',
   POST_TIME = 'postTime',
+  IMPULSE_TIME = 'postTime',
 }
 
 export enum Platforms {
@@ -23,4 +24,10 @@ export enum Platforms {
   ANDROID_TABLET = 'AndroidTablet',
   WEB = 'Web',
   OTHER = 'Other',
+}
+
+export enum PushType {
+  GENERAL = 'general',
+  AUSGABE = 'ausgabe',
+  IMPULSE = 'impulse',
 }

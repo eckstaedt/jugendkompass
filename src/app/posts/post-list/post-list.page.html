@@ -35,43 +35,50 @@
       </ion-slide>
     </ion-slides>
 
-    <div *ngIf="posts.length">
-      <ion-list-header *ngIf="!showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel
-      </ion-list-header>
-      <ion-list-header *ngIf="showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Ungelesene Artikel
-      </ion-list-header>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="overallColumn" *ngFor="let post of posts" size="12" size-md="6" size-xl="4">
-            <ion-card (click)="setAsRead(post)" [ngClass]="isRead(post) ? 'read' : ''"
-              [routerLink]="['/', 'tabs', 'posts', post.id]">
-              <ion-grid>
-                <ion-row>
-                  <ion-col class="cardColumn image" size="4">
-                    <img *ngIf="post.postImg" [src]="post.postImg.source_url" />
-                  </ion-col>
-                  <ion-col class="cardColumn text" size="8">
-                    <div class="postHeader">
-                      <ion-card-header>
-                        <p class="subTitle" *ngIf="!post.ausgabe">
-                          {{ post.date_gmt | date: 'dd.MM.yyyy' }}
-                        </p>
-                        <p class="subTitle" *ngIf="post.ausgabe && !post.rubrik">
-                          {{ post.ausgabe.name }}
-                        </p>
-                        <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
-                          {{ post.rubrik.name }}
-                        </p>
-                        <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
-                          {{ post.ausgabe.name}} | {{post.rubrik.name }}
-                        </p>
-                        <p class="title" [innerHTML]="post.title"></p>
-                      </ion-card-header>
-                    </div>
-                    <div class="postFooter">
-                      <ion-row>
-                        <ion-col size="4">
-                          <ion-icon name="book-outline"></ion-icon> {{
+  <div *ngIf="posts.length"
+  appSwipe
+  (swipeLeft)="onSwipeLeft()" 
+  (swipeRight)="onSwipeRight()">
+    <ion-list-header *ngIf="!showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel</ion-list-header>
+    <ion-list-header *ngIf="showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Ungelesene Artikel</ion-list-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          class="overallColumn"
+          *ngFor="let post of posts"
+          size="12"
+          size-md="6"
+          size-xl="4"
+        >
+          <ion-card
+            (click)="setAsRead(post)"
+            [ngClass]="isRead(post) ? 'read' : ''"
+            [routerLink]="['/', 'tabs', 'posts', post.id]"
+          >
+            <ion-grid>
+              <ion-row>
+                <ion-col class="cardColumn image" size="4">
+                  <img *ngIf="post.postImg" [src]="post.postImg.source_url" />
+                </ion-col>
+                <ion-col class="cardColumn text" size="8">
+                  <div class="postHeader">
+                    <ion-card-header>
+                      <p class="subTitle" *ngIf="post.ausgabe && !post.rubrik">
+                        {{ post.ausgabe.name }}
+                      </p>
+                      <p class="subTitle" *ngIf="!post.ausgabe && post.rubrik">
+                        {{ post.rubrik.name }}
+                      </p>
+                      <p class="subTitle" *ngIf="post.ausgabe && post.rubrik">
+                        {{ post.ausgabe.name}} | {{post.rubrik.name }}
+                      </p>
+                      <p class="title" [innerHTML]="post.title"></p>
+                    </ion-card-header>
+                  </div>
+                  <div class="postFooter">
+                    <ion-row>
+                      <ion-col size="4">
+                        <ion-icon name="book-outline"></ion-icon> {{
                         post.readingTime }} min
                         </ion-col>
                         <ion-col size="3">
@@ -93,53 +100,73 @@
       </ion-grid>
     </div>
 
-    <div *ngIf="!posts.length && !allPosts.length && online">
-      <ion-list-header mode="ios">
-        <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-      </ion-list-header>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="overallColumn" *ngFor="let i of items" size="12" size-md="6">
-            <ion-card>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-thumbnail>
-                      <ion-skeleton-text animated></ion-skeleton-text>
-                    </ion-thumbnail>
-                  </ion-col>
-                  <ion-col size="8">
-                    <div class="postHeader">
-                      <ion-card-header>
-                        <p class="subTitle">
-                          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-                        </p>
-                        <p class="title">
-                          <ion-skeleton-text animated style="width: 90%"></ion-skeleton-text>
-                        </p>
-                      </ion-card-header>
-                    </div>
-                    <div class="postFooter">
-                      <ion-row>
-                        <ion-col size="4">
-                          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-                        </ion-col>
-                        <ion-col size="4">
-                          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-                        </ion-col>
-                        <ion-col size="4">
-                          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-                        </ion-col>
-                      </ion-row>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+  <div *ngIf="!posts.length && !allPosts.length && online">
+    <ion-list-header mode="ios">
+      <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+    </ion-list-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          class="overallColumn"
+          *ngFor="let i of items"
+          size="12"
+          size-md="6"
+        >
+          <ion-card>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="4">
+                  <ion-thumbnail>
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </ion-thumbnail>
+                </ion-col>
+                <ion-col size="8">
+                  <div class="postHeader">
+                    <ion-card-header>
+                      <p class="subTitle">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </p>
+                      <p class="title">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 90%"
+                        ></ion-skeleton-text>
+                      </p>
+                    </ion-card-header>
+                  </div>
+                  <div class="postFooter">
+                    <ion-row>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 50%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-skeleton-text
+                          animated
+                          style="width: 40%"
+                        ></ion-skeleton-text>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 
     <div class="noResultContainer" *ngIf="(!posts.length && allPosts.length && online) || !online">
       <ion-grid>

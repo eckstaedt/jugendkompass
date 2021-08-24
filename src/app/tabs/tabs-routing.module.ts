@@ -100,6 +100,14 @@ const routes: Routes = [
             m => m.TextSizePageModule,
           ),
       },
+      {
+        path: 'impulse',
+        loadChildren: () => import('./../impulse/impulse-list/impulse-list.module').then( m => m.ImpulseListPageModule)
+      },
+      {
+        path: 'impulse/:id',
+        loadChildren: () => import('./../impulse/impulse/impulse.module').then( m => m.ImpulsePageModule)
+      },
     ],
   },
 ];

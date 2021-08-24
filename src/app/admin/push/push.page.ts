@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AlertController, ToastController } from '@ionic/angular';
-import { Ausgabe } from 'src/app/utils/interfaces';
+import { Ausgabe, FirebasePost } from 'src/app/utils/interfaces';
 import { Utils } from 'src/app/utils/utils';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { PushType } from 'src/app/utils/constants';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-push',
@@ -13,10 +15,11 @@ import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 export class PushPage implements OnInit {
   public title: string = '';
   public body: string = '';
-  public isAusgabe: boolean = true;
   public ausgaben: Ausgabe[] = [];
   public ausgabe: Ausgabe;
-  public noAusgabe: boolean = false;
+  public impulses: FirebasePost[] = [];
+  public impulse: FirebasePost;
+  public type: PushType;
   public file: FileLikeObject;
   public fileUploader: FileUploader = new FileUploader({});
 
@@ -27,8 +30,9 @@ export class PushPage implements OnInit {
     private toastController: ToastController,
   ) {}
 
-  ngOnInit() {
-    this.getCategories();
+  async ngOnInit() {
+    await this.getCategories();
+    await this.getImpulses();
   }
 
   async getCategories() {
@@ -39,8 +43,19 @@ export class PushPage implements OnInit {
     if (this.ausgaben?.length) {
       this.ausgabe = this.ausgaben[0];
     } else {
-      this.isAusgabe = false;
-      this.noAusgabe = true;
+      this.type = PushType.GENERAL;
+    }
+  }
+
+  async getImpulses() {
+    const impulses: any = await this.firebaseService.getImpulses().pipe(take(1)).toPromise();
+    this.impulses = impulses
+      .filter((i: FirebasePost) => !i.pushSend);
+
+    if (this.impulses?.length) {
+      this.impulse = this.impulses[0];
+    } else {
+      this.type = PushType.GENERAL;
     }
   }
 
@@ -108,9 +123,13 @@ export class PushPage implements OnInit {
       {
         title: this.title,
         body: this.body,
-        image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url,
+        image: this.type === PushType.AUSGABE
+          ? this.ausgabe?.imageUrl
+          : this.type === PushType.IMPULSE ? this.impulse?.postImg.source_url : res?.url,
       },
-      this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {},
+      this.type === PushType.AUSGABE
+        ? { ausgabe: this.ausgabe.id.toString() }
+        : this.type === PushType.IMPULSE ? { impulse: this.impulse.id.toString() } : {},
     );
     this.utils.showToast(
       'Die Test Push Mitteilung wurde erfolgreich versendet',
@@ -124,12 +143,21 @@ export class PushPage implements OnInit {
       {
         title: this.title,
         body: this.body,
-        image: this.isAusgabe ? this.ausgabe?.imageUrl : res?.url,
+        image: this.type === PushType.AUSGABE
+          ? this.ausgabe?.imageUrl
+          : this.type === PushType.IMPULSE ? this.impulse?.postImg.source_url : res?.url,
       },
-      this.isAusgabe ? { ausgabe: this.ausgabe.id.toString() } : {},
+      this.type === PushType.AUSGABE
+        ? { ausgabe: this.ausgabe.id.toString() }
+        : this.type === PushType.IMPULSE ? { impulse: this.impulse.id.toString() } : {},
     );
-    if (this.isAusgabe) {
+    if (this.type === PushType.AUSGABE) {
       this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {
+        pushSend: true,
+      });
+    }
+    if (this.type === PushType.IMPULSE) {
+      this.firebaseService.updateImpulse(this.impulse.id.toString(), {
         pushSend: true,
       });
     }

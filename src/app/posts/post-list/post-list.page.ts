@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   IonSelect,
   DomController,
-  IonContent,
   ModalController,
   ToastController,
   GestureController,
