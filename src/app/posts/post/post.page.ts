@@ -162,7 +162,7 @@ export class PostPage implements OnInit {
 
     setTimeout(() => {
       for (const image of Array.from(
-        document.querySelectorAll('img'),
+        document.querySelectorAll('.postContent img'),
       )) {
         (image as any).onclick = () => {
           this.photoViewer.show((image as any).src);

@@ -17,7 +17,7 @@ import {
   PushNotificationActionPerformed,
 } from '@capacitor/core';
 import { Router } from '@angular/router';
-import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField } from './utils/constants';
+import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField, PushType } from './utils/constants';
 import { FirebaseService } from './services/firebase/firebase.service';
 import { environment } from 'src/environments/environment';
 import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page';
@@ -176,10 +176,22 @@ export class AppComponent {
             if (res.granted) {
               PushNotifications.register()
                 .then(() => {
-                  fcm
-                    .subscribeTo({ topic: 'general' })
-                    .then(() => console.log('subscribed successfully'))
-                    .catch(err => console.log(err));
+                  this.storage.get('pushGeneral').then((isOn: boolean) => {
+                    if (isOn !== false) {
+                      fcm
+                      .subscribeTo({ topic: PushType.GENERAL })
+                      .then(() => this.storage.set('pushGeneral', true))
+                      .catch(err => console.log(err));
+                    }
+                  });
+                  this.storage.get('pushImpulse').then((isOn: boolean) => {
+                    if (isOn !== false) {
+                      fcm
+                      .subscribeTo({ topic: PushType.IMPULSE })
+                      .then(() => this.storage.set('pushImpulse', true))
+                      .catch(err => console.log(err));
+                    }
+                  });
                 })
                 .catch(err => console.log(JSON.stringify(err)));
             }

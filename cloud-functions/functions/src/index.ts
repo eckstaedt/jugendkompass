@@ -247,7 +247,7 @@ exports.sendPush = functions.https.onCall((data: any, _: functions.https.Callabl
     data: data.data
   };
 
-  admin.messaging().sendToTopic('general', payload);
+  admin.messaging().sendToTopic(data.topic ? data.topic : 'general', payload);
 
   return data;
 });

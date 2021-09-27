@@ -150,6 +150,7 @@ export class PushPage implements OnInit {
       this.type === PushType.AUSGABE
         ? { ausgabe: this.ausgabe.id.toString() }
         : this.type === PushType.IMPULSE ? { impulse: this.impulse.id.toString() } : {},
+      this.type
     );
     if (this.type === PushType.AUSGABE) {
       this.firebaseService.updateAusgabe(this.ausgabe.id.toString(), {

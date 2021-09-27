@@ -149,7 +149,7 @@
       </p>
     </div>
   </div>
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <ion-fab class="postPlayButton" vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button
       style="margin: auto"
       *ngIf="!isPlaying && ((post?.audio && online) || (post?.audio?.base64 && !online))"

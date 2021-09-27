@@ -9,6 +9,7 @@ export class HideHeaderDirective {
   @Input('isList') isList: boolean;
   private toolbarHeight: number;
   private lastY: number = 60;
+  private playButton: Element | undefined;
   // private isScrollingToTop: boolean = false;
   // private scrollingToTopStartingHeight: number;
 
@@ -17,6 +18,7 @@ export class HideHeaderDirective {
   ngOnInit() {
     this.domCtrl.read(() => {
       this.header = this.header.el;
+      this.playButton = document.getElementsByClassName('postPlayButton').length ? document.getElementsByClassName('postPlayButton')[0] : undefined;
       this.toolbarHeight = 60;
     });
   }
@@ -37,11 +39,17 @@ export class HideHeaderDirective {
         this.domCtrl.write(() => {
           this.renderer.setStyle(this.header, 'top', `${newPosition}px`);
           this.renderer.setStyle(this.header, 'opacity', newOpacity);
+          if (this.playButton) {
+            this.renderer.setStyle(this.playButton, 'opacity', newOpacity);
+          }
         });
       } else {
         this.domCtrl.write(() => {
           this.renderer.setStyle(this.header, 'top', '0px');
           this.renderer.setStyle(this.header, 'opacity', 1);
+          if (this.playButton) {
+            this.renderer.setStyle(this.playButton, 'opacity', 1);
+          }
         });
         // if (!this.isScrollingToTop) {
         //   this.isScrollingToTop = true;
@@ -65,6 +73,9 @@ export class HideHeaderDirective {
       this.domCtrl.write(() => {
         this.renderer.setStyle(this.header, 'top', '0px');
         this.renderer.setStyle(this.header, 'opacity', 1);
+        if (this.playButton) {
+          this.renderer.setStyle(this.playButton, 'opacity', 1);
+        }
       });
     }
 

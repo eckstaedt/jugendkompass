@@ -101,6 +101,10 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'settings/push-settings',
+        loadChildren: () => import('./../push-settings/push-settings.module').then( m => m.PushSettingsPageModule)
+      },
+      {
         path: 'impulse',
         loadChildren: () => import('./../impulse/impulse-list/impulse-list.module').then( m => m.ImpulseListPageModule)
       },

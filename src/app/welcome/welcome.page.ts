@@ -5,7 +5,7 @@ import { FCM } from '@capacitor-community/fcm';
 const fcm = new FCM();
 import { Plugins } from '@capacitor/core';
 import { ThemeService } from '../services/theme/theme.service';
-import { AnalyticsField } from '../utils/constants';
+import { AnalyticsField, PushType } from '../utils/constants';
 import { FirebaseService } from '../services/firebase/firebase.service';
 
 const { PushNotifications } = Plugins;
@@ -33,10 +33,22 @@ export class WelcomePage implements OnInit {
       if (res.granted) {
         PushNotifications.register()
           .then(() => {
-            fcm
-              .subscribeTo({ topic: 'general' })
-              .then(() => console.log('subscribed successfully'))
-              .catch(err => console.log(err));
+            this.storage.get('pushGeneral').then((isOn: boolean) => {
+              if (isOn !== false) {
+                fcm
+                .subscribeTo({ topic: PushType.GENERAL })
+                .then(() => this.storage.set('pushGeneral', true))
+                .catch(err => console.log(err));
+              }
+            });
+            this.storage.get('pushImpulse').then((isOn: boolean) => {
+              if (isOn !== false) {
+                fcm
+                .subscribeTo({ topic: PushType.IMPULSE })
+                .then(() => this.storage.set('pushImpulse', true))
+                .catch(err => console.log(err));
+              }
+            });
           })
           .catch(err => console.log(JSON.stringify(err)));
       }

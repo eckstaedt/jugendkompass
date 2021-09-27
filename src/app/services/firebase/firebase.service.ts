@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import { firestore } from 'firebase/app';
 import * as firebase from 'firebase/app';
-import { AnalyticsField } from '../../utils/constants';
+import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -59,13 +59,14 @@ export class FirebaseService {
     }).toPromise();
   }
 
-  async sendPush(notification, data) {
+  async sendPush(notification: any, data: any, topic: PushType) {
     const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
       'sendPush',
     );
     await callable({
-      data: data,
-      notification: notification,
+      data,
+      notification,
+      topic: topic === PushType.IMPULSE ? topic : PushType.GENERAL, // TODO 
     }).toPromise();
   }
 

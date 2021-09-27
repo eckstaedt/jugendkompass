@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/tabs/settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Benachrichtigungen</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p class="info">Passe hier deine Präferenzen an, für welche Themen du Benachrichtigungen empfangen möchtest.</p>
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <h2>Allgemein</h2>
+        <h3>~4x jährlich</h3>
+      </ion-label>
+      <ion-toggle (ionChange)="onGeneralChange()" [(ngModel)]="general"></ion-toggle>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>
+        <h2>Impulse</h2>
+        <h3>~2x wöchentlich</h3>
+      </ion-label>
+      <ion-toggle (ionChange)="onImpulseChange()" [(ngModel)]="impulse"></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>
