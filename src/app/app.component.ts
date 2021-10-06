@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { version } from '../../package.json';
 import {
   Platform,
   AlertController,
@@ -77,6 +77,7 @@ export class AppComponent {
       this.themeService.setAppTheme();
       this.setupNetworkCheck();
       this.setupPush();
+      this.addUpdateAnalytic();
     });
   }
 
@@ -136,6 +137,13 @@ export class AppComponent {
               text: 'Ausgabe anzeigen',
               handler: () => {
                 this.navigateToAusgabe(notification.data.ausgabe);
+                this.firebaseService.incrementAnalyticsField(
+                  AnalyticsField.PUSH_OPENED_FROM_APP,
+                  {
+                    type: PushType.GENERAL,
+                    id: notification.data.ausgabe
+                  }
+                );
               },
             });
           } else if (notification?.data?.impulse) {
@@ -143,8 +151,22 @@ export class AppComponent {
               text: 'Impuls anzeigen',
               handler: () => {
                 this.navigateToImpulse(notification.data.impulse);
+                this.firebaseService.incrementAnalyticsField(
+                  AnalyticsField.PUSH_OPENED_FROM_APP,
+                  {
+                    type: PushType.IMPULSE,
+                    id: notification.data.impulse
+                  }
+                );
               },
             });
+          } else {
+            this.firebaseService.incrementAnalyticsField(
+              AnalyticsField.PUSH_OPENED_FROM_APP,
+              {
+                type: PushType.GENERAL,
+              }
+            );
           }
           buttons.push({
             text: 'Okay',
@@ -164,8 +186,29 @@ export class AppComponent {
         (notification: PushNotificationActionPerformed) => {
           if (notification.notification?.data?.ausgabe) {
             this.navigateToAusgabe(notification.notification.data.ausgabe);
+            this.firebaseService.incrementAnalyticsField(
+              AnalyticsField.PUSH_OPENED_FROM_OUTSIDE,
+              {
+                type: PushType.GENERAL,
+                id: notification.notification.data.ausgabe
+              }
+            );
           } else if (notification.notification?.data?.impulse) {
             this.navigateToImpulse(notification.notification.data.impulse);
+            this.firebaseService.incrementAnalyticsField(
+              AnalyticsField.PUSH_OPENED_FROM_OUTSIDE,
+              {
+                type: PushType.IMPULSE,
+                id: notification.notification.data.impulse
+              }
+            );
+          } else {
+            this.firebaseService.incrementAnalyticsField(
+              AnalyticsField.PUSH_OPENED_FROM_OUTSIDE,
+              {
+                type: PushType.GENERAL,
+              }
+            );
           }
         },
       );
@@ -310,5 +353,22 @@ export class AppComponent {
       ],
     });
     return alert;
+  }
+
+  async addUpdateAnalytic() {
+    const oldVersion: string | undefined = await this.storage.get('version');
+
+    if (!oldVersion) {
+      await this.storage.set('version', version);
+      return;
+    }
+
+    if (oldVersion !== version) {
+      this.firebaseService.incrementAnalyticsField(
+        AnalyticsField.APP_UPDATED,
+        { version }
+      );
+      await this.storage.set('version', version);
+    }
   }
 }

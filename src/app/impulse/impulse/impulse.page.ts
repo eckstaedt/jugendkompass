@@ -47,6 +47,12 @@ export class ImpulsePage implements OnInit {
           });
       }
     });
+
+    if (this.activatedRoute.snapshot?.paramMap?.get('id')) {
+      this.firebaseService.incrementImpulseViews(
+        this.activatedRoute.snapshot?.paramMap?.get('id'),
+      );
+    }
   }
 
   ionViewWillEnter() {
@@ -55,9 +61,6 @@ export class ImpulsePage implements OnInit {
     });
 
     this.loadData();
-    this.firebaseService.incrementImpulseViews(
-      this.activatedRoute.snapshot.paramMap.get('id'),
-    );
 
     this.intervalId = setInterval(() => {
       this.counter = this.counter + 1;

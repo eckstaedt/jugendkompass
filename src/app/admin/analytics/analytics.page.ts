@@ -13,10 +13,16 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class AnalyticsPage implements OnInit {
   @ViewChild('sessionsChart') sessionsChart: ElementRef;
+  @ViewChild('updatesChart') updatesChart: ElementRef;
   @ViewChild('platformChart') platformChart: ElementRef;
+  @ViewChild('pushFromAppChart') pushFromAppChart: ElementRef;
+  @ViewChild('pushFromOutsideChart') pushFromOutsideChart: ElementRef;
 
   data;
   sessionsCount: number = 0;
+  updatesCount: number = 0;
+  pushFromAppCount: number = 0;
+  pushFromOutsideCount: number = 0;
   installationsCount: number = 0;
   adminCount: number = 0;
   passwordSuccesCount: number = 0;
@@ -40,7 +46,25 @@ export class AnalyticsPage implements OnInit {
       if (data[`${AnalyticsField.APP_SESSIONS}Count`]) {
         this.sessionsCount = data[`${AnalyticsField.APP_SESSIONS}Count`];
         if (data[`${AnalyticsField.APP_SESSIONS}Count`] > 1) {
-          this.prepareSessionsChart(data[`${AnalyticsField.APP_SESSIONS}Data`]);
+          this.prepareBarChart(this.sessionsChart.nativeElement, data[`${AnalyticsField.APP_SESSIONS}Data`]);
+        }
+      }
+      if (data[`${AnalyticsField.APP_UPDATED}Count`]) {
+        this.updatesCount = data[`${AnalyticsField.APP_UPDATED}Count`];
+        if (data[`${AnalyticsField.APP_UPDATED}Count`] > 1) {
+          this.prepareBarChart(this.updatesChart.nativeElement, data[`${AnalyticsField.APP_UPDATED}Data`]);
+        }
+      }
+      if (data[`${AnalyticsField.PUSH_OPENED_FROM_APP}Count`]) {
+        this.pushFromAppCount = data[`${AnalyticsField.PUSH_OPENED_FROM_APP}Count`];
+        if (data[`${AnalyticsField.PUSH_OPENED_FROM_APP}Count`] > 1) {
+          this.prepareBarChart(this.pushFromAppChart.nativeElement, data[`${AnalyticsField.PUSH_OPENED_FROM_APP}Data`]);
+        }
+      }
+      if (data[`${AnalyticsField.PUSH_OPENED_FROM_OUTSIDE}Count`]) {
+        this.pushFromOutsideCount = data[`${AnalyticsField.PUSH_OPENED_FROM_OUTSIDE}Count`];
+        if (data[`${AnalyticsField.PUSH_OPENED_FROM_OUTSIDE}Count`] > 1) {
+          this.prepareBarChart(this.pushFromOutsideChart.nativeElement, data[`${AnalyticsField.PUSH_OPENED_FROM_OUTSIDE}Data`]);
         }
       }
       if (data[`${AnalyticsField.APP_INSTALLATIONS}Count`]) {
@@ -100,7 +124,8 @@ export class AnalyticsPage implements OnInit {
     });
   }
 
-  prepareSessionsChart(
+  prepareBarChart(
+    element: any,
     data: { timestamp: firebase.firestore.Timestamp; platform: Platforms }[],
   ) {
     let days: any[] = [];
@@ -123,7 +148,7 @@ export class AnalyticsPage implements OnInit {
       }
     }
     days = days.slice(-30);
-    new Chart(this.sessionsChart.nativeElement, {
+    new Chart(element, {
       type: 'bar',
       data: {
         labels: days.map((d: any) => d.name),

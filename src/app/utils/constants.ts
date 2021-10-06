@@ -15,6 +15,9 @@ export enum AnalyticsField {
   PDF_DOWNLOADED = 'pdfDownloaded',
   POST_TIME = 'postTime',
   IMPULSE_TIME = 'postTime',
+  PUSH_OPENED_FROM_OUTSIDE = 'pushOpenedFromOutside',
+  PUSH_OPENED_FROM_APP = 'pushReceivedFromApp',
+  APP_UPDATED = 'appUpdated',
 }
 
 export enum Platforms {
