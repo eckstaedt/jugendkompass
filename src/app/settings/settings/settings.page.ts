@@ -10,6 +10,7 @@ import {
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
 import { ThemeService } from 'src/app/services/theme/theme.service';
+import { Utils } from 'src/app/utils/utils';
 const { Share } = Plugins;
 
 @Component({
@@ -21,6 +22,7 @@ export class SettingsPage implements OnInit {
   public version: string = version;
   public theme: string = 'default';
   public isAdmin: boolean = false;
+  public isApp: boolean = true;
   public feedbackProvided: boolean = false;
 
   constructor(
@@ -30,10 +32,12 @@ export class SettingsPage implements OnInit {
     private firebaseService: FirebaseService,
     private modalController: ModalController,
     private themeService: ThemeService,
+    private utils: Utils,
   ) {}
 
   async ngOnInit() {
     this.theme = await this.themeService.getThemeInStorage();
+    this.isApp = this.utils.isApp();
 
     this.firebaseService.subscribeToAdmin().subscribe((isAdmin: boolean) => {
       this.isAdmin = isAdmin;
@@ -94,7 +98,7 @@ export class SettingsPage implements OnInit {
   }
 
   async share() {
-    if (this.plt.is('capacitor')) {
+    if (this.utils.isApp()) {
       await Share.share({
         title: 'Artikel teilen',
         text: 'Jugendkompass',

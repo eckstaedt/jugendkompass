@@ -1,15 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { version } from '../../package.json';
 import {
   Platform,
   AlertController,
-  LoadingController,
   ModalController,
 } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
 import {
   Plugins,
@@ -19,9 +16,9 @@ import {
 import { Router } from '@angular/router';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField, PushType } from './utils/constants';
 import { FirebaseService } from './services/firebase/firebase.service';
-import { environment } from 'src/environments/environment';
 import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page';
 import { ThemeService } from './services/theme/theme.service';
+import { Utils } from './utils/utils';
 
 const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
@@ -35,49 +32,42 @@ const { SplashScreen } = Plugins;
 export class AppComponent {
   observer: any;
   observable: any;
-  verifyKeyUrl = '';
 
   constructor(
     private platform: Platform,
     private statusBar: StatusBar,
     private storage: Storage,
     private alertController: AlertController,
-    private httpClient: HttpClient,
-    private loadingController: LoadingController,
     private router: Router,
     private modalController: ModalController,
     private firebaseService: FirebaseService,
     private themeService: ThemeService,
+    private zone: NgZone,
+    private utils: Utils,
   ) {
-    this.verifyKeyUrl = environment.production
-      ? 'https://us-central1-jugendkompass-46aa7.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey'
-      : 'https://us-central1-jugendkompasstest.cloudfunctions.net/oneTimeKeys/verifyOneTimeKey';
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.handleSessionCount();
-      this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
+      if (this.utils.isApp()) {
+        this.handleSessionCount();
+      }
+      if (this.utils.isApp()) {
+        this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
+      } else {
+        this.firebaseService.incrementAnalyticsField(AnalyticsField.WEBSITE_SESSIONS);
+      }
       this.statusBar.styleDefault();
       SplashScreen.hide();
-      this.observable = new Observable(observer => {
-        this.observer = observer;
-        this.storage.get('isLoggedIn').then((isLoggedIn: boolean) => {
-          if (isLoggedIn) {
-            this.observer.next(true);
-            observer.complete();
-          } else {
-            this.showPasswordAlert();
-            this.observer.next(false);
-          }
-        });
-      });
-      this.registerEvents();
       this.themeService.setAppTheme();
-      this.setupNetworkCheck();
-      this.setupPush();
-      this.addUpdateAnalytic();
+      if (this.utils.isApp()) {
+        this.configureDeepLinks();
+        this.registerEvents();
+        this.setupNetworkCheck();
+        this.setupPush();
+        this.addUpdateAnalytic();
+      }
     });
   }
 
@@ -227,6 +217,14 @@ export class AppComponent {
                       .catch(err => console.log(err));
                     }
                   });
+                  this.storage.get('pushAusgabe').then((isOn: boolean) => {
+                    if (isOn !== false) {
+                      fcm
+                      .subscribeTo({ topic: PushType.AUSGABE })
+                      .then(() => this.storage.set('pushAusgabe', true))
+                      .catch(err => console.log(err));
+                    }
+                  });
                   this.storage.get('pushImpulse').then((isOn: boolean) => {
                     if (isOn !== false) {
                       fcm
@@ -246,63 +244,6 @@ export class AppComponent {
 
   public getObservable() {
     return this.observable;
-  }
-
-  async showPasswordAlert(message?: string) {
-    const alert = await this.alertController.create({
-      backdropDismiss: false,
-      header: 'App Passwort erforderlich',
-      cssClass: 'password-alert',
-      inputs: [
-        {
-          type: 'password',
-          placeholder: 'Passwort eingeben...',
-          name: 'password',
-        },
-      ],
-      message: message,
-      buttons: [
-        {
-          text: 'Okay',
-          handler: async (event: any) => {
-            if (!event.password) {
-              this.showPasswordAlert((message = 'Bitte gib das Passwort ein.'));
-              this.firebaseService.incrementAnalyticsField(
-                AnalyticsField.INVALID_PASSWORD_PROVIDED,
-              );
-              return;
-            }
-            const loading = await this.loadingController.create();
-            loading.present();
-            await this.httpClient
-              .get(`${this.verifyKeyUrl}/${event.password}`)
-              .toPromise()
-              .then(res => {
-                if (res) {
-                  this.observer.next(true);
-                  this.observer.complete();
-                  this.storage.set('isLoggedIn', true);
-                  alert.dismiss();
-                  this.firebaseService.incrementAnalyticsField(
-                    AnalyticsField.CORRECT_PASSWORD_PROVIDED,
-                  );
-                }
-              })
-              .catch(() => {
-                this.showPasswordAlert(
-                  (message = 'Bitte gebe das richtige Passwort ein.'),
-                );
-                this.firebaseService.incrementAnalyticsField(
-                  AnalyticsField.INVALID_PASSWORD_PROVIDED,
-                );
-              });
-            loading.dismiss();
-          },
-        },
-      ],
-    });
-
-    await alert.present();
   }
 
   registerEvents(): void {
@@ -353,6 +294,25 @@ export class AppComponent {
       ],
     });
     return alert;
+  }
+
+  async configureDeepLinks() {
+    App.addListener('appUrlOpen', (event: any) => {
+      this.zone.run(async () => {
+        const slug = event.url.split(".com").pop();
+        if (slug) {
+          this.router.navigateByUrl(slug);
+        }
+      });
+    });
+
+    const urlOpen = await Plugins.App.getLaunchUrl();
+    if (urlOpen?.url) {
+      const slug = urlOpen.url.split(".com").pop();
+      window.setTimeout(() => {
+        this.router.navigateByUrl(slug);
+      }, 200);
+    };
   }
 
   async addUpdateAnalytic() {

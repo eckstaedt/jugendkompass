@@ -10,7 +10,6 @@ import {
   AlertController,
   LoadingController,
 } from '@ionic/angular';
-import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
@@ -20,7 +19,7 @@ import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { Utils } from 'src/app/utils/utils';
-const { Browser, Network, Share } = Plugins;
+const { Network, Share } = Plugins;
 
 @Component({
   selector: 'app-post',
@@ -43,6 +42,7 @@ export class PostPage implements OnInit {
   public online: boolean = true;
   private counter: number = 0;
   private intervalId: any;
+  public isApp: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -51,7 +51,6 @@ export class PostPage implements OnInit {
     private photoViewer: PhotoViewer,
     private platform: Platform,
     private actionSheetController: ActionSheetController,
-    private appComponent: AppComponent,
     private storage: Storage,
     private routerService: RouterService,
     private firebaseService: FirebaseService,
@@ -62,28 +61,27 @@ export class PostPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    Network.addListener('networkStatusChange', (status: NetworkStatus) => {
-      this.online = status.connected;
-      if (!this.online) {
-        if (this.post?.audio?.base64) {
-          this.audioService.loadNewAudio(
-            this.post.audio.base64,
-            this.post.title,
-          );
+    this.isApp = this.utils.isApp();
+    if (this.isApp) {
+      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
+        this.online = status.connected;
+        if (!this.online) {
+          if (this.post?.audio?.base64) {
+            this.audioService.loadNewAudio(
+              this.post.audio.base64,
+              this.post.title,
+            );
+          }
         }
-      }
-    });
-    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
-      if (loggedIn) {
-        this.loadData();
+      });
+    }
+    this.loadData();
 
-        this.firebaseService
-          .subscribeToAdmin()
-          .subscribe((isAdmin: boolean) => {
-            this.isAdmin = isAdmin;
-          });
-      }
-    });
+    this.firebaseService
+      .subscribeToAdmin()
+      .subscribe((isAdmin: boolean) => {
+        this.isAdmin = isAdmin;
+      });
 
     this.audioService.onTitleChange().subscribe((data: any) => {
       this.isPlaying = data.title === this.post.title;
@@ -171,54 +169,13 @@ export class PostPage implements OnInit {
     }, 200);
   }
 
-  async openMenu() {
-    const actionButtons: any[] = [
-      {
-        text: 'Artikel teilen',
-        handler: async () => {
-          if (this.platform.is('capacitor')) {
-            await Share.share({
-              title: 'Artikel teilen',
-              text: this.post.title,
-              url: this.post.link,
-              dialogTitle: 'Artikel teilen',
-            });
-          } else {
-            window.open(this.post.link, '_blank');
-          }
-        },
-      },
-      {
-        text: 'Artikel im Browser aufrufen',
-        handler: async () => {
-          await Browser.open({
-            url: this.post.link,
-          });
-        },
-      },
-    ];
-
-    if (this.post.pdf) {
-      actionButtons.push({
-        text: 'Artikel als PDF anzeigen',
-        handler: async () => {
-          await Browser.open({
-            url: this.post.pdf,
-          });
-        },
-      });
-    }
-
-    actionButtons.push({
-      role: 'destructive',
-      text: 'Abbrechen',
+  async share() {
+    await Share.share({
+      title: 'Artikel teilen',
+      text: this.post.title,
+      url: `https://jugendkompass.com/tabs/posts/${this.post.id}`,
+      dialogTitle: 'Artikel teilen',
     });
-
-    const sheet = await this.actionSheetController.create({
-      buttons: actionButtons,
-    });
-
-    await sheet.present();
   }
 
   play() {

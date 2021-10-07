@@ -13,6 +13,7 @@
   <ion-list>
     <ion-list-header>Allgemein</ion-list-header>
     <ion-item
+      *ngIf="isApp"
       detail
       routerDirection="forward"
       routerLink="/tabs/settings/push-settings"
@@ -53,7 +54,7 @@
       <ion-icon slot="start" name="send-outline"></ion-icon>
       <ion-label>Sende Benachrichtigungen</ion-label>
     </ion-item>
-    <ion-item button *ngIf="!feedbackProvided" (click)="openFeedbackModal()" detail>
+    <ion-item button *ngIf="!feedbackProvided && isApp" (click)="openFeedbackModal()" detail>
       <ion-icon slot="start" name="clipboard-outline"></ion-icon>
       <ion-label>Feedback</ion-label>
     </ion-item>
@@ -74,15 +75,6 @@
     >
       <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
       <ion-label>Analysenauswertung</ion-label>
-    </ion-item>
-    <ion-item
-      *ngIf="isAdmin"
-      detail
-      routerDirection="forward"
-      routerLink="/tabs/settings/keys"
-    >
-      <ion-icon slot="start" name="key-outline"></ion-icon>
-      <ion-label>Keyverwaltung</ion-label>
     </ion-item>
     <ion-item lines="full">
       <ion-icon slot="start" name="information-outline"></ion-icon>

@@ -22,6 +22,12 @@
           src="../../../assets/icons/pdf.svg"
         ></ion-icon>
       </ion-button>
+      <ion-button *ngIf="isApp" (click)="share()">
+        <ion-icon
+          slot="icon-only"
+          name="share-outline"
+        ></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end" *ngIf="editMode">
       <ion-button (click)="saveVorwort()">

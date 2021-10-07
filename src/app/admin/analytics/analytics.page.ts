@@ -25,8 +25,6 @@ export class AnalyticsPage implements OnInit {
   pushFromOutsideCount: number = 0;
   installationsCount: number = 0;
   adminCount: number = 0;
-  passwordSuccesCount: number = 0;
-  passwordFailureCount: number = 0;
   categoryChangedCount: number = 0;
   videoPlayedCount: number = 0;
   pdfDownloadedCount: number = 0;
@@ -88,14 +86,6 @@ export class AnalyticsPage implements OnInit {
           sum / data[`${AnalyticsField.POST_TIME}Data`].length,
         );
         this.postReadAverage = this.utils.getMinString(avg);
-      }
-      if (data[`${AnalyticsField.CORRECT_PASSWORD_PROVIDED}Count`]) {
-        this.passwordSuccesCount =
-          data[`${AnalyticsField.CORRECT_PASSWORD_PROVIDED}Count`];
-      }
-      if (data[`${AnalyticsField.INVALID_PASSWORD_PROVIDED}Count`]) {
-        this.passwordFailureCount =
-          data[`${AnalyticsField.INVALID_PASSWORD_PROVIDED}Count`];
       }
       if (data[`${AnalyticsField.CATEGORY_CHANGED}Count`]) {
         this.categoryChangedCount =

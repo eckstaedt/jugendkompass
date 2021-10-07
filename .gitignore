@@ -28,6 +28,9 @@ cloud-functions/functions/src/serviceAccountKey.json
 .firebase/hosting.d3d3.cache
 
 src/environments
+src/.well-known
+
+android/KEY-NAME.keystore
 
 /.idea
 /.ionic

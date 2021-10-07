@@ -9,9 +9,12 @@ import { Platforms } from './constants';
 export class Utils {
   constructor(
     private toastController: ToastController,
-    private modalController: ModalController,
     private platform: Platform,
   ) {}
+
+  isApp(): boolean {
+    return this.platform.is('capacitor');
+  }
 
   async showToast(text: string, status: string = 'danger', p: any = 'bottom') {
     const toast = await this.toastController.create({

@@ -66,7 +66,7 @@ export class FirebaseService {
     await callable({
       data,
       notification,
-      topic: topic === PushType.IMPULSE ? topic : PushType.GENERAL, // TODO 
+      topic,
     }).toPromise();
   }
 

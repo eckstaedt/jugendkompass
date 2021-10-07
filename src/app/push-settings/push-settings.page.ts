@@ -16,6 +16,7 @@ export class PushSettingsPage implements OnInit {
 
   public general: boolean;
   public impulse: boolean;
+  public ausgabe: boolean;
 
   constructor(
     private storage: Storage
@@ -24,6 +25,19 @@ export class PushSettingsPage implements OnInit {
   async ngOnInit() {
     this.general = Boolean(await this.storage.get('pushGeneral'));
     this.impulse = Boolean(await this.storage.get('pushImpulse'));
+    this.ausgabe = Boolean(await this.storage.get('pushAusgabe'));
+  }
+
+  onAusgabeChange() {
+    if (this.ausgabe) {
+      fcm.subscribeTo({ topic: PushType.AUSGABE }).then(async () => {
+        await this.storage.set('pushAusgabe', this.general);
+      });
+    } else {
+      fcm.unsubscribeFrom({ topic: PushType.AUSGABE }).then(async () => {
+        await this.storage.set('pushAusgabe', this.general);
+      });
+    }
   }
 
   onGeneralChange() {

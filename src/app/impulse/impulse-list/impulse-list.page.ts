@@ -26,7 +26,7 @@ export class ImpulseListPage implements OnInit {
     });
   }
 
-  async getReadImpulses() {
+  async getReadImpulses() { // TODO
 
   }
 

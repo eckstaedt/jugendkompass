@@ -20,7 +20,13 @@
       <ion-button *ngIf="isAdmin" (click)="audioSelector.click()">
         <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
       </ion-button>
-      <ion-button (click)="setPostFavorite()" [disabled]="!post?.id">
+      <ion-button *ngIf="isApp" (click)="share()">
+        <ion-icon
+          slot="icon-only"
+          name="share-outline"
+        ></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="isApp" (click)="setPostFavorite()" [disabled]="!post?.id">
         <ion-icon
           slot="icon-only"
           [name]="post?.isFavorite ? 'star' : 'star-outline'"

@@ -6,7 +6,6 @@ import {
   ToastController,
   IonContent,
 } from '@ionic/angular';
-import { AppComponent } from 'src/app/app.component';
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
@@ -19,6 +18,7 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 import { Plugins } from '@capacitor/core';
 import { AnalyticsField } from 'src/app/utils/constants';
+import { Utils } from 'src/app/utils/utils';
 const { Network } = Plugins;
 
 @Component({
@@ -72,38 +72,36 @@ export class PostListPage implements OnInit {
   };
 
   constructor(
-    private appComponent: AppComponent,
     private storage: Storage,
     private domCtrl: DomController,
     private routerService: RouterService,
     private modalController: ModalController,
     private toastController: ToastController,
     private firebaseService: FirebaseService,
+    private utils: Utils,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.domCtrl.read(() => {
       this.content.scrollToPoint(0, 60);
     });
-    this.appComponent.getObservable().subscribe(async (loggedIn: boolean) => {
-      if (loggedIn) {
-        await this.getReadArticles();
-        this.loadData();
-        Network.addListener('networkStatusChange', async status => {
-          if (status.connected) {
-            this.online = true;
-            if (!this.allPosts.length) {
-              this.loadData();
-            }
-          } else {
-            this.online = false;
-            this.allPosts = [];
-            this.filteredPosts = [];
-            this.posts = [];
+    await this.getReadArticles();
+    this.loadData();
+    if (this.utils.isApp()) {
+      Network.addListener('networkStatusChange', async status => {
+        if (status.connected) {
+          this.online = true;
+          if (!this.allPosts.length) {
+            this.loadData();
           }
-        });
-      }
-    });
+        } else {
+          this.online = false;
+          this.allPosts = [];
+          this.filteredPosts = [];
+          this.posts = [];
+        }
+      });
+    }
   }
 
   async ionViewWillEnter() {

@@ -135,7 +135,6 @@ export class PushPage implements OnInit {
       'Die Test Push Mitteilung wurde erfolgreich versendet',
       'success',
     );
-    this.resetData();
   }
 
   sendPush(res?: any) {

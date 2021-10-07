@@ -1,6 +1,6 @@
 {
   "name": "jugendkompass",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "FECG Jugend Speyer",
   "homepage": "https://jugend-speyer.org/",
   "prettier": "@ionic/prettier-config",
@@ -13,6 +13,7 @@
     "openAndProd": "ng build --prod && npx cap copy && npx cap sync && npx cap open android",
     "openAnd": "ng build && npx cap copy && npx cap sync && npx cap open android",
     "deployHosting": "ng build && firebase deploy --only hosting --project jugendkompasstest",
+    "deployHostingProd": "ng build --prod && firebase deploy --only hosting --project jugendkompass-46aa7",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -41,6 +41,14 @@ export class WelcomePage implements OnInit {
                 .catch(err => console.log(err));
               }
             });
+            this.storage.get('pushAusgabe').then((isOn: boolean) => {
+              if (isOn !== false) {
+                fcm
+                .subscribeTo({ topic: PushType.AUSGABE })
+                .then(() => this.storage.set('pushAusgabe', true))
+                .catch(err => console.log(err));
+              }
+            });
             this.storage.get('pushImpulse').then((isOn: boolean) => {
               if (isOn !== false) {
                 fcm

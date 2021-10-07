@@ -22,8 +22,13 @@ export class TabsPage {
   movingSlider = false;
   sliderSubscription: Subscription;
   online: boolean = true;
+  isApp: boolean = true;
 
-  constructor(private audioService: AudioService, private utils: Utils) {
+  constructor(
+    private audioService: AudioService,
+    private utils: Utils,
+  ) {
+    this.isApp = this.utils.isApp();
     this.audioService.onChange().subscribe((res: any) => {
       this.playing = res.playing;
       if (this.playing) {
@@ -33,9 +38,11 @@ export class TabsPage {
         this.title = res.title;
       }
     });
-    Network.addListener('networkStatusChange', (status: NetworkStatus) => {
-      this.online = status.connected;
-    });
+    if (this.isApp) {
+      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
+        this.online = status.connected;
+      });
+    }
   }
 
   seek() {

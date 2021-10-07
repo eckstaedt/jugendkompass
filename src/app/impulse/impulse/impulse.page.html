@@ -7,6 +7,14 @@
         #backButton
       ></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isApp" (click)="share()">
+        <ion-icon
+          slot="icon-only"
+          name="share-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

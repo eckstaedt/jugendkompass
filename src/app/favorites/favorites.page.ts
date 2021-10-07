@@ -33,11 +33,7 @@ export class FavoritesPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
-      if (loggedIn) {
-        this.loadData();
-      }
-    });
+    this.loadData();
   }
 
   ionViewDidEnter() {

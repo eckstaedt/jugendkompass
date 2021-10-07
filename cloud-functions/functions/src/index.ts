@@ -19,7 +19,7 @@ const options: cors.CorsOptions = {
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
 };
-const url: string = 'https://jugendkompass.com/wp-json/wp/v2/';
+const url: string = 'https://wp.jugendkompass.com/wp-json/wp/v2/';
 const impulsesId: number = 9;
 // const url: string = 'https://eckstaedt-webdesign.com/wp-json/wp/v2/';
 // const impulsesId: number = 19;

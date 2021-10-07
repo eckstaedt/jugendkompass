@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AppComponent } from 'src/app/app.component';
 import { ActivatedRoute } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { Ausgabe } from 'src/app/utils/interfaces';
@@ -16,11 +15,12 @@ import {
 import * as PluginsLibrary from 'capacitor-video-player';
 import { HttpEventType } from '@angular/common/http';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-const { CapacitorVideoPlayer } = Plugins;
+const { CapacitorVideoPlayer, Share } = Plugins;
 import { writeFile } from 'capacitor-blob-writer';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { AudioService } from 'src/app/services/audio/audio.service';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-ausgabe',
@@ -32,6 +32,7 @@ export class AusgabePage implements OnInit {
   public ausgabe: Ausgabe;
   private videoPlayer: any;
   public isAdmin: boolean = false;
+  public isApp: boolean = true;
   private file: FileLikeObject;
   private file2: FileLikeObject;
   public fileUploader: FileUploader = new FileUploader({});
@@ -40,7 +41,6 @@ export class AusgabePage implements OnInit {
 
   constructor(
     private platform: Platform,
-    private appComponent: AppComponent,
     private storage: Storage,
     private activatedRoute: ActivatedRoute,
     private firebaseService: FirebaseService,
@@ -50,20 +50,18 @@ export class AusgabePage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private audioService: AudioService,
+    private utils: Utils,
   ) {}
 
   ngOnInit() {
-    this.appComponent.getObservable().subscribe((loggedIn: boolean) => {
-      if (loggedIn) {
-        this.loadData();
+    this.isApp = this.utils.isApp();
+    this.loadData();
 
-        this.firebaseService
-          .subscribeToAdmin()
-          .subscribe((isAdmin: boolean) => {
-            this.isAdmin = isAdmin;
-          });
-      }
-    });
+    this.firebaseService
+      .subscribeToAdmin()
+      .subscribe((isAdmin: boolean) => {
+        this.isAdmin = isAdmin;
+      });
   }
 
   ngAfterViewInit() {
@@ -476,5 +474,14 @@ export class AusgabePage implements OnInit {
         });
         toast.present();
       });
+  }
+
+  async share() {
+    await Share.share({
+      title: 'Ausgabe teilen',
+      text: `Ausgabe ${this.ausgabe.name}`,
+      url: `https://jugendkompass.com/tabs/ausgabe/${this.ausgabe.id}`,
+      dialogTitle: 'Impuls teilen',
+    });
   }
 }

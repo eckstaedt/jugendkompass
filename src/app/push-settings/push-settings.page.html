@@ -13,13 +13,19 @@
     <ion-item>
       <ion-label>
         <h2>Allgemein</h2>
-        <h3>~4x jährlich</h3>
       </ion-label>
       <ion-toggle (ionChange)="onGeneralChange()" [(ngModel)]="general"></ion-toggle>
     </ion-item>
+    <ion-item>
+      <ion-label>
+        <h2>Neue Ausgabe</h2>
+        <h3>~4x jährlich</h3>
+      </ion-label>
+      <ion-toggle (ionChange)="onAusgabeChange()" [(ngModel)]="ausgabe"></ion-toggle>
+    </ion-item>
     <ion-item lines="full">
       <ion-label>
-        <h2>Impulse</h2>
+        <h2>Neuer Impuls</h2>
         <h3>~2x wöchentlich</h3>
       </ion-label>
       <ion-toggle (ionChange)="onImpulseChange()" [(ngModel)]="impulse"></ion-toggle>
