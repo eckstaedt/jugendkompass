@@ -34,13 +34,13 @@
   --ion-font-family: 'JugendkompassFont';
 }
 
-body {
+body.web {
   background-color: var(--ion-color-primary-tint);
-}
 
-ion-app {
-  max-width: 100rem;
-  margin: auto;
+  ion-app {
+    max-width: 100rem;
+    margin: auto;
+  }
 }
 
 ion-toggle {
