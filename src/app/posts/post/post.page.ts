@@ -171,8 +171,8 @@ export class PostPage implements OnInit {
 
   async share() {
     await Share.share({
-      title: 'Artikel teilen',
-      text: this.post.title,
+      title: 'Ich habe einen interessanten Artikel aus dem Jugendkompass für dich!',
+      text: `Schau dir den Artikel "${this.post.title}" aus dem Jugendkompass an:`,
       url: `https://jugendkompass.com/tabs/posts/${this.post.id}`,
       dialogTitle: 'Artikel teilen',
     });

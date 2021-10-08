@@ -52,8 +52,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       if (this.utils.isApp()) {
         this.handleSessionCount();
-      } else {
-        document.body.classList.add("web");
+      } else if (this.platform.is("desktop")) {
+        document.body.classList.add("desktop");
       }
       if (this.utils.isApp()) {
         this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);

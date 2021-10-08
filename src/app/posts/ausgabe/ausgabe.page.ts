@@ -478,10 +478,10 @@ export class AusgabePage implements OnInit {
 
   async share() {
     await Share.share({
-      title: 'Ausgabe teilen',
-      text: `Ausgabe ${this.ausgabe.name}`,
-      url: `https://jugendkompass.com/tabs/ausgabe/${this.ausgabe.id}`,
-      dialogTitle: 'Impuls teilen',
+      title: `Kennst du schon die Ausgabe ${this.ausgabe.name} der Jugendkompass-Zeitschrift?`,
+      text: `Wirf jetzt einen Blick auf die Ausgabe ${this.ausgabe.name} der Jugendkompass-Zeitschrift.`,
+      url: `https://jugendkompass.com/tabs/posts/ausgabe/${this.ausgabe.id}`,
+      dialogTitle: 'Ausgabe teilen',
     });
   }
 }

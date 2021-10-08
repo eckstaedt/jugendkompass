@@ -96,8 +96,8 @@ export class ImpulsePage implements OnInit {
 
   async share() {
     await Share.share({
-      title: 'Impuls teilen',
-      text: this.impulse.title,
+      title: `Kennst du schon den Impuls "${this.impulse.title}" aus dem Jugendkompass?`,
+      text: `Wirf jetzt einen Blick auf den Impuls "${this.impulse.title}" der Jugendkompass-Zeitschrift:`,
       url: `https://jugendkompass.com/tabs/impulse/${this.impulse.id}`,
       dialogTitle: 'Impuls teilen',
     });
