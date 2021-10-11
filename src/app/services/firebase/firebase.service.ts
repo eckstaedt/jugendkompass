@@ -370,6 +370,13 @@ export class FirebaseService {
     });
   }
 
+  getVerseOfTheDay() {
+    return new Promise(async (resolve: any) => {
+      const data: any = await this.httpClient.jsonp("https://dailyverses.net/getdailyverse.ashx?language=lut", "callback").toPromise();
+      resolve(data?.html.replace("<a ", "<div class='bible' ").replace("</a>", "</div>") ?? '');
+    });
+  }
+
   downloadFile(url: string) {
     return this.httpClient.get(url, {
       responseType: 'blob',

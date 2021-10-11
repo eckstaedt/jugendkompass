@@ -13,6 +13,16 @@
       <ion-col size="12" size-md="6" size-xl="4">
         <ion-card>
           <ion-card-header>
+            <ion-card-title
+              >App-Installationen ({{ installationsCount }})</ion-card-title
+            >
+          </ion-card-header>
+          <canvas #platformChart></canvas>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6" size-xl="4">
+        <ion-card>
+          <ion-card-header>
             <ion-card-title>App Aufrufe ({{ sessionsCount }})</ion-card-title>
           </ion-card-header>
           <canvas #sessionsChart></canvas>
@@ -40,16 +50,6 @@
             <ion-card-title>Push von außen empfangen ({{ pushFromOutsideCount }})</ion-card-title>
           </ion-card-header>
           <canvas #pushFromOutsideChart></canvas>
-        </ion-card>
-      </ion-col>
-      <ion-col size="12" size-md="6" size-xl="4">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title
-              >App-Installationen ({{ installationsCount }})</ion-card-title
-            >
-          </ion-card-header>
-          <canvas #platformChart></canvas>
         </ion-card>
       </ion-col>
       <ion-col size="12" size-md="6" size-xl="4">

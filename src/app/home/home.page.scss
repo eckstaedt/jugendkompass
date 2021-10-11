@@ -1,0 +1,10 @@
+ion-toolbar {
+    --padding-top: 0.5rem;
+    --padding-start: 0.5rem;
+    --padding-end: 0.5rem;
+  
+    img {
+      height: 2rem;
+      content: url('../../assets/logo.png');
+    }
+}

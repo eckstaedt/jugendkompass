@@ -9,6 +9,11 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: '',
+        redirectTo: '/tabs/home',
+        pathMatch: 'full',
+      },
+      {
         path: 'posts',
         loadChildren: () =>
           import('./../posts/post-list/post-list.module').then(
@@ -89,11 +94,6 @@ const routes: Routes = [
           import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       {
-        path: '',
-        redirectTo: '/tabs/posts',
-        pathMatch: 'full',
-      },
-      {
         path: 'settings/text-size',
         loadChildren: () =>
           import('./../settings/text-size/text-size.module').then(
@@ -111,6 +111,10 @@ const routes: Routes = [
       {
         path: 'impulse/:id',
         loadChildren: () => import('./../impulse/impulse/impulse.module').then( m => m.ImpulsePageModule)
+      },
+      {
+        path: 'home',
+        loadChildren: () => import('./../home/home.module').then( m => m.HomePageModule)
       },
     ],
   },

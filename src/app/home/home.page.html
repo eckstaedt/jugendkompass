@@ -1,0 +1,22 @@
+<ion-header #header class="ion-no-border">
+  <ion-toolbar>
+    <img class="logo" />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" size-xl="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Vers des Tages</ion-card-title>
+          </ion-card-header>
+          <ion-card-content *ngIf="verse">
+            <div [innerHtml]="verse"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

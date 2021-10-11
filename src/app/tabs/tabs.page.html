@@ -29,21 +29,47 @@
       </ion-range>
     </div>
   </ion-toolbar>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="impulse">
-      <ion-icon name="pulse"></ion-icon>
-      <!-- <ion-label>Impulse</ion-label> -->
-    </ion-tab-button>
-    <ion-tab-button *ngIf="isApp" tab="favorites">
-      <ion-icon name="star"></ion-icon>
-      <!-- <ion-label>Favoriten</ion-label> -->
-    </ion-tab-button>
+
+  <!-- App mode -->
+  <ion-tab-bar *ngIf="isApp" slot="bottom">
     <ion-tab-button [disabled]="!online" tab="posts">
       <ion-icon name="list"></ion-icon>
       <!-- <ion-label>Artikel</ion-label> -->
     </ion-tab-button>
+    <ion-tab-button tab="favorites">
+      <ion-icon name="star"></ion-icon>
+      <!-- <ion-label>Favoriten</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button [disabled]="!online" tab="home">
+      <ion-icon name="home"></ion-icon>
+      <!-- <ion-label>Artikel</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button tab="impulse">
+      <ion-icon name="pulse"></ion-icon>
+      <!-- <ion-label>Impulse</ion-label> -->
+    </ion-tab-button>
     <ion-tab-button [disabled]="!online" tab="settings">
       <ion-icon name="cog"></ion-icon>
+      <!-- <ion-label>Einstellungen</ion-label> -->
+    </ion-tab-button>
+  </ion-tab-bar>
+
+  <!-- Web mode -->
+  <ion-tab-bar *ngIf="!isApp" slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home-outline"></ion-icon>
+      <!-- <ion-label>Artikel</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button tab="posts">
+      <ion-icon name="list-outline"></ion-icon>
+      <!-- <ion-label>Artikel</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button tab="impulse">
+      <ion-icon name="pulse-outline"></ion-icon>
+      <!-- <ion-label>Impulse</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon name="cog-outline"></ion-icon>
       <!-- <ion-label>Einstellungen</ion-label> -->
     </ion-tab-button>
   </ion-tab-bar>
