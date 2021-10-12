@@ -8,6 +8,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "buildProd": "ng build --configuration production",
     "openIosProd": "ng build --configuration production && npx cap copy && npx cap sync && npx cap open ios",
     "openIos": "ng build && npx cap copy && npx cap sync && npx cap open ios",
     "openAndProd": "ng build --configuration production && npx cap copy && npx cap sync && npx cap open android",
