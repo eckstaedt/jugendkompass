@@ -1,4 +1,4 @@
-import { version } from '../../../../package.json';
+import packageInfo from '../../../../package.json';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
@@ -19,7 +19,7 @@ const { Share } = Plugins;
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-  public version: string = version;
+  public version: string = packageInfo.version;
   public theme: string = 'default';
   public isAdmin: boolean = false;
   public isApp: boolean = true;

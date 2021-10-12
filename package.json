@@ -52,6 +52,7 @@
     "jetifier": "^1.6.6",
     "ng2-charts": "~2.3.0",
     "ng2-file-upload": "^1.4.0",
+    "rxfire": "^6.0.2",
     "rxjs": "~6.5.1",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"

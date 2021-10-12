@@ -14,9 +14,9 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AngularFireFunctions } from '@angular/fire/compat/functions';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getDownloadURL, Storage, ref, uploadBytesResumable, UploadTask } from '@angular/fire/storage';
+import { Functions, httpsCallable, HttpsCallableResult } from '@angular/fire/functions';
+import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData, addDoc } from '@angular/fire/firestore';
 
 const fcm = new FCM();
@@ -35,12 +35,12 @@ export class FirebaseService {
   legalPages: any[];
 
   constructor(
+    private auth: Auth,
     private firestore: Firestore,
-    private fireStorage: AngularFireStorage,
+    private functions: Functions,
+    private storage: Storage,
     private utils: Utils,
     private httpClient: HttpClient,
-    private fns: AngularFireFunctions,
-    private afAuth: AngularFireAuth,
   ) {
     this.init();
   }
@@ -49,25 +49,27 @@ export class FirebaseService {
     await this.loadCategories();
   }
 
-  async sendTestPush(notification, data) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+  async sendTestPush(notification: any, data: any) {
+    const callable: (res: any) => Promise<HttpsCallableResult> = httpsCallable(
+      this.functions,
       'sendTestPush',
     );
     await callable({
       data: data,
       notification: notification,
-    }).toPromise();
+    });
   }
 
   async sendPush(notification: any, data: any, topic: PushType) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+    const callable: (res: any) => Promise<HttpsCallableResult> = httpsCallable(
+      this.functions,
       'sendPush',
     );
     await callable({
       data,
       notification,
       topic,
-    }).toPromise();
+    });
   }
 
   incrementAnalyticsField(field: AnalyticsField, data: any = {}) {
@@ -88,11 +90,11 @@ export class FirebaseService {
   }
 
   getFeedback() {
-    return collectionData(this.firestore, 'feedback');
+    return collectionData(collection(this.firestore, 'feedback'));
   }
 
   submitFeedback(feedback: any[]) {
-    addDoc(collection(this.firestore, 'feedback'), {
+    return addDoc(collection(this.firestore, 'feedback'), {
       feedback: feedback,
       time: firebase.firestore.Timestamp.now(),
       platform: this.utils.getPlatform(),
@@ -100,14 +102,14 @@ export class FirebaseService {
   }
 
   getAnalyticsOverview() {
-    return docData(this.firestore, 'analytics/overall');
+    return docData(doc(this.firestore, 'analytics/overall'));
   }
 
   async loadCategories() {
     if (this.ausgaben && this.rubrics) {
       return Promise.resolve();
     } else {
-      const categories: any = await collectionData(this.firestore, 'categories')
+      const categories: any = await collectionData(collection(this.firestore, 'categories'))
         .pipe(take(1))
         .toPromise();
       const ausgabenCategory = categories.find(
@@ -184,7 +186,7 @@ export class FirebaseService {
 
   getPosts() {
     return new Observable(observer => {
-      collectionData(this.firestore, 'posts')
+      collectionData(collection(this.firestore, 'posts'))
         .subscribe((posts: FirebasePost[]) => {
           this.posts = this.getEditedPosts(posts)
             .sort((a: FirebasePost, b: FirebasePost) => {
@@ -216,7 +218,7 @@ export class FirebaseService {
 
   getImpulses() {
     return new Observable(observer => {
-      collectionData(this.firestore, 'impulses', (ref: any) => ref.orderBy('date', 'desc'))
+      collectionData(collection(this.firestore, 'impulses'))
         .subscribe((impulses: FirebasePost[]) => {
           this.impulses = impulses;
           observer.next(this.impulses);
@@ -264,7 +266,7 @@ export class FirebaseService {
     if (this.legalPages) {
       return;
     }
-    this.legalPages = await collectionData(this.firestore, 'pages')
+    this.legalPages = await collectionData(collection(this.firestore, 'pages'))
       .pipe(take(1))
       .toPromise();
   }
@@ -281,8 +283,7 @@ export class FirebaseService {
 
   login(email: string, password: string) {
     return new Promise((resolve: any) => {
-      this.afAuth
-        .signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(this.auth, email, password)
         .then(() => {
           fcm.subscribeTo({ topic: 'admin' });
           if (this.subscriber) {
@@ -298,7 +299,7 @@ export class FirebaseService {
   }
 
   async isAdmin(): Promise<boolean> {
-    const user: any = await this.afAuth.authState.pipe(first()).toPromise();
+    const user: any = await authState(this.auth).pipe(first() as any).toPromise();
     if (this.subscriber) {
       this.subscriber.next(Boolean(user));
     }
@@ -360,88 +361,68 @@ export class FirebaseService {
     });
   }
 
-  uploadAudio(file: FileLikeObject, post: FirebasePost) {
-    return new Promise((resolve: any) => {
+  uploadAudio(file: FileLikeObject) {
+    return new Promise(async (resolve: any) => {
       const path = `/audios/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const reference = ref(this.storage, path);
+      const task: UploadTask = uploadBytesResumable(reference, new File([file.rawFile], file.name));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-              name: file.name,
-            });
-          }),
-        )
-        .subscribe();
+      await task;
+
+      const url = await getDownloadURL(reference);
+      resolve({
+        url,
+        path,
+        name: file.name,
+      });
     });
   }
 
   uploadPdf(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/pdfs/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const reference = ref(this.storage, path);
+      const task: UploadTask = uploadBytesResumable(reference, new File([file.rawFile], file.name));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      await task;
+
+      const url = await getDownloadURL(reference);
+      resolve({
+        url,
+        path,
+      });
     });
   }
 
   uploadVideoFile(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/videos/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const reference = ref(this.storage, path);
+      const task: UploadTask = uploadBytesResumable(reference, new File([file.rawFile], file.name));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      await task;
+
+      const url = await getDownloadURL(reference);
+      resolve({
+        url,
+        path,
+      });
     });
   }
 
   uploadImageFile(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/other/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const reference = ref(this.storage, path);
+      const task: UploadTask = uploadBytesResumable(reference, new File([file.rawFile], file.name));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      await task;
+
+      const url = await getDownloadURL(reference);
+      resolve({
+        url,
+        path,
+      });
     });
   }
 }

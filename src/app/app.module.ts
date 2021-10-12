@@ -11,10 +11,10 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-import { AngularFireFunctionsModule } from '@angular/fire/compat/functions';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 
 import { IonicStorageModule } from '@ionic/storage';
@@ -39,13 +39,16 @@ import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.m
     FeedbackModalPageModule,
     AnswersModalPageModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    AngularFireAuthModule,
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      return firestore;
+    }),
+    provideStorage(() => getStorage()),
+    provideAuth(() => getAuth()),
+    provideFunctions(() => getFunctions()),
     IonicStorageModule.forRoot(),
     ChartsModule,
     FileUploadModule,
-    AngularFireFunctionsModule,
   ],
   providers: [
     PhotoViewer,

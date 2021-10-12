@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { version } from '../../package.json';
+import packageInfo from '../../package.json';
 import {
   Platform,
   AlertController,
@@ -321,16 +321,16 @@ export class AppComponent {
     const oldVersion: string | undefined = await this.storage.get('version');
 
     if (!oldVersion) {
-      await this.storage.set('version', version);
+      await this.storage.set('version', packageInfo.version);
       return;
     }
 
-    if (oldVersion !== version) {
+    if (oldVersion !== packageInfo.version) {
       this.firebaseService.incrementAnalyticsField(
         AnalyticsField.APP_UPDATED,
-        { version }
+        { version: packageInfo.version }
       );
-      await this.storage.set('version', version);
+      await this.storage.set('version', packageInfo.version);
     }
   }
 }

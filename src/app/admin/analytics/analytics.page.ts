@@ -3,7 +3,7 @@ import * as dayjs from 'dayjs';
 import { Chart } from 'chart.js';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField, Platforms } from 'src/app/utils/constants';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 import { Utils } from 'src/app/utils/utils';
 
 @Component({

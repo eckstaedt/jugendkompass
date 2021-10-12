@@ -263,7 +263,7 @@ export class PostPage implements OnInit {
             const loading = await this.loadingController.create();
             loading.present();
             this.firebaseService
-              .uploadAudio(this.file, this.post)
+              .uploadAudio(this.file)
               .then(async (res: any) => {
                 const sound = new Howl({
                   html5: true,
