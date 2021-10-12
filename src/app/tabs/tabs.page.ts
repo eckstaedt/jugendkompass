@@ -3,8 +3,7 @@ import { AudioService } from '../services/audio/audio.service';
 import { IonRange } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Utils } from '../utils/utils';
-import { Plugins, NetworkStatus } from '@capacitor/core';
-const { Network } = Plugins;
+import { Network, NetworkStatus } from '@capacitor/network';
 
 @Component({
   selector: 'app-tabs',

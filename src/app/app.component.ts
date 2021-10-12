@@ -9,10 +9,13 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 import {
-  Plugins,
+  PushNotifications,
   PushNotification,
   PushNotificationActionPerformed,
-} from '@capacitor/core';
+} from '@capacitor/push-notifications';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { App } from '@capacitor/app';
+import { Network } from '@capacitor/network';
 import { Router } from '@angular/router';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField, PushType } from './utils/constants';
 import { FirebaseService } from './services/firebase/firebase.service';
@@ -21,8 +24,6 @@ import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
 
 const fcm = new FCM();
-const { App, PushNotifications, Network } = Plugins;
-const { SplashScreen } = Plugins;
 
 @Component({
   selector: 'app-root',
@@ -207,7 +208,7 @@ export class AppComponent {
 
       this.storage.get('oldUser').then((oldUser: boolean): void => {
         if (oldUser) {
-          PushNotifications.requestPermission().then((res: any) => {
+          PushNotifications.requestPermissions().then((res: any) => {
             if (res.granted) {
               PushNotifications.register()
                 .then(() => {
@@ -308,7 +309,7 @@ export class AppComponent {
       });
     });
 
-    const urlOpen = await Plugins.App.getLaunchUrl();
+    const urlOpen = await App.getLaunchUrl();
     if (urlOpen?.url) {
       const slug = urlOpen.url.split(".com").pop();
       window.setTimeout(() => {

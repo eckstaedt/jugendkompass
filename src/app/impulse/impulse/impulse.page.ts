@@ -4,12 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
-import { Plugins, NetworkStatus } from '@capacitor/core';
+import { Network, NetworkStatus } from '@capacitor/network';
+import { Share } from '@capacitor/share';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Storage } from '@ionic/storage';
 import { Utils } from 'src/app/utils/utils';
-
-const { Network, Share } = Plugins;
 
 @Component({
   selector: 'app-impulse',
