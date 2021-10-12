@@ -49,6 +49,6 @@
 	},
 	{
 		"pkg": "capacitor-video-player",
-		"classpath": "com.jeep.plugin.capacitor.CapacitorVideoPlayer"
+		"classpath": "com.jeep.plugin.capacitor.capacitorvideoplayer.CapacitorVideoPlayerPlugin"
 	}
 ]

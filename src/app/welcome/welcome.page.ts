@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
-const fcm = new FCM();
 import { Plugins } from '@capacitor/core';
 import { ThemeService } from '../services/theme/theme.service';
 import { AnalyticsField, PushType } from '../utils/constants';
@@ -35,7 +34,7 @@ export class WelcomePage implements OnInit {
           .then(() => {
             this.storage.get('pushGeneral').then((isOn: boolean) => {
               if (isOn !== false) {
-                fcm
+                FCM
                 .subscribeTo({ topic: PushType.GENERAL })
                 .then(() => this.storage.set('pushGeneral', true))
                 .catch(err => console.log(err));
@@ -43,7 +42,7 @@ export class WelcomePage implements OnInit {
             });
             this.storage.get('pushAusgabe').then((isOn: boolean) => {
               if (isOn !== false) {
-                fcm
+                FCM
                 .subscribeTo({ topic: PushType.AUSGABE })
                 .then(() => this.storage.set('pushAusgabe', true))
                 .catch(err => console.log(err));
@@ -51,7 +50,7 @@ export class WelcomePage implements OnInit {
             });
             this.storage.get('pushImpulse').then((isOn: boolean) => {
               if (isOn !== false) {
-                fcm
+                FCM
                 .subscribeTo({ topic: PushType.IMPULSE })
                 .then(() => this.storage.set('pushImpulse', true))
                 .catch(err => console.log(err));

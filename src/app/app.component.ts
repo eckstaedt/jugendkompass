@@ -22,9 +22,12 @@ import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page
 import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
 
+<<<<<<< HEAD
 const fcm = new FCM();
 
 const version = "1.2.0";
+=======
+>>>>>>> ba5a61f... fix capacitor issues
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -214,7 +217,7 @@ export class AppComponent {
                 .then(() => {
                   this.storage.get('pushGeneral').then((isOn: boolean) => {
                     if (isOn !== false) {
-                      fcm
+                      FCM
                       .subscribeTo({ topic: PushType.GENERAL })
                       .then(() => this.storage.set('pushGeneral', true))
                       .catch(err => console.log(err));
@@ -222,7 +225,7 @@ export class AppComponent {
                   });
                   this.storage.get('pushAusgabe').then((isOn: boolean) => {
                     if (isOn !== false) {
-                      fcm
+                      FCM
                       .subscribeTo({ topic: PushType.AUSGABE })
                       .then(() => this.storage.set('pushAusgabe', true))
                       .catch(err => console.log(err));
@@ -230,7 +233,7 @@ export class AppComponent {
                   });
                   this.storage.get('pushImpulse').then((isOn: boolean) => {
                     if (isOn !== false) {
-                      fcm
+                      FCM
                       .subscribeTo({ topic: PushType.IMPULSE })
                       .then(() => this.storage.set('pushImpulse', true))
                       .catch(err => console.log(err));

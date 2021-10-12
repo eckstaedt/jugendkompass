@@ -17,7 +17,7 @@ import {
 import * as PluginsLibrary from 'capacitor-video-player';
 import { HttpEventType } from '@angular/common/http';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { writeFile } from 'capacitor-blob-writer';
+import writeFile from 'capacitor-blob-writer';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { AudioService } from 'src/app/services/audio/audio.service';
@@ -116,10 +116,10 @@ export class AusgabePage implements OnInit {
           if (event.type === HttpEventType.DownloadProgress) {
             // console.log(Math.round((100 * event.loaded) / event.total));
           } else if (event.type === HttpEventType.Response) {
-            const { uri } = await writeFile({
+            const uri = await writeFile({
               path: this.ausgabe.name.replace('.', '-') + '.pdf',
               directory: FilesystemDirectory.Data,
-              data: event.body,
+              blob: event.body,
               recursive: true,
             });
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscriber } from 'rxjs';
-import { take, finalize, first } from 'rxjs/operators';
+import { take, first } from 'rxjs/operators';
 import {
   Category,
   FirebasePost,
@@ -19,8 +19,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from '@ionic/storage';
-
-const fcm = new FCM();
 
 @Injectable({
   providedIn: 'root',
@@ -369,7 +367,7 @@ export class FirebaseService {
       this.afAuth
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          fcm.subscribeTo({ topic: 'admin' });
+          FCM.subscribeTo({ topic: 'admin' });
           if (this.subscriber) {
             this.subscriber.next(true);
           }
