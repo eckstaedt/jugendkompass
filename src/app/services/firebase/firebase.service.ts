@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
-import { take, finalize, first } from 'rxjs/operators';
+import { take, first } from 'rxjs/operators';
 import {
   Category,
   FirebasePost,
@@ -18,8 +18,6 @@ import { getDownloadURL, Storage, ref, uploadBytesResumable, UploadTask } from '
 import { Functions, httpsCallable, HttpsCallableResult } from '@angular/fire/functions';
 import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData, addDoc } from '@angular/fire/firestore';
-
-const fcm = new FCM();
 
 @Injectable({
   providedIn: 'root',
@@ -285,7 +283,7 @@ export class FirebaseService {
     return new Promise((resolve: any) => {
       signInWithEmailAndPassword(this.auth, email, password)
         .then(() => {
-          fcm.subscribeTo({ topic: 'admin' });
+          FCM.subscribeTo({ topic: 'admin' });
           if (this.subscriber) {
             this.subscriber.next(true);
           }

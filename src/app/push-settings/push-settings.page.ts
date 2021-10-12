@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Plugins } from '@capacitor/core';
 import { FCM } from '@capacitor-community/fcm';
 import { PushType } from '../utils/constants';
-
-const fcm = new FCM();
-const { PushNotifications } = Plugins;
 
 @Component({
   selector: 'app-push-settings',
@@ -30,11 +26,11 @@ export class PushSettingsPage implements OnInit {
 
   onAusgabeChange() {
     if (this.ausgabe) {
-      fcm.subscribeTo({ topic: PushType.AUSGABE }).then(async () => {
+      FCM.subscribeTo({ topic: PushType.AUSGABE }).then(async () => {
         await this.storage.set('pushAusgabe', this.general);
       });
     } else {
-      fcm.unsubscribeFrom({ topic: PushType.AUSGABE }).then(async () => {
+      FCM.unsubscribeFrom({ topic: PushType.AUSGABE }).then(async () => {
         await this.storage.set('pushAusgabe', this.general);
       });
     }
@@ -42,11 +38,11 @@ export class PushSettingsPage implements OnInit {
 
   onGeneralChange() {
     if (this.general) {
-      fcm.subscribeTo({ topic: PushType.GENERAL }).then(async () => {
+      FCM.subscribeTo({ topic: PushType.GENERAL }).then(async () => {
         await this.storage.set('pushGeneral', this.general);
       });
     } else {
-      fcm.unsubscribeFrom({ topic: PushType.GENERAL }).then(async () => {
+      FCM.unsubscribeFrom({ topic: PushType.GENERAL }).then(async () => {
         await this.storage.set('pushGeneral', this.general);
       });
     }
@@ -54,11 +50,11 @@ export class PushSettingsPage implements OnInit {
 
   async onImpulseChange() {
     if (this.impulse) {
-      fcm.subscribeTo({ topic: PushType.IMPULSE }).then(async () => {
+      FCM.subscribeTo({ topic: PushType.IMPULSE }).then(async () => {
         await this.storage.set('pushImpulse', this.impulse);
       });
     } else {
-      fcm.unsubscribeFrom({ topic: PushType.IMPULSE }).then(async () => {
+      FCM.unsubscribeFrom({ topic: PushType.IMPULSE }).then(async () => {
         await this.storage.set('pushImpulse', this.impulse);
       });
     }
