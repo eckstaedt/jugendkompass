@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscriber } from 'rxjs';
 import { take, finalize, first } from 'rxjs/operators';
 import {
@@ -11,13 +10,14 @@ import {
 import { Utils } from '../../utils/utils';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { firestore } from 'firebase/app';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData, addDoc } from '@angular/fire/firestore';
 
 const fcm = new FCM();
 
@@ -35,7 +35,7 @@ export class FirebaseService {
   legalPages: any[];
 
   constructor(
-    private db: AngularFirestore,
+    private firestore: Firestore,
     private fireStorage: AngularFireStorage,
     private utils: Utils,
     private httpClient: HttpClient,
@@ -72,15 +72,14 @@ export class FirebaseService {
 
   incrementAnalyticsField(field: AnalyticsField, data: any = {}) {
     const now: Date = new Date();
-    const increment = firestore.FieldValue.increment(1);
-    const analyticsData: any = firestore.FieldValue.arrayUnion({
+    const increment = firebase.firestore.FieldValue.increment(1);
+    const analyticsData: any = firebase.firestore.FieldValue.arrayUnion({
       ...data,
       timestamp: firebase.firestore.Timestamp.fromDate(now),
       platform: this.utils.getPlatform(),
     });
 
-    this.db.doc('analytics/overall').set(
-      {
+    setDoc(doc(this.firestore, 'analytics/overall'), {
         [`${field}Count`]: increment,
         [`${field}Data`]: analyticsData,
       },
@@ -88,28 +87,12 @@ export class FirebaseService {
     );
   }
 
-  getKeys() {
-    return this.db
-      .collection('oneTimeKeyCollection', (ref: any) => ref.orderBy('value'))
-      .valueChanges();
-  }
-
-  addKey(key: any) {
-    return this.db.doc(`oneTimeKeyCollection/${key.value}`).set(key);
-  }
-
-  updateKey(key: any) {
-    return this.db.doc(`oneTimeKeyCollection/${key.value}`).update({
-      remainingKeyCount: key.count,
-    });
-  }
-
   getFeedback() {
-    return this.db.collection('feedback').valueChanges();
+    return collectionData(this.firestore, 'feedback');
   }
 
   submitFeedback(feedback: any[]) {
-    return this.db.collection('feedback').add({
+    addDoc(collection(this.firestore, 'feedback'), {
       feedback: feedback,
       time: firebase.firestore.Timestamp.now(),
       platform: this.utils.getPlatform(),
@@ -117,16 +100,14 @@ export class FirebaseService {
   }
 
   getAnalyticsOverview() {
-    return this.db.doc('analytics/overall').valueChanges();
+    return docData(this.firestore, 'analytics/overall');
   }
 
   async loadCategories() {
     if (this.ausgaben && this.rubrics) {
       return Promise.resolve();
     } else {
-      const categories: any = await this.db
-        .collection<Category[]>('categories')
-        .valueChanges()
+      const categories: any = await collectionData(this.firestore, 'categories')
         .pipe(take(1))
         .toPromise();
       const ausgabenCategory = categories.find(
@@ -190,22 +171,20 @@ export class FirebaseService {
   }
 
   updateAusgabe(id: string, data: any) {
-    return this.db.doc(`categories/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `categories/${id}`), data);
   }
 
   updateImpulse(id: string, data: any) {
-    return this.db.doc(`impulses/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `impulses/${id}`), data);
   }
 
   updatePost(id: string, data: any) {
-    return this.db.doc(`posts/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `posts/${id}`), data);
   }
 
   getPosts() {
     return new Observable(observer => {
-      this.db
-        .collection('posts')
-        .valueChanges()
+      collectionData(this.firestore, 'posts')
         .subscribe((posts: FirebasePost[]) => {
           this.posts = this.getEditedPosts(posts)
             .sort((a: FirebasePost, b: FirebasePost) => {
@@ -237,9 +216,7 @@ export class FirebaseService {
 
   getImpulses() {
     return new Observable(observer => {
-      this.db
-        .collection('impulses', (ref: any) => ref.orderBy('date', 'desc'))
-        .valueChanges()
+      collectionData(this.firestore, 'impulses', (ref: any) => ref.orderBy('date', 'desc'))
         .subscribe((impulses: FirebasePost[]) => {
           this.impulses = impulses;
           observer.next(this.impulses);
@@ -248,22 +225,22 @@ export class FirebaseService {
   }
 
   incrementPostViews(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`posts/${id}`).update({
+    const increment = firebase.firestore.FieldValue.increment(1);
+    updateDoc(doc(this.firestore, `posts/${id}`), {
       views: increment,
     });
   }
 
   incrementImpulseViews(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`impulses/${id}`).update({
+    const increment = firebase.firestore.FieldValue.increment(1);
+    updateDoc(doc(this.firestore, `impulses/${id}`), {
       views: increment,
     });
   }
 
   incrementAudioPlays(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`posts/${id}`).update({
+    const increment = firebase.firestore.FieldValue.increment(1);
+    updateDoc(doc(this.firestore, `posts/${id}`), {
       audioPlays: increment,
     });
   }
@@ -287,9 +264,7 @@ export class FirebaseService {
     if (this.legalPages) {
       return;
     }
-    this.legalPages = await this.db
-      .collection<any[]>('pages')
-      .valueChanges()
+    this.legalPages = await collectionData(this.firestore, 'pages')
       .pipe(take(1))
       .toPromise();
   }
