@@ -11,13 +11,13 @@ import {
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
-import { Plugins, NetworkStatus } from '@capacitor/core';
+import { Network, NetworkStatus } from '@capacitor/network';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { Utils } from 'src/app/utils/utils';
-const { Network, Share } = Plugins;
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-post',

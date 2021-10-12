@@ -46,17 +46,4 @@ public class MainActivity extends BridgeActivity {
     super.onResume();
     setDarkMode();
   }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    // Initializes the Bridge
-    this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
-      // Additional plugins you've installed go here
-      add(BlobWriter.class);
-      add(CapacitorVideoPlayer.class);
-      add(FCMPlugin.class);
-    }});
-  }
 }

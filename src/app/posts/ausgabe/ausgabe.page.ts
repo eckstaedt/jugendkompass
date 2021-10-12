@@ -4,7 +4,9 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { Ausgabe } from 'src/app/utils/interfaces';
 import { Storage } from '@ionic/storage';
 
-import { Plugins, FilesystemDirectory } from '@capacitor/core';
+import { FilesystemDirectory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
+import { CapacitorVideoPlayer } from 'capacitor-video-player';
 import {
   Platform,
   LoadingController,
@@ -15,7 +17,6 @@ import {
 import * as PluginsLibrary from 'capacitor-video-player';
 import { HttpEventType } from '@angular/common/http';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-const { CapacitorVideoPlayer, Share } = Plugins;
 import { writeFile } from 'capacitor-blob-writer';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';

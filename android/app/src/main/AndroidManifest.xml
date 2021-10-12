@@ -54,8 +54,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Network API -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Audio -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 </manifest>
