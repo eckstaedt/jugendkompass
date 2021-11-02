@@ -13,7 +13,6 @@ import {
 import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
-import { Network, NetworkStatus } from '@capacitor/network';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
@@ -62,19 +61,6 @@ export class PostPage implements OnInit {
 
   ngOnInit() {
     this.isApp = this.utils.isApp();
-    if (this.isApp) {
-      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
-        this.online = status.connected;
-        if (!this.online) {
-          if (this.post?.audio?.base64) {
-            this.audioService.loadNewAudio(
-              this.post.audio.base64,
-              this.post.title,
-            );
-          }
-        }
-      });
-    }
     this.loadData();
 
     this.firebaseService

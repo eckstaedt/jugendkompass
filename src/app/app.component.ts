@@ -15,7 +15,6 @@ import {
 } from '@capacitor/push-notifications';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App } from '@capacitor/app';
-import { Network } from '@capacitor/network';
 import { Router } from '@angular/router';
 import { SESSION_FEEDBACK_THRESHOLD, AnalyticsField, PushType } from './utils/constants';
 import { FirebaseService } from './services/firebase/firebase.service';
@@ -65,7 +64,6 @@ export class AppComponent {
       if (this.utils.isApp()) {
         this.configureDeepLinks();
         this.registerEvents();
-        this.setupNetworkCheck();
         this.setupPush();
         this.addUpdateAnalytic();
       }
@@ -258,43 +256,6 @@ export class AppComponent {
         App.exitApp();
       }
     });
-  }
-
-  async setupNetworkCheck() {
-    let alert = await this.createNetworkAlert();
-    Network.addListener('networkStatusChange', async status => {
-      if (
-        !status.connected &&
-        this.router.url.search('/tabs/favorites') === -1
-      ) {
-        alert.present();
-      } else {
-        if (alert) {
-          alert.dismiss();
-        }
-        alert = await this.createNetworkAlert();
-      }
-    });
-  }
-
-  async createNetworkAlert() {
-    let alert = await this.alertController.create({
-      backdropDismiss: false,
-      header: 'Keine Internetverbindung vorhanden',
-      cssClass: 'password-alert',
-      buttons: [
-        {
-          text: 'Zu meinen Favoriten',
-          handler: () => {
-            this.router.navigateByUrl('/tabs/favorites', { replaceUrl: true });
-          },
-        },
-        {
-          text: 'Abbrechen',
-        },
-      ],
-    });
-    return alert;
   }
 
   async configureDeepLinks() {

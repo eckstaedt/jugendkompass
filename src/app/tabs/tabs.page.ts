@@ -3,7 +3,6 @@ import { AudioService } from '../services/audio/audio.service';
 import { IonRange } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Utils } from '../utils/utils';
-import { Network, NetworkStatus } from '@capacitor/network';
 
 @Component({
   selector: 'app-tabs',
@@ -37,11 +36,6 @@ export class TabsPage {
         this.title = res.title;
       }
     });
-    if (this.isApp) {
-      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
-        this.online = status.connected;
-      });
-    }
   }
 
   seek() {

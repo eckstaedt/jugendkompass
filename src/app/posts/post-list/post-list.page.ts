@@ -16,7 +16,6 @@ import {
 } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
-import { Network } from '@capacitor/network';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Utils } from 'src/app/utils/utils';
 
@@ -86,21 +85,6 @@ export class PostListPage implements OnInit {
     });
     await this.getReadArticles();
     this.loadData();
-    if (this.utils.isApp()) {
-      Network.addListener('networkStatusChange', async status => {
-        if (status.connected) {
-          this.online = true;
-          if (!this.allPosts.length) {
-            this.loadData();
-          }
-        } else {
-          this.online = false;
-          this.allPosts = [];
-          this.filteredPosts = [];
-          this.posts = [];
-        }
-      });
-    }
   }
 
   async ionViewWillEnter() {

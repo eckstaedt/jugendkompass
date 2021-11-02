@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
-import { Network, NetworkStatus } from '@capacitor/network';
 import { Share } from '@capacitor/share';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Storage } from '@ionic/storage';
@@ -34,11 +33,6 @@ export class ImpulsePage implements OnInit {
 
   ngOnInit() {
     this.isApp = this.utils.isApp();
-    if (this.isApp) {
-      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
-        this.online = status.connected;
-      });
-    }
     this.loadData();
 
     this.firebaseService
