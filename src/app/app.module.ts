@@ -30,7 +30,7 @@ import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.m
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
