@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
-import { Plugins } from '@capacitor/core';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { ThemeService } from '../services/theme/theme.service';
 import { AnalyticsField, PushType } from '../utils/constants';
 import { FirebaseService } from '../services/firebase/firebase.service';
-
-const { PushNotifications } = Plugins;
 
 @Component({
   selector: 'app-welcome',
@@ -28,7 +26,7 @@ export class WelcomePage implements OnInit {
   ngOnInit() {}
 
   toHome() {
-    PushNotifications.requestPermission().then((res: any) => {
+    PushNotifications.requestPermissions().then((res: any) => {
       if (res.granted) {
         PushNotifications.register()
           .then(() => {

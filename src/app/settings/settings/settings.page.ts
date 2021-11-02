@@ -1,7 +1,7 @@
 import packageInfo from '../../../../package.json';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Plugins } from '@capacitor/core';
+import { Share } from '@capacitor/share';
 import {
   Platform,
   ActionSheetController,
@@ -11,7 +11,6 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { Utils } from 'src/app/utils/utils';
-const { Share } = Plugins;
 
 @Component({
   selector: 'app-settings',

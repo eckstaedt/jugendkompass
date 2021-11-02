@@ -16,10 +16,9 @@ import {
 } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
-import { Plugins } from '@capacitor/core';
+import { Network } from '@capacitor/network';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Utils } from 'src/app/utils/utils';
-const { Network } = Plugins;
 
 @Component({
   selector: 'app-post-list',
