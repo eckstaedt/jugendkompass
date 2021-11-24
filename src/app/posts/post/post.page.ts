@@ -69,9 +69,9 @@ export class PostPage implements OnInit {
         this.isAdmin = isAdmin;
       });
 
-    this.audioService.onTitleChange().subscribe((data: any) => {
-      this.isPlaying = data.title === this.post.title;
-    });
+    // this.audioService.onTitleChange().subscribe((data: any) => {
+    //   this.isPlaying = data.title === this.post.title;
+    // });
   }
 
   ionViewWillEnter() {
@@ -79,7 +79,7 @@ export class PostPage implements OnInit {
       this.router['routerState'].snapshot.url.search('favorites') > -1,
     )
       ? '/tabs/favorites'
-      : '/tabs/posts';
+      : '/tabs/lesen';
 
     this.storage.get('text-size').then((res: number) => {
       this.textSize = res;
@@ -136,11 +136,11 @@ export class PostPage implements OnInit {
 
     if (this.online) {
       if (this.post.audio) {
-        this.audioService.loadNewAudio(this.post.audio.url, this.post.title);
+        this.audioService.loadNewAudio(this.post.audio.url, this.post);
       }
     } else {
       if (this.post.audio?.base64) {
-        this.audioService.loadNewAudio(this.post.audio.base64, this.post.title);
+        this.audioService.loadNewAudio(this.post.audio.base64, this.post);
       }
     }
 
@@ -159,7 +159,7 @@ export class PostPage implements OnInit {
     await Share.share({
       title: 'Artikel teilen',
       text: this.post.title,
-      url: `https://jugendkompass.com/tabs/posts/${this.post.id}`,
+      url: `https://jugendkompass.com/tabs/lesen/posts/${this.post.id}`,
       dialogTitle: 'Artikel teilen',
     });
   }
@@ -225,7 +225,11 @@ export class PostPage implements OnInit {
 
   openFilteredList(category: Category): void {
     this.routerService.setData(category);
-    this.router.navigateByUrl('tabs/posts');
+    this.router.navigateByUrl('tabs/lesen');
+  }
+
+  openAusgabe(ausgabe: Category): void {
+    this.router.navigateByUrl(`tabs/lesen/ausgabe/${ausgabe.id}`);
   }
 
   async onAudioSelected() {
@@ -272,7 +276,7 @@ export class PostPage implements OnInit {
                       this.post.audio = audio;
                       this.audioService.loadNewAudio(
                         this.post.audio.url,
-                        this.post.title,
+                        this.post,
                       );
                       loading.dismiss();
                       const toast = await this.toastController.create({

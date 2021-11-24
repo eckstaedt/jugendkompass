@@ -1,10 +1,44 @@
-ion-toolbar {
-    --padding-top: 0.5rem;
-    --padding-start: 0.5rem;
-    --padding-end: 0.5rem;
+ion-content {
+  --padding-bottom: 4rem;
+
+  ion-card {
+    border-radius: 2rem;
+    margin: 0.5rem;
   
-    img {
-      height: 2rem;
-      content: url('../../assets/logo.png');
+    ion-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      ion-button {
+        margin: 0;
+        height: 2rem;
+  
+        ion-icon {
+          font-size: 1.3rem;
+        }
+      }
+  
+      ion-card-title {
+        font-size: 1.3rem;
+      }
     }
+  
+    ion-card-content {
+      img {
+        border-radius: 1rem;
+      }
+
+      ion-slide {
+        img {
+          max-height: 8rem;
+        }
+  
+        p {
+          font-size: .8rem;
+        }
+      }
+    }
+  }
+  
 }

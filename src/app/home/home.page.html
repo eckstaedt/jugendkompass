@@ -1,19 +1,69 @@
-<ion-header #header class="ion-no-border">
-  <ion-toolbar>
-    <img class="logo" />
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <ion-grid>
     <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              {{ greeting }} Phillipp!
+            </ion-card-title>
+            <ion-button fill="none">
+              <ion-icon name="cog-outline"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
       <ion-col size="12" size-md="6" size-xl="4">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Vers des Tages</ion-card-title>
+            <ion-button fill="none">
+              <ion-icon name="share-outline"></ion-icon>
+            </ion-button>
           </ion-card-header>
           <ion-card-content *ngIf="verse">
             <div [innerHtml]="verse"></div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6" size-xl="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Artikel die dir gefallen könnten</ion-card-title>
+          </ion-card-header>
+          <ion-card-content *ngIf="postSuggests">
+            <ion-slides
+              [options]="slideOpts"
+            >
+            <ion-slide
+              (click)="openPost(post)"
+              *ngFor="let post of postSuggests"
+            >
+              <div>
+                <img [src]="post.postImg.source_url" />
+                <p>{{ post.title }}</p>
+              </div>
+            </ion-slide>
+          </ion-slides>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6" size-xl="4">
+        <ion-card *ngIf="impulse">
+          <ion-card-header>
+            <ion-card-title>Impulse der Woche</ion-card-title>
+            <ion-button (click)="shareImpulse()" fill="none">
+              <ion-icon name="share-outline"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+          <ion-card-content>
+            <img [src]="impulse.postImg.source_url"/>
+            <ion-button (click)="openImpulse()" shape="round" size="small">
+              Impuls lesen
+            </ion-button>
+            <ion-button (click)="navigateToImpulses()" shape="round" size="small">
+              Alle Impulse anzeigen
+            </ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>

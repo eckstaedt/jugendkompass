@@ -1,41 +1,59 @@
+ion-toolbar {
+  --background: transparent;
+  padding: 1rem;
+}
+
 ion-content {
   --padding-bottom: 2.5rem;
 
-  ion-card {
-    overflow: visible;
-    margin: 2.5rem 1rem 2rem 1rem;
+  #header {
     position: relative;
-    padding-top: 60px;
+    z-index: 9;
 
-    ion-card-content {
-      padding-bottom: 1rem;
-      padding-top: 1.8rem;
+    img {
+      width: 100%;
+      border-bottom: 1px solid var(--ion-color-light-shade);
     }
 
-    .img-wrapper {
-      background: var(--ion-color-dark-contrast);
-      width: 6rem;
-      height: 6rem;
+    .topButtons {
       position: absolute;
-      left: 50%;
-      top: -30px;
-      transform: translateX(-50%);
-      box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
-      border-radius: 10px;
+      top: 1rem;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 1rem;
+    }
 
-      img {
-        border-radius: 10px;
-        width: 6rem;
-        height: 6rem;
+    .bottomButtons {
+      position: absolute;
+      bottom: 1rem;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 1rem;
+
+      .leftButtons {
+        ion-button {
+          --background: rgba(var(--ion-color-medium-rgb), .8);
+        }
+      }
+
+      .rightButtons ion-button {
+        height: 35px;
+        font-size: 1rem;
       }
     }
 
-    .subTitle {
-      padding-top: 0.3rem;
+    #headerImage {
+      border-radius: 0 0 2rem 2rem;
     }
   }
 
-  .text {
-    padding: 0 1rem;
+  .mainContent {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+
+    ion-button {
+      --background: rgba(var(--ion-color-medium-rgb), 1);
+    }
   }
 }

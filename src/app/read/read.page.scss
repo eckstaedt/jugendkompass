@@ -1,0 +1,22 @@
+ion-content {
+    --padding-bottom: 4rem;
+
+    .title {
+        padding-left: 1rem;
+        font-size: 1.3rem;
+    }
+
+    ion-slides {
+        padding-left: 1rem;
+
+        ion-slide {
+            margin-top: 15px !important;
+        }
+
+        img {
+            border-radius: 1rem;
+            border: 2px solid var(--ion-color-light);
+        }
+    }
+    
+}

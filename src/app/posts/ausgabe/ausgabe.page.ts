@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
-import { Ausgabe } from 'src/app/utils/interfaces';
+import { Ausgabe, FirebasePost } from 'src/app/utils/interfaces';
 import { Storage } from '@ionic/storage';
 
 import { FilesystemDirectory } from '@capacitor/filesystem';
@@ -22,6 +22,8 @@ import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { AudioService } from 'src/app/services/audio/audio.service';
 import { Utils } from 'src/app/utils/utils';
+import { take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ausgabe',
@@ -39,6 +41,31 @@ export class AusgabePage implements OnInit {
   public fileUploader: FileUploader = new FileUploader({});
   private uploadItem: string;
   public editMode: boolean = false;
+  public posts: FirebasePost[];
+  public showMore: boolean = false;
+  public slideOpts = {
+    slidesPerView: 1.5,
+    spaceBetween: 10,
+    freeMode: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 1.5,
+        spaceBetween: 10,
+      },
+      480: {
+        slidesPerView: 3.2,
+        spaceBetween: 10,
+      },
+      640: {
+        slidesPerView: 4.4,
+        spaceBetween: 30,
+      },
+      1080: {
+        slidesPerView: 5.4,
+        spaceBetween: 40,
+      },
+    },
+  };
 
   constructor(
     private platform: Platform,
@@ -52,6 +79,7 @@ export class AusgabePage implements OnInit {
     private toastController: ToastController,
     private audioService: AudioService,
     private utils: Utils,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -104,6 +132,9 @@ export class AusgabePage implements OnInit {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     await this.firebaseService.loadCategories();
     this.ausgabe = this.firebaseService.getAusgabe(id);
+    this.posts = (await this.firebaseService.getPosts().pipe(take(1)).toPromise()).filter((post: FirebasePost) =>
+      String(post.ausgabe?.id) === String(id)
+    );
   }
 
   async downloadPdf() {
@@ -484,5 +515,13 @@ export class AusgabePage implements OnInit {
       url: `https://jugendkompass.com/tabs/ausgabe/${this.ausgabe.id}`,
       dialogTitle: 'Impuls teilen',
     });
+  }
+
+  openPost(post: FirebasePost) {
+    this.router.navigateByUrl(`/tabs/lesen/${post.id}`);
+  }
+
+  toggleShowMore() {
+    this.showMore = !this.showMore;
   }
 }

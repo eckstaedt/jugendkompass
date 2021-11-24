@@ -6,6 +6,7 @@ import {
   FirebasePost,
   CategoryData,
   Ausgabe,
+  Tag,
 } from '../../utils/interfaces';
 import { Utils } from '../../utils/utils';
 import { HttpClient } from '@angular/common/http';
@@ -17,7 +18,7 @@ import { FileLikeObject } from 'ng2-file-upload';
 import { getDownloadURL, Storage, ref, uploadBytesResumable, UploadTask } from '@angular/fire/storage';
 import { Functions, httpsCallable, HttpsCallableResult } from '@angular/fire/functions';
 import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
-import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData, addDoc, query, orderBy } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ import { Firestore, collection, doc, setDoc, docData, updateDoc, collectionData,
 export class FirebaseService {
   subscriber: Subscriber<boolean>;
   rubrics: Category[];
+  tags: Tag[];
   ausgaben: Ausgabe[];
   readArticles: FirebasePost[] = [];
   posts: FirebasePost[];
@@ -45,6 +47,7 @@ export class FirebaseService {
 
   async init() {
     await this.loadCategories();
+    await this.loadTags();
   }
 
   async sendTestPush(notification: any, data: any) {
@@ -140,8 +143,34 @@ export class FirebaseService {
     }
   }
 
+  async loadTags() {
+    if (this.tags) {
+      return Promise.resolve();
+    } else {
+      const tags: any = await collectionData(collection(this.firestore, 'tags'))
+        .pipe(take(1))
+        .toPromise();
+
+      this.tags = tags
+        .sort((a: Category, b: Category) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        })
+        .reverse();
+    }
+  }
+
   getAusgaben(): Ausgabe[] {
     return this.ausgaben;
+  }
+
+  getTags(): Tag[] {
+    return this.tags;
   }
 
   getAusgabe(id: string): Ausgabe {
@@ -170,6 +199,11 @@ export class FirebaseService {
     }
   }
 
+  async getCurrentImpulse() {
+    await this.getImpulses().pipe(take(1)).toPromise();
+    return this.impulses[1];
+  }
+
   updateAusgabe(id: string, data: any) {
     return updateDoc(doc(this.firestore, `categories/${id}`), data);
   }
@@ -182,7 +216,7 @@ export class FirebaseService {
     return updateDoc(doc(this.firestore, `posts/${id}`), data);
   }
 
-  getPosts() {
+  getPosts(): Observable<any> {
     return new Observable(observer => {
       collectionData(collection(this.firestore, 'posts'))
         .subscribe((posts: FirebasePost[]) => {
@@ -216,7 +250,7 @@ export class FirebaseService {
 
   getImpulses() {
     return new Observable(observer => {
-      collectionData(collection(this.firestore, 'impulses'))
+      collectionData(query(collection(this.firestore, 'impulses'), orderBy("date", "desc")))
         .subscribe((impulses: FirebasePost[]) => {
           this.impulses = impulses;
           observer.next(this.impulses);
@@ -252,10 +286,17 @@ export class FirebaseService {
         this.rubrics,
         this.ausgaben,
       );
+      const tags: Tag[] = [];
+
+      for (const tagId of post.tags) {
+        tags.push(this.tags.find((t: Tag) => t.id === String(tagId)));
+      }
+
       return {
         ...post,
         rubrik: categroyData.rubrik,
-        ausgabe: categroyData.ausgabe
+        ausgabe: categroyData.ausgabe,
+        tags,
       };
     });
   }

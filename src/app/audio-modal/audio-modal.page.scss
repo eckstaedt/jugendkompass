@@ -1,0 +1,32 @@
+ion-content {
+    --background: var(--ion-color-light);
+
+    ion-label {
+        color: var(--ion-color-light-contrast)
+    }
+
+    .controlRow {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .playButton {
+            width: 60px !important;
+            height: 60px !important;
+        }
+    }
+
+    .songLabel {
+        padding: 0 1rem;
+    }
+    
+    .imageWrapper {
+        padding: 2rem 3rem;
+    
+        img {
+            border-radius: 2rem;
+        }
+    }
+}

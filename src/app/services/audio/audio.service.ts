@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Howl } from 'howler';
 import { Observable } from 'rxjs';
+import { FirebasePost } from 'src/app/utils/interfaces';
 @Injectable({
   providedIn: 'root',
 })
@@ -8,17 +9,12 @@ export class AudioService {
   private sound: any;
   private loadedSound: any;
   private loadedTitle: string;
-  private observer: any;
   private titleObserver: any;
   private title: string;
   private playing = false;
+  private currentPost: FirebasePost;
 
-  constructor() {}
-
-  onChange(): Observable<any> {
-    return new Observable(observer => {
-      this.observer = observer;
-    });
+  constructor() {
   }
 
   onTitleChange(): Observable<any> {
@@ -27,17 +23,26 @@ export class AudioService {
     });
   }
 
-  loadNewAudio(audioUrl: string, title: string) {
+  loadNewAudio(audioUrl: string, post: FirebasePost) {
     this.loadedSound = new Howl({
       html5: true,
       src: [audioUrl],
     });
 
-    this.loadedTitle = title;
+    this.currentPost = post;
+    this.loadedTitle = post.title;
+  }
+
+  getCurrentPost(): FirebasePost {
+    return this.currentPost;
   }
 
   getTitle(): string {
     return this.title;
+  }
+
+  getPlaying(): boolean {
+    return this.playing;
   }
 
   getDuration(): number {
@@ -55,9 +60,7 @@ export class AudioService {
   stop() {
     this.sound.stop();
     this.title = '';
-    this.titleObserver.next({
-      title: '',
-    });
+    this.titleObserver.next('');
   }
 
   playNew() {
@@ -68,28 +71,16 @@ export class AudioService {
     this.sound = this.loadedSound;
     this.sound.play();
     this.playing = true;
-    this.observer.next({
-      title: this.title,
-      playing: true,
-    });
-    this.titleObserver.next({
-      title: this.title,
-    });
+    this.titleObserver.next(this.title);
   }
 
   play() {
     if (this.playing) {
       this.sound.pause();
       this.playing = false;
-      this.observer.next({
-        playing: false,
-      });
     } else {
       this.sound.play();
       this.playing = true;
-      this.observer.next({
-        playing: true,
-      });
     }
   }
 
@@ -97,9 +88,10 @@ export class AudioService {
     if (this.playing) {
       this.sound.pause();
       this.playing = false;
-      this.observer.next({
-        playing: false,
-      });
     }
+  }
+
+  changeRate(rate: number): void {
+    this.sound.rate(rate);
   }
 }

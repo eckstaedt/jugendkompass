@@ -296,6 +296,7 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
       excerpt: post.excerpt.rendered,
       categories: post.categories,
       readingTime: post.readingTime,
+      tags: post.tags,
       postImg: post._embedded['wp:featuredmedia']
         ? post._embedded['wp:featuredmedia'][0].media_details.sizes.large
           ? post._embedded['wp:featuredmedia'][0].media_details.sizes.large
@@ -342,6 +343,39 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
 
   await batch.commit();
   return "Successfully updated categories";
+});
+
+exports.syncTagsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+  let tags: any[];
+
+  try {
+    const options: any = {
+      uri: `${url}tags?_embed&per_page=100`,
+    };
+    const res: any = await request.get(options);
+    tags = JSON.parse(res);
+  } catch (error) {
+    return `Could not load tags from Wordpress (${url}) ${error}`;
+  }
+
+  const batch = db.batch();
+
+  for (const tag of tags) {
+    if (tag.count) {
+      const postRef = db.collection("tags").doc(`${tag.id}`);
+      batch.set(postRef, {
+        id: `${tag.id}`,
+        name: tag.name,
+        description: tag.description,
+        taxonomy: tag.taxonomy
+      }, {
+        merge: true
+      });
+    }
+  }
+
+  await batch.commit();
+  return "Successfully updated tags";
 });
 
 exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {

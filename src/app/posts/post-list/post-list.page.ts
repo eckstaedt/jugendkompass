@@ -76,7 +76,6 @@ export class PostListPage implements OnInit {
     private modalController: ModalController,
     private toastController: ToastController,
     private firebaseService: FirebaseService,
-    private utils: Utils,
   ) { }
 
   async ngOnInit() {

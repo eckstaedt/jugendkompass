@@ -1,29 +1,59 @@
-ion-toolbar {
-  border-top: 0.55px solid
-    var(
-      --ion-tab-bar-border-color,
-      var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.2)))
-    );
-}
-
-.songLabel {
-  padding: 1rem;
+ion-tab-bar {
   position: absolute;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 80%;
-  text-overflow: ellipsis;
-}
-
-.songRange {
-  top: 1.8rem;
-}
-
-.close {
-  position: absolute;
+  bottom: 1rem;
   right: 0;
+  width: 95%;
+  margin: auto;
+  left: 0;
+  border: none;
+  border-radius: 2rem;
 }
 
-ion-range {
-  --bar-background: var(--ion-color-primary-contrast);
+.musicButton {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 2rem;
+  z-index: 99;
+
+  -webkit-animation: fadein 1s;
+  /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 1s;
+  /* Firefox < 16 */
+  -ms-animation: fadein 1s;
+  /* Internet Explorer */
+  -o-animation: fadein 1s;
+  /* Opera < 12.1 */
+  animation: fadein 1s;
+
+  #wave {
+    height: 50px;
+    width: 40px;
+    fill: #fff;
+  }
+
+  @for $i from 1 through 9 {
+    #Line_#{$i} {
+      animation: pulse 0.5s infinite;
+      animation-delay: $i * .15s;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scaleY(1);
+      transform-origin: 50% 50%;
+    }
+
+    50% {
+      transform: scaleY(.7);
+      transform-origin: 50% 50%;
+    }
+
+    100% {
+      transform: scaleY(1);
+      transform-origin: 50% 50%;
+    }
+  }
 }

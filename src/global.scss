@@ -130,3 +130,42 @@ body.dark {
   text-align: right;
   color: var(--ion-color-primary);
 }
+
+ion-button[shape=circle] {
+  --border-radius: 50%;
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 35px;
+  height: 35px;
+
+  ion-icon {
+    font-size: 1.4rem;
+  }
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.playModal {
+  opacity: .95;
+}

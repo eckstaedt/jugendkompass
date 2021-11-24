@@ -1,0 +1,27 @@
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="tags" size="12" size-md="6" size-xl="4">
+        <p class="title">Kategorien</p>
+        <ion-slides [options]="slideOptsTags">
+          <ion-slide *ngFor="let tag of tags">
+            <ion-button color="light" size="small">
+              {{ tag.name }}
+            </ion-button>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+      <ion-col *ngIf="ausgaben" size="12" size-md="6" size-xl="4">
+        <p class="title">Ausgaben</p>
+        <ion-slides [options]="slideOpts">
+          <ion-slide (click)="openAusgabe(ausgabe)" *ngFor="let ausgabe of ausgaben">
+            <div>
+              <img [src]="ausgabe.imageUrl" />
+              <div>Ausgabe {{ ausgabe.name }}</div>
+            </div>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

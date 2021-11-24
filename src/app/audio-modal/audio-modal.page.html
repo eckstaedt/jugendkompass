@@ -1,0 +1,29 @@
+<ion-content>
+  <ion-button fill="clear" class="close" size="small" (click)="close()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+  <div class="imageWrapper">
+    <img [src]="post.postImg.source_url" />
+  </div>
+  <div class="controlRow">
+    <ion-button *ngIf="faster" fill="clear" (click)="changeRate()">
+      x1
+    </ion-button>
+    <ion-button *ngIf="!faster" fill="clear" (click)="changeRate()">
+      x1,5
+    </ion-button>
+    <ion-button class="playButton" shape="circle" size="large" (click)="play()">
+      <ion-icon *ngIf="!playing" name="play"></ion-icon>
+      <ion-icon *ngIf="playing" name="pause"></ion-icon>
+    </ion-button>
+    <ion-button fill="clear">
+      <ion-icon name="heart-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <ion-label class="songLabel">{{ post.title }}</ion-label>
+  <ion-range class="songRange" #range [(ngModel)]="progress" min="0" max="1000" (touchstart)="onRangeFocus()"
+    (touchend)="seek()" (mousedown)="onRangeFocus()" (mouseup)="seek()">
+    <ion-label slot="start">{{ curTime }}</ion-label>
+    <ion-label slot="end">{{ duration }}</ion-label>
+  </ion-range>
+</ion-content>

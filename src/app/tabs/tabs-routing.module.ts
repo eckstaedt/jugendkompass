@@ -14,53 +14,57 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'posts',
+        path: 'lesen',
         loadChildren: () =>
-          import('./../posts/post-list/post-list.module').then(
-            m => m.PostListPageModule,
+          import('./../read/read.module').then(
+            m => m.ReadPageModule,
           ),
       },
       {
-        path: 'posts/:id',
+        path: 'suche',
+        loadChildren: () => import('./../search/search.module').then( m => m.SearchPageModule)
+      },
+      {
+        path: 'lesen/:id',
         loadChildren: () =>
           import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       {
-        path: 'posts/ausgabe/:id',
+        path: 'lesen/ausgabe/:id',
         loadChildren: () =>
           import('./../posts/ausgabe/ausgabe.module').then(
             m => m.AusgabePageModule,
           ),
       },
       {
-        path: 'settings',
+        path: 'einstellungen',
         loadChildren: () =>
           import('./../settings/settings/settings.module').then(
             m => m.SettingsPageModule,
           ),
       },
       {
-        path: 'settings/imprint',
+        path: 'einstellungen/imprint',
         loadChildren: () =>
           import('./../settings/imprint/imprint.module').then(
             m => m.ImprintPageModule,
           ),
       },
       {
-        path: 'settings/dataprotection',
+        path: 'einstellungen/dataprotection',
         loadChildren: () =>
           import('./../settings/dataprot/dataprot.module').then(
             m => m.DataprotPageModule,
           ),
       },
       {
-        path: 'settings/push',
+        path: 'einstellungen/push',
         loadChildren: () =>
           import('./../admin/push/push.module').then(m => m.PushPageModule),
         canLoad: [AdminGuardService],
       },
       {
-        path: 'settings/feedback-summary',
+        path: 'einstellungen/feedback-summary',
         loadChildren: () =>
           import('./../admin/feedback-summary/feedback-summary.module').then(
             m => m.FeedbackSummaryPageModule,
@@ -68,7 +72,7 @@ const routes: Routes = [
         canLoad: [AdminGuardService],
       },
       {
-        path: 'settings/analytics',
+        path: 'einstellungen/analytics',
         loadChildren: () =>
           import('./../admin/analytics/analytics.module').then(
             m => m.AnalyticsPageModule,
@@ -88,14 +92,14 @@ const routes: Routes = [
           import('./../posts/post/post.module').then(m => m.PostPageModule),
       },
       {
-        path: 'settings/text-size',
+        path: 'einstellungen/text-size',
         loadChildren: () =>
           import('./../settings/text-size/text-size.module').then(
             m => m.TextSizePageModule,
           ),
       },
       {
-        path: 'settings/push-settings',
+        path: 'einstellungen/push-settings',
         loadChildren: () => import('./../push-settings/push-settings.module').then( m => m.PushSettingsPageModule)
       },
       {

@@ -1,7 +1,13 @@
+ion-toolbar {
+  --background: transparent;
+  --border-color: transparent;
+  padding: 1rem;
+}
+
 .coverCard {
   margin: auto;
   margin-top: 1rem;
-  max-width: 15rem;
+  max-width: 10rem;
 }
 
 ion-slides {
@@ -19,15 +25,28 @@ ion-fab-button {
   pointer-events: none;
 }
 
-.text {
-  padding: 0 1rem;
-}
-
 ion-card {
   box-shadow: none;
+}
 
-  img {
-    border: 2px solid var(--ion-color-light);
-    border-radius: 4px;
-  }
+.mainContent {
+  padding: 1rem 1.5rem 1rem 1.5rem;
+}
+
+ion-content {
+  --padding-bottom: 2.5rem;
+}
+
+img {
+  border: 2px solid var(--ion-color-light);
+  border-radius: 1rem;
+}
+
+.shortText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* number of lines to show */
+          line-clamp: 5; 
+  -webkit-box-orient: vertical;
 }

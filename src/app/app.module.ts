@@ -25,6 +25,7 @@ import { ChartsModule } from 'ng2-charts';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.module';
+import { AudioModalPageModule } from './audio-modal/audio-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.m
     FilterModalPageModule,
     FeedbackModalPageModule,
     AnswersModalPageModule,
+    AudioModalPageModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
       const firestore = getFirestore();

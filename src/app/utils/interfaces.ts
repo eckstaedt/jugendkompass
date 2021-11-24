@@ -1,17 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-export interface CalendarDate {
-  name: string;
-  start: firebase.firestore.Timestamp;
-  startUnix: number;
-  end: firebase.firestore.Timestamp;
-  endUnix: number;
-  location?: string;
-  lat?: number;
-  long?: number;
-}
-
 export enum PostStatus {
   PUBLISH = 'publish',
 }
@@ -47,6 +36,7 @@ export interface FirebasePost {
   articleWasRead: boolean;
   audioPlays?: number;
   pushSend?: boolean;
+  tags: number[];
 }
 
 export interface Category {
@@ -58,6 +48,14 @@ export interface Category {
   name: string;
   parent: number;
   slug: string;
+  taxonomy: string;
+}
+
+export interface Tag {
+  count: number;
+  description: string;
+  id: string;
+  name: string;
   taxonomy: string;
 }
 

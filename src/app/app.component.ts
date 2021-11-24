@@ -108,7 +108,7 @@ export class AppComponent {
   }
 
   navigateToAusgabe(id: string) {
-    this.router.navigateByUrl(`/tabs/posts/ausgabe/${id}`);
+    this.router.navigateByUrl(`/tabs/lesen/ausgabe/${id}`);
   }
 
   navigateToImpulse(id: string) {
@@ -248,9 +248,9 @@ export class AppComponent {
   registerEvents(): void {
     this.platform.backButton.subscribeWithPriority(-1, () => {
       if (
-        this.router.url === '/tabs/posts' ||
+        this.router.url === '/tabs/lesen' ||
         this.router.url === '/tabs/favorites' ||
-        this.router.url === '/tabs/settings' ||
+        this.router.url === '/tabs/einstellungen' ||
         this.router.url === '/'
       ) {
         App.exitApp();
