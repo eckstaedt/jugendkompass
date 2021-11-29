@@ -3,8 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AudioService } from 'src/app/services/audio/audio.service';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import {
-  Platform,
-  ActionSheetController,
   IonBackButton,
   ToastController,
   AlertController,
@@ -49,8 +47,6 @@ export class PostPage implements OnInit {
     private router: Router,
     private audioService: AudioService,
     private photoViewer: PhotoViewer,
-    private platform: Platform,
-    private actionSheetController: ActionSheetController,
     private storage: Storage,
     private routerService: RouterService,
     private firebaseService: FirebaseService,

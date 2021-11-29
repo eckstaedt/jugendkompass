@@ -21,6 +21,7 @@ const options: cors.CorsOptions = {
 };
 const url: string = 'https://wp.jugendkompass.com/wp-json/wp/v2/';
 const impulsesId: number = 9;
+const vdtId: number = 42;
 // const url: string = 'https://eckstaedt-webdesign.com/wp-json/wp/v2/';
 // const impulsesId: number = 19;
 
@@ -272,7 +273,9 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
   try {
       await getPosts();
   } catch (error) {
+    if (!posts.length) {
       return `Could not load posts from Wordpress (${url}) ${error}`;
+    }
   }
 
   const batch = db.batch();
@@ -281,6 +284,8 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
     let postRef: any;
     if (post.categories.find((cat: number) => cat === impulsesId)) {
       postRef = db.collection("impulses").doc(`${post.id}`);
+    } else if (post.categories.find((cat: number) => cat === vdtId)) {
+      postRef = db.collection("vdt").doc(`${post.id}`);
     } else {
       postRef = db.collection("posts").doc(`${post.id}`);
     }

@@ -1,5 +1,4 @@
 import { Component, NgZone } from '@angular/core';
-import { version } from '../../package.json';
 import {
   Platform,
   AlertController,
@@ -24,6 +23,7 @@ const fcm = new FCM();
 const { App, PushNotifications, Network } = Plugins;
 const { SplashScreen } = Plugins;
 
+const version = "1.2.0";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

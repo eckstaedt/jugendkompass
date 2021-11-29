@@ -1,0 +1,39 @@
+<ion-header #header class="ion-no-border">
+  <ion-toolbar>
+    <img class="logo" />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Vers des Tages</ion-card-title>
+    </ion-card-header>
+    <ion-card-content *ngIf="vdt">
+      <div class="vers" [innerHtml]="vdt.content"></div>
+      <div class="divider"></div>
+      <div class="versStelle" [innerHtml]="vdt.title"></div>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Artikel, die dir gefallen könnten</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-slides
+        [options]="slideOpts"
+      >
+        <ion-slide
+          (click)="openPost(post.id)"
+          *ngFor="let post of myPosts"
+        >
+          <div>
+            <img [src]="post.postImg?.source_url" />
+            <p class="cat">{{ post.ausgabe.name}} | {{post.rubrik.name }}</p>
+            <p>{{ post.title }}</p>
+          </div>
+        </ion-slide>
+    </ion-slides>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

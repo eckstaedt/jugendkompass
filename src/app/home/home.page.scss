@@ -1,0 +1,50 @@
+ion-toolbar {
+    --padding-top: 0.5rem;
+    --padding-start: 0.5rem;
+    --padding-end: 0.5rem;
+  
+    img {
+      height: 2rem;
+      content: url('../../assets/logo.png');
+    }
+}
+
+ion-card-content {
+    .divider {
+        background-color: var(--ion-color-primary);
+        height: 2px;
+        width: 20%;
+        margin: auto;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .versStelle {
+        color: var(--ion-color-primary);
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    .vers {
+        text-align: center;
+    }
+
+    img {
+      border-radius: 1rem;
+    }
+
+    ion-slide {
+      img {
+        max-height: 8rem;
+      }
+
+      p {
+        font-size: .9rem;
+
+        &.cat {
+            font-size: .8rem;
+            color: var(--ion-color-primary);
+        }
+      }
+    }
+}

@@ -1,4 +1,3 @@
-import { version } from '../../../../package.json';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Plugins } from '@capacitor/core';
@@ -13,6 +12,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 import { Utils } from 'src/app/utils/utils';
 const { Share } = Plugins;
 
+const version = "1.2.0";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',

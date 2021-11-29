@@ -18,6 +18,7 @@ import { FileLikeObject } from 'ng2-file-upload';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Storage } from '@ionic/storage';
 
 const fcm = new FCM();
 
@@ -28,13 +29,14 @@ export class FirebaseService {
   subscriber: Subscriber<boolean>;
   rubrics: Category[];
   ausgaben: Ausgabe[];
-  readArticles: FirebasePost[] = [];
   posts: FirebasePost[];
   impulses: FirebasePost[];
+  vdt: FirebasePost;
   categories: Category[];
   legalPages: any[];
 
   constructor(
+    private storage: Storage,
     private db: AngularFirestore,
     private fireStorage: AngularFireStorage,
     private utils: Utils,
@@ -235,6 +237,52 @@ export class FirebaseService {
     });
   }
 
+  async getMyPosts(): Promise<FirebasePost[]> {
+    await this.getPosts().pipe(take(1)).toPromise();
+    const readArticlesString: string | undefined = await this.storage.get(
+      'readArticles',
+    );
+
+    if (!readArticlesString) {
+      return this.posts.slice(0, 14);
+    }
+
+    const readArticleIds: string[] = JSON.parse(readArticlesString);
+    const readArticles: FirebasePost[] = readArticleIds.map((id: string): FirebasePost => {
+      return this.posts.find((post: FirebasePost) => post.id === id);
+    });
+    let categories: number[] = [];
+    let categoryCounts: number[] = [];
+
+    for (const post of readArticles) {
+      categories = categories.concat(post.categories);
+    }
+
+    categories.forEach((x: number) => { categoryCounts["cat" + x] = (categoryCounts["cat" + x] || 0) + 1; });
+    categoryCounts = categoryCounts.sort();
+
+    let myPosts: FirebasePost[] = [];
+
+    for (const cat in categoryCounts) {
+      if (myPosts.length > 9) {
+        break;
+      }
+
+      const catId: number = Number(cat.slice(3));
+      const posts: FirebasePost[] = this.posts.filter((post: FirebasePost) =>
+        post.categories.includes(catId) && !readArticleIds.includes(post.id)
+      );
+
+      if (posts.length > 5) {
+        posts.length = 5;
+      }
+
+      myPosts = myPosts.concat(posts);
+    }
+
+    return this.utils.shuffleArray(myPosts);
+  }
+
   getImpulses() {
     return new Observable(observer => {
       this.db
@@ -243,6 +291,18 @@ export class FirebaseService {
         .subscribe((impulses: FirebasePost[]) => {
           this.impulses = impulses;
           observer.next(this.impulses);
+        });
+    });
+  }
+
+  getVdt() { // TODO
+    return new Observable(observer => {
+      this.db
+        .collection('vdt', (ref: any) => ref.orderBy('date', 'desc'))
+        .valueChanges()
+        .subscribe((vdt: FirebasePost[]) => {
+          this.vdt = vdt[0];
+          observer.next(this.vdt);
         });
     });
   }

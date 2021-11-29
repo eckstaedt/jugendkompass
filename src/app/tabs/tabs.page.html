@@ -30,17 +30,21 @@
     </div>
   </ion-toolbar>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="impulse">
-      <ion-icon name="pulse"></ion-icon>
-      <!-- <ion-label>Impulse</ion-label> -->
+    <ion-tab-button tab="home">
+      <ion-icon name="home"></ion-icon>
+      <!-- <ion-label>Dashboard</ion-label> -->
+    </ion-tab-button>
+    <ion-tab-button [disabled]="!online" tab="posts">
+      <ion-icon name="list"></ion-icon>
+      <!-- <ion-label>Artikel</ion-label> -->
     </ion-tab-button>
     <ion-tab-button *ngIf="isApp" tab="favorites">
       <ion-icon name="star"></ion-icon>
       <!-- <ion-label>Favoriten</ion-label> -->
     </ion-tab-button>
-    <ion-tab-button [disabled]="!online" tab="posts">
-      <ion-icon name="list"></ion-icon>
-      <!-- <ion-label>Artikel</ion-label> -->
+    <ion-tab-button tab="impulse">
+      <ion-icon name="pulse"></ion-icon>
+      <!-- <ion-label>Impulse</ion-label> -->
     </ion-tab-button>
     <ion-tab-button [disabled]="!online" tab="settings">
       <ion-icon name="cog"></ion-icon>
