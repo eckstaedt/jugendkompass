@@ -87,10 +87,10 @@ export class TabsPage {
         this.progress =
           (this.audioService.getSeek() / this.audioService.getDuration()) *
             1000 || 0;
-        this.curTime = this.utils.getMinString(
+        this.curTime = this.utils.getDurationString(
           Math.round(this.audioService.getSeek()),
         );
-        this.duration = this.utils.getMinString(
+        this.duration = this.utils.getDurationString(
           Math.round(this.audioService.getDuration()),
         );
       }
@@ -104,7 +104,7 @@ export class TabsPage {
     this.movingSlider = true;
     const endTime = this.audioService.getDuration();
     this.sliderSubscription = this.range.ionChange.subscribe(() => {
-      this.curTime = this.utils.getMinString(
+      this.curTime = this.utils.getDurationString(
         Math.round((+this.range.value / 1000) * endTime),
       );
     });

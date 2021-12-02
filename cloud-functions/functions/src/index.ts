@@ -5,6 +5,7 @@ import * as express from 'express';
 import * as uuid from 'uuid';
 import * as cors from 'cors';
 import * as request from "request-promise-native";
+import * as dayjs from 'dayjs';
 
 const options: cors.CorsOptions = {
   allowedHeaders: [
@@ -253,6 +254,77 @@ exports.sendPush = functions.https.onCall((data: any, _: functions.https.Callabl
   return data;
 });
 
+exports.sendVdt = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+  const res: any = await db
+    .collection("vdt")
+    .where('date', '>=', dayjs().startOf('d').toISOString())
+    .where('date', '<=', dayjs().endOf('d').toISOString())
+    .orderBy('date', 'desc')
+    .limit(1)
+    .get();
+
+  let success = false;
+
+  res.forEach((snap: any) => {
+    const data = snap.data();
+
+    const payload: admin.messaging.MessagingPayload = {
+      notification: {
+        title: "Vers des Tages",
+        body: `${data.content.replace(/<[^>]+>/g, '')} (${data.title})`.replace(/(\r\n|\n|\r)/gm, ""),
+      },
+      // data: data.data
+    };
+    
+    admin.messaging().sendToTopic('vdt', payload);
+
+    success = true;
+  });
+
+  if (success) {
+    return "VDT send successfully";
+  } else {
+    return "No VDT available";
+  }
+});
+
+exports.sendImpulse = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+  const res: any = await db
+    .collection("impulses")
+    .where('date', '>=', dayjs().subtract(1, 'd').toISOString())
+    .where('date', '<=', dayjs().toISOString())
+    .orderBy('date', 'desc')
+    .limit(1)
+    .get();
+
+  let success = false;
+
+  res.forEach((snap: any) => {
+    const data = snap.data();
+
+    const payload: admin.messaging.MessagingPayload = {
+      notification: {
+        title: "Neue Andacht",
+        body: `Die neue Andacht „${data.title}" ist in der Jugendkompass-App online!`,
+        image: data.postImg?.source_url,
+      },
+      data: {
+        impulse: data.id.toString()
+      }
+    };
+    
+    admin.messaging().sendToTopic('impulse', payload);
+
+    success = true;
+  });
+
+  if (success) {
+    return "Impulse send successfully";
+  } else {
+    return "No Impulse available";
+  }
+});
+
 exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
   let posts: any[] = [];
   let page: number = 1;
@@ -292,6 +364,7 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
     batch.set(postRef, {
       id: `${post.id}`,
       date: post.date,
+      fbDate: admin.firestore.Timestamp.fromDate(new Date(post.date)),
       modified: post.modified,
       status: post.status,
       type: post.type,

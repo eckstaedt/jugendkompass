@@ -26,7 +26,7 @@
           name="share-outline"
         ></ion-icon>
       </ion-button>
-      <ion-button *ngIf="isApp" (click)="setPostFavorite()" [disabled]="!post?.id">
+      <ion-button  (click)="setPostFavorite()" [disabled]="!post?.id">
         <ion-icon
           slot="icon-only"
           [name]="post?.isFavorite ? 'star' : 'star-outline'"
@@ -58,7 +58,7 @@
         />
       </div>
       <ion-card-content class="ion-text-center">
-        <h2>{{ post.title }}</h2>
+        <h2 [innerHTML]="post.title"></h2>
         <ion-text color="medium">
           <div style="display: flex" class="ion-justify-content-center">
             <p *ngIf="post.ausgabe && !post.rubrik" class="subTitle">

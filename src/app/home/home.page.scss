@@ -36,6 +36,8 @@ ion-card-content {
     ion-slide {
       img {
         max-height: 8rem;
+        border: 2px solid var(--ion-color-light);
+        border-radius: 1rem;
       }
 
       p {

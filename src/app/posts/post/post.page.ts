@@ -181,43 +181,38 @@ export class PostPage implements OnInit {
 
   async setPostFavorite() {
     if (!this.post.isFavorite) {
-      const loading = await this.loadingController.create({
-        message: 'Beitrag wird offline gespeichert...',
-      });
-      loading.present();
-      if (
-        this.post.postImg &&
-        !this.post.postImg.source_url.startsWith('data')
-      ) {
-        await this.firebaseService
-          .getBase64FromUrl(this.post.postImg.source_url)
-          .then((res: string) => (this.post.base64Img = res));
-      }
-      for (const image of Array.from(
-        document.querySelectorAll('.postContent img'),
-      )) {
-        const imageSrc: string = (image as HTMLImageElement).src;
-        if (imageSrc.startsWith('data')) {
-          const base64: any = await this.firebaseService.getBase64FromUrl(
-            imageSrc,
-          );
-          this.post.content = this.post.content.replace(imageSrc, base64);
-        }
-      }
+      // if (
+      //   this.post.postImg &&
+      //   !this.post.postImg.source_url.startsWith('data')
+      // ) {
+      //   await this.firebaseService
+      //     .getBase64FromUrl(this.post.postImg.source_url)
+      //     .then((res: string) => (this.post.base64Img = res));
+      // }
+      // for (const image of Array.from(
+      //   document.querySelectorAll('.postContent img'),
+      // )) {
+      //   const imageSrc: string = (image as HTMLImageElement).src;
+      //   if (imageSrc.startsWith('data')) {
+      //     const base64: any = await this.firebaseService.getBase64FromUrl(
+      //       imageSrc,
+      //     );
+      //     this.post.content = this.post.content.replace(imageSrc, base64);
+      //   }
+      // }
 
-      if (this.post.audio) {
-        this.post.audio.base64 = (await this.firebaseService.getBase64FromUrl(
-          this.post.audio.url,
-          false,
-        )) as string;
-      }
+      // if (this.post.audio) {
+      //   this.post.audio.base64 = (await this.firebaseService.getBase64FromUrl(
+      //     this.post.audio.url,
+      //     false,
+      //   )) as string;
+      // }
       this.post.isFavorite = true;
       this.favoritePosts.push(this.post);
       this.storage.set('favoritePosts', JSON.stringify(this.favoritePosts));
       this.firebaseService.incrementAnalyticsField(
         AnalyticsField.FAVORITE_ADDED,
       );
-      loading.dismiss();
     } else {
       this.post.isFavorite = false;
       this.post.base64Img = null;
@@ -269,7 +264,7 @@ export class PostPage implements OnInit {
                 sound.on('load', () => {
                   const audio: any = {
                     ...res,
-                    duration: this.utils.getMinString(
+                    duration: this.utils.getDurationString(
                       Math.round(sound.duration()),
                     ),
                   };

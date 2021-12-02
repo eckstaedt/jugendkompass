@@ -39,7 +39,10 @@
             <ion-grid>
               <ion-row>
                 <ion-col class="cardColumn image" size="4">
-                  <img *ngIf="post.base64Img" [src]="post.base64Img" />
+                  <img
+                    *ngIf="post.postImg || post.base64Img"
+                    [src]="post.base64Img ? post.base64Img : post.postImg.source_url"
+                  />
                 </ion-col>
                 <ion-col class="cardColumn text" size="8">
                   <div class="postHeader">

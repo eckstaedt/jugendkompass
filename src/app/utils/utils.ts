@@ -27,18 +27,21 @@ export class Utils {
     toast.present();
   }
 
-  getMinString(time: number): string {
-    const hours: number | string = Math.floor(time / 3600);
+  getDurationString(time: number): string {
+    let hours: number | string = Math.floor(time / 3600);
     let minutes: number | string = Math.floor((time - hours * 3600) / 60);
     let seconds: number | string = time - hours * 3600 - minutes * 60;
 
+    if (hours < 10) {
+      hours = '0' + hours;
+    }
     if (minutes < 10) {
       minutes = '0' + minutes;
     }
     if (seconds < 10) {
       seconds = '0' + seconds;
     }
-    return minutes + ':' + seconds;
+    return `${hours !== '00' ? hours + ':' : ''}` + minutes + ':' + seconds;
   }
 
   getPlatform(): Platforms {

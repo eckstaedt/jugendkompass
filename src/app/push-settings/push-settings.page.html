@@ -30,5 +30,12 @@
       </ion-label>
       <ion-toggle (ionChange)="onImpulseChange()" [(ngModel)]="impulse"></ion-toggle>
     </ion-item>
+    <ion-item lines="full">
+      <ion-label>
+        <h2>Vers des Tages</h2>
+        <h3>1x täglich</h3>
+      </ion-label>
+      <ion-toggle (ionChange)="onVdtChange()" [(ngModel)]="vdt"></ion-toggle>
+    </ion-item>
   </ion-list>
 </ion-content>

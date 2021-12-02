@@ -19,6 +19,7 @@ export interface FirebasePost {
   content: string;
   categories: number[];
   date: string;
+  fbDate: firebase.firestore.Timestamp;
   excerpt: string;
   id: string;
   link: string;

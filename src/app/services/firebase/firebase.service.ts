@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscriber } from 'rxjs';
-import { take, first } from 'rxjs/operators';
+import { take, first, finalize } from 'rxjs/operators';
 import {
   Category,
   FirebasePost,
@@ -19,6 +19,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Storage } from '@ionic/storage';
+import * as dayjs from 'dayjs';
 
 @Injectable({
   providedIn: 'root',
@@ -249,19 +250,23 @@ export class FirebaseService {
     const readArticles: FirebasePost[] = readArticleIds.map((id: string): FirebasePost => {
       return this.posts.find((post: FirebasePost) => post.id === id);
     });
-    let categories: number[] = [];
+    const categories: number[] = [];
     let categoryCounts: number[] = [];
 
     for (const post of readArticles) {
-      categories = categories.concat(post.categories);
+      if (post?.rubrik?.name) {
+        categories.push(Number(post.rubrik.id));
+      }
     }
 
     categories.forEach((x: number) => { categoryCounts["cat" + x] = (categoryCounts["cat" + x] || 0) + 1; });
     categoryCounts = categoryCounts.sort();
 
     let myPosts: FirebasePost[] = [];
+    let count: number = 5;
 
     for (const cat in categoryCounts) {
+
       if (myPosts.length > 9) {
         break;
       }
@@ -271,10 +276,11 @@ export class FirebaseService {
         post.categories.includes(catId) && !readArticleIds.includes(post.id)
       );
 
-      if (posts.length > 5) {
-        posts.length = 5;
+      if (posts.length > count) {
+        posts.length = count;
       }
 
+      count--;
       myPosts = myPosts.concat(posts);
     }
 
@@ -293,10 +299,10 @@ export class FirebaseService {
     });
   }
 
-  getVdt() { // TODO
+  getVdt() {
     return new Observable(observer => {
       this.db
-        .collection('vdt', (ref: any) => ref.orderBy('date', 'desc'))
+        .collection('vdt', (ref: any) => ref.where('date', '>=', dayjs().startOf('d').toISOString()).where('date', '<=', dayjs().endOf('d').toISOString()).orderBy('date', 'desc'))
         .valueChanges()
         .subscribe((vdt: FirebasePost[]) => {
           this.vdt = vdt[0];
@@ -405,10 +411,10 @@ export class FirebaseService {
     });
   }
 
-  async getBase64FromUrl(url: string, redirect: boolean = true) {
+  async getBase64FromUrl(url: string) {
     return new Promise(async (resolve, reject) => {
       const data: Blob = await this.httpClient
-        .get(redirect ? `https://cors.bridged.cc/${url}` : url, {
+        .get(url, {
           responseType: 'blob',
         })
         .toPromise();

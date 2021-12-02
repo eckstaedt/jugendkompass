@@ -22,12 +22,7 @@ import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page
 import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
 
-<<<<<<< HEAD
-const fcm = new FCM();
-
-const version = "1.2.0";
-=======
->>>>>>> ba5a61f... fix capacitor issues
+const version = "1.2.1";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -115,11 +110,21 @@ export class AppComponent {
   }
 
   navigateToAusgabe(id: string) {
-    this.router.navigateByUrl(`/tabs/posts/ausgabe/${id}`);
+    window.setTimeout(() => {
+      this.router.navigateByUrl(`/tabs/posts/ausgabe/${id}`);
+    }, 200);
   }
 
   navigateToImpulse(id: string) {
-    this.router.navigateByUrl(`/tabs/impulse/${id}`);
+    window.setTimeout(() => {
+      this.router.navigateByUrl(`/tabs/impulse/${id}`);
+    }, 200);
+  }
+
+  navigateHome() {
+    window.setTimeout(() => {
+      this.router.navigateByUrl(`/tabs/home`);
+    }, 200);
   }
 
   setupPush() {
@@ -198,6 +203,15 @@ export class AppComponent {
                 id: notification.notification.data.impulse
               }
             );
+          } else if (notification.notification?.data?.vdt) {
+            this.navigateHome();
+            this.firebaseService.incrementAnalyticsField(
+              AnalyticsField.PUSH_OPENED_FROM_OUTSIDE,
+              {
+                type: PushType.VDT,
+                id: 99,
+              }
+            );
           } else {
             this.firebaseService.incrementAnalyticsField(
               AnalyticsField.PUSH_OPENED_FROM_OUTSIDE,
@@ -236,6 +250,14 @@ export class AppComponent {
                       FCM
                       .subscribeTo({ topic: PushType.IMPULSE })
                       .then(() => this.storage.set('pushImpulse', true))
+                      .catch(err => console.log(err));
+                    }
+                  });
+                  this.storage.get('pushVdt').then((isOn: boolean) => {
+                    if (isOn !== false) {
+                      FCM
+                      .subscribeTo({ topic: PushType.VDT })
+                      .then(() => this.storage.set('pushVdt', false))
                       .catch(err => console.log(err));
                     }
                   });

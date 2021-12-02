@@ -107,6 +107,7 @@ export class PostListPage implements OnInit {
   async ionViewWillEnter() {
     const filterData: Category | undefined = this.routerService.getData();
 
+    this.isSearching = false;
     this.areFiltersActive = this.currentAusgabe !== 'all' || this.currentRubrik !== 'all';
     if (filterData) {
       if (this.ausgaben.find((aus: Category) => aus.id === filterData.id)) {

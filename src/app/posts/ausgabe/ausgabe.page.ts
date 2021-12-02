@@ -133,7 +133,11 @@ export class AusgabePage implements OnInit {
               },
             );
 
-            this.fileOpener.open(uri, 'application/pdf');
+            this.fileOpener.open(uri, 'application/pdf').then(() => {
+              console.log("success");
+            }).catch((e) => {
+              console.log(e);
+            });
           }
         });
     } else {

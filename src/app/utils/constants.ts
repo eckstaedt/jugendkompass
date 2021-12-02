@@ -32,4 +32,5 @@ export enum PushType {
   GENERAL = 'general',
   AUSGABE = 'ausgabe',
   IMPULSE = 'impulse',
+  VDT = 'vdt',
 }

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkjugendkompass=self.webpackChunkjugendkompass||[]).push([[8962],{78962:function(n,e,s){s.r(e),s.d(e,{SplashScreenWeb:function(){return t}});var u=s(8239),r=s(68384);class t extends r.Uw{show(n){return(0,u.Z)(function*(){})()}hide(n){return(0,u.Z)(function*(){})()}}}}]);

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSelect, IonContent, DomController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { AppComponent } from 'src/app/app.component';
 import { FirebasePost } from '../utils/interfaces';
 
 @Component({
@@ -27,7 +26,6 @@ export class FavoritesPage implements OnInit {
   isSearching: boolean = false;
 
   constructor(
-    private appComponent: AppComponent,
     private storage: Storage,
     private domCtrl: DomController,
   ) {}

@@ -85,7 +85,7 @@ export class AnalyticsPage implements OnInit {
         const avg: number = Math.round(
           sum / data[`${AnalyticsField.POST_TIME}Data`].length,
         );
-        this.postReadAverage = this.utils.getMinString(avg);
+        this.postReadAverage = this.utils.getDurationString(avg);
       }
       if (data[`${AnalyticsField.CATEGORY_CHANGED}Count`]) {
         this.categoryChangedCount =

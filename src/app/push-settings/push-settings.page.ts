@@ -13,6 +13,7 @@ export class PushSettingsPage implements OnInit {
   public general: boolean;
   public impulse: boolean;
   public ausgabe: boolean;
+  public vdt: boolean;
 
   constructor(
     private storage: Storage
@@ -22,6 +23,7 @@ export class PushSettingsPage implements OnInit {
     this.general = Boolean(await this.storage.get('pushGeneral'));
     this.impulse = Boolean(await this.storage.get('pushImpulse'));
     this.ausgabe = Boolean(await this.storage.get('pushAusgabe'));
+    this.vdt = Boolean(await this.storage.get('pushVdt'));
   }
 
   onAusgabeChange() {
@@ -56,6 +58,18 @@ export class PushSettingsPage implements OnInit {
     } else {
       FCM.unsubscribeFrom({ topic: PushType.IMPULSE }).then(async () => {
         await this.storage.set('pushImpulse', this.impulse);
+      });
+    }
+  }
+
+  async onVdtChange() {
+    if (this.impulse) {
+      FCM.subscribeTo({ topic: PushType.VDT }).then(async () => {
+        await this.storage.set('pushVdt', this.vdt);
+      });
+    } else {
+      FCM.unsubscribeFrom({ topic: PushType.VDT }).then(async () => {
+        await this.storage.set('pushVdt', this.vdt);
       });
     }
   }

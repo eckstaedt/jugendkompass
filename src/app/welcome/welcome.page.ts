@@ -56,6 +56,14 @@ export class WelcomePage implements OnInit {
                 .catch(err => console.log(err));
               }
             });
+            this.storage.get('pushVdt').then((isOn: boolean) => {
+              if (isOn !== false) {
+                FCM
+                .subscribeTo({ topic: PushType.VDT })
+                .then(() => this.storage.set('pushVdt', false))
+                .catch(err => console.log(err));
+              }
+            });
           })
           .catch(err => console.log(JSON.stringify(err)));
       }
