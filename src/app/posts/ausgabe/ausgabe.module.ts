@@ -9,6 +9,7 @@ import { AusgabePageRoutingModule } from './ausgabe-routing.module';
 import { AusgabePage } from './ausgabe.page';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
 import { FileUploadModule } from 'ng2-file-upload';
+import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     SharedDirectivesModule,
     AusgabePageRoutingModule,
     FileUploadModule,
+    SwiperModule,
   ],
   declarations: [AusgabePage],
 })

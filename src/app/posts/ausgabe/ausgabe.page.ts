@@ -22,6 +22,7 @@ import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { AudioService } from 'src/app/services/audio/audio.service';
 import { Utils } from 'src/app/utils/utils';
+import SwiperCore, { Pagination } from 'swiper';
 
 @Component({
   selector: 'app-ausgabe',
@@ -39,6 +40,11 @@ export class AusgabePage implements OnInit {
   public fileUploader: FileUploader = new FileUploader({});
   private uploadItem: string;
   public editMode: boolean = false;
+  public slideOpts: any = {
+    pagination: {
+      dynamicBullets: true
+    },
+  };
 
   constructor(
     private platform: Platform,
@@ -52,7 +58,9 @@ export class AusgabePage implements OnInit {
     private toastController: ToastController,
     private audioService: AudioService,
     private utils: Utils,
-  ) {}
+  ) {
+    SwiperCore.use([Pagination]);
+  }
 
   ngOnInit() {
     this.isApp = this.utils.isApp();

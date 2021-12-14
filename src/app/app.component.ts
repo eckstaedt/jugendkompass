@@ -22,7 +22,7 @@ import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page
 import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
 
-const version = "1.2.1";
+const version = "1.2.3";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
