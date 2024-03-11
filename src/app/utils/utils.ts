@@ -1,4 +1,4 @@
-import { ToastController, ModalController, Platform } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { CategoryData, Category, FirebasePost } from './interfaces';
 import { Platforms } from './constants';
@@ -10,7 +10,7 @@ export class Utils {
   constructor(
     private toastController: ToastController,
     private platform: Platform,
-  ) {}
+  ) { }
 
   isApp(): boolean {
     return this.platform.is('capacitor');
@@ -92,7 +92,7 @@ export class Utils {
 
       [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
-  
+
     return array;
   }
 }

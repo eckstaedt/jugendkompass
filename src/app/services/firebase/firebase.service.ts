@@ -106,7 +106,7 @@ export class FirebaseService {
   }
 
   getFeedback() {
-    return this.db.collection('feedback').valueChanges();
+    return this.db.collection('feedback', (ref: any) => ref.orderBy("time", "desc")).valueChanges();
   }
 
   submitFeedback(feedback: any[]) {
@@ -302,7 +302,7 @@ export class FirebaseService {
   getVdt() {
     return new Observable(observer => {
       this.db
-        .collection('vdt', (ref: any) => ref.where('date', '>=', dayjs().startOf('d').toISOString()).where('date', '<=', dayjs().endOf('d').toISOString()).orderBy('date', 'desc'))
+        .collection('vdt', (ref: any) => ref.orderBy('date', 'desc').limit(1))
         .valueChanges()
         .subscribe((vdt: FirebasePost[]) => {
           this.vdt = vdt[0];

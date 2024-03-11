@@ -22,7 +22,7 @@ import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page
 import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
 
-const version = "1.2.3";
+const version = "1.2.5";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -48,7 +48,7 @@ export class AppComponent {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async () => {
       if (this.utils.isApp()) {
         this.handleSessionCount();
       } else if (this.platform.is("desktop")) {
@@ -57,6 +57,11 @@ export class AppComponent {
       if (this.utils.isApp()) {
         this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
       } else {
+        const registration = await navigator.serviceWorker.getRegistration();
+        console.log(registration);
+        const permission = await Notification.requestPermission();
+        console.log(permission);
+
         this.firebaseService.incrementAnalyticsField(AnalyticsField.WEBSITE_SESSIONS);
       }
       this.statusBar.styleDefault();
@@ -118,13 +123,13 @@ export class AppComponent {
   navigateToImpulse(id: string) {
     window.setTimeout(() => {
       this.router.navigateByUrl(`/tabs/impulse/${id}`);
-    }, 200);
+    }, 500);
   }
 
   navigateHome() {
     window.setTimeout(() => {
       this.router.navigateByUrl(`/tabs/home`);
-    }, 200);
+    }, 500);
   }
 
   setupPush() {
@@ -232,33 +237,33 @@ export class AppComponent {
                   this.storage.get('pushGeneral').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
-                      .subscribeTo({ topic: PushType.GENERAL })
-                      .then(() => this.storage.set('pushGeneral', true))
-                      .catch(err => console.log(err));
+                        .subscribeTo({ topic: PushType.GENERAL })
+                        .then(() => this.storage.set('pushGeneral', true))
+                        .catch(err => console.log(err));
                     }
                   });
                   this.storage.get('pushAusgabe').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
-                      .subscribeTo({ topic: PushType.AUSGABE })
-                      .then(() => this.storage.set('pushAusgabe', true))
-                      .catch(err => console.log(err));
+                        .subscribeTo({ topic: PushType.AUSGABE })
+                        .then(() => this.storage.set('pushAusgabe', true))
+                        .catch(err => console.log(err));
                     }
                   });
                   this.storage.get('pushImpulse').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
-                      .subscribeTo({ topic: PushType.IMPULSE })
-                      .then(() => this.storage.set('pushImpulse', true))
-                      .catch(err => console.log(err));
+                        .subscribeTo({ topic: PushType.IMPULSE })
+                        .then(() => this.storage.set('pushImpulse', true))
+                        .catch(err => console.log(err));
                     }
                   });
                   this.storage.get('pushVdt').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
-                      .subscribeTo({ topic: PushType.VDT })
-                      .then(() => this.storage.set('pushVdt', false))
-                      .catch(err => console.log(err));
+                        .subscribeTo({ topic: PushType.VDT })
+                        .then(() => this.storage.set('pushVdt', false))
+                        .catch(err => console.log(err));
                     }
                   });
                 })

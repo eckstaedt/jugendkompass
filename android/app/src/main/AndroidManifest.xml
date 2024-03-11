@@ -59,4 +59,6 @@
 
     <!-- Audio -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" tools:node="remove" />
 </manifest>

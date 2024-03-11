@@ -12,7 +12,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 import { Utils } from 'src/app/utils/utils';
 const { Share } = Plugins;
 
-const version = "1.2.3";
+const version = "1.2.5";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -33,7 +33,7 @@ export class SettingsPage implements OnInit {
     private modalController: ModalController,
     private themeService: ThemeService,
     private utils: Utils,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.theme = await this.themeService.getThemeInStorage();

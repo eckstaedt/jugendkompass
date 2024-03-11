@@ -34,7 +34,8 @@
                 "glob": "**/*",
                 "input": "src/.well-known",
                 "output": ".well-known/"
-              }
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
               {
@@ -52,7 +53,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -132,7 +135,8 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/assets"
-              }
+              },
+              "src/manifest.webmanifest"
             ]
           },
           "configurations": {

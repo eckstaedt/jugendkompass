@@ -34,9 +34,9 @@ export class AnalyticsPage implements OnInit {
   favoriteRemovedCount: number = 0;
   postReadAverage: string = '';
 
-  constructor(private firebaseService: FirebaseService, private utils: Utils) {}
+  constructor(private firebaseService: FirebaseService, private utils: Utils) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.firebaseService.getAnalyticsOverview().subscribe((data: any) => {

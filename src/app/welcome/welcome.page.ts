@@ -23,45 +23,45 @@ export class WelcomePage implements OnInit {
     private storage: Storage,
     private themeService: ThemeService,
     private firebaseService: FirebaseService,
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   toHome() {
-    PushNotifications.requestPermission().then((res: any) => {
+    PushNotifications.requestPermissions().then((res: any) => {
       if (res.granted) {
         PushNotifications.register()
           .then(() => {
             this.storage.get('pushGeneral').then((isOn: boolean) => {
               if (isOn !== false) {
                 FCM
-                .subscribeTo({ topic: PushType.GENERAL })
-                .then(() => this.storage.set('pushGeneral', true))
-                .catch(err => console.log(err));
+                  .subscribeTo({ topic: PushType.GENERAL })
+                  .then(() => this.storage.set('pushGeneral', true))
+                  .catch(err => console.log(err));
               }
             });
             this.storage.get('pushAusgabe').then((isOn: boolean) => {
               if (isOn !== false) {
                 FCM
-                .subscribeTo({ topic: PushType.AUSGABE })
-                .then(() => this.storage.set('pushAusgabe', true))
-                .catch(err => console.log(err));
+                  .subscribeTo({ topic: PushType.AUSGABE })
+                  .then(() => this.storage.set('pushAusgabe', true))
+                  .catch(err => console.log(err));
               }
             });
             this.storage.get('pushImpulse').then((isOn: boolean) => {
               if (isOn !== false) {
                 FCM
-                .subscribeTo({ topic: PushType.IMPULSE })
-                .then(() => this.storage.set('pushImpulse', true))
-                .catch(err => console.log(err));
+                  .subscribeTo({ topic: PushType.IMPULSE })
+                  .then(() => this.storage.set('pushImpulse', true))
+                  .catch(err => console.log(err));
               }
             });
             this.storage.get('pushVdt').then((isOn: boolean) => {
               if (isOn !== false) {
                 FCM
-                .subscribeTo({ topic: PushType.VDT })
-                .then(() => this.storage.set('pushVdt', false))
-                .catch(err => console.log(err));
+                  .subscribeTo({ topic: PushType.VDT })
+                  .then(() => this.storage.set('pushVdt', false))
+                  .catch(err => console.log(err));
               }
             });
           })
