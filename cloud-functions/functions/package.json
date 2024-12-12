@@ -9,28 +9,18 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "14"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@supabase/supabase-js": "^1.30.4",
-    "@types/cors": "^2.8.10",
-    "@types/express": "^4.17.11",
-    "@types/express-serve-static-core": "4.17.30",
-    "@types/uuid": "^8.3.0",
     "axios": "^1.5.0",
-    "cors": "^2.8.5",
     "dayjs": "^1.10.7",
-    "firebase-admin": "^11.0.0",
-    "firebase-functions": "^4.4.1",
-    "node-fetch": "^2.6.1",
-    "telegraf": "^3.32.0",
-    "uuid": "^8.3.2"
+    "firebase-admin": "^13.0.1",
+    "firebase-functions": "^6.1.2",
+    "telegraf": "^3.32.0"
   },
   "devDependencies": {
-    "@types/request": "^2.48.5",
-    "@types/request-promise-native": "^1.0.17",
-    "typescript": "^4.0.3"
+    "typescript": "^5.7.2"
   },
   "private": true
 }

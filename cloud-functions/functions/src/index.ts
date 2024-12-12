@@ -4,7 +4,10 @@ import * as admin from 'firebase-admin';
 import axios from 'axios';
 import * as dayjs from 'dayjs';
 import * as telegraf from 'telegraf';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { onDocumentCreated } from 'firebase-functions/firestore';
+import { onSchedule } from 'firebase-functions/scheduler';
+import { CallableRequest } from 'firebase-functions/https';
+import { defineString } from 'firebase-functions/params';
 
 const url: string = 'https://wp.jugendkompass.com/wp-json/wp/v2/';
 const impulsesId: number = 9;
@@ -16,39 +19,45 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-exports.sendTestPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
+exports.sendTestPush = functions.https.onCall((request: CallableRequest<any>) => {
   const payload: admin.messaging.MessagingPayload = {
     notification: {
-      ...data.notification,
-      image: data.notification.image ? data.notification.image : '',
-      title: data.notification.title ? data.notification.title : ''
+      ...request.data.notification,
+      image: request.data.notification.image ?? '',
+      title: request.data.notification.title ?? ''
     },
-    data: data.data
+    data: request.data.data
   };
 
-  admin.messaging().sendToTopic('admin', payload);
+  admin.messaging().send({
+    topic: 'admin',
+    notification: payload.notification,
+  });
 
-  return data;
+  return request;
 });
 
-exports.sendPush = functions.https.onCall((data: any, _: functions.https.CallableContext) => {
+exports.sendPush = functions.https.onCall((request: CallableRequest<any>) => {
   const payload: admin.messaging.MessagingPayload = {
     notification: {
-      ...data.notification,
-      image: data.notification.image ? data.notification.image : '',
-      title: data.notification.title ? data.notification.title : ''
+      ...request.data.notification,
+      image: request.data.notification.image ?? '',
+      title: request.data.notification.title ?? ''
     },
-    data: data.data
+    data: request.data.data
   };
 
-  admin.messaging().sendToTopic(data.topic ? data.topic : 'general', payload);
+  admin.messaging().send({
+    topic: request.data.topic ?? 'general',
+    notification: payload.notification,
+  });
 
-  return data;
+  return request;
 });
 
-exports.newFeedback = functions.firestore.document("/feedback/{id}").onCreate(() => {
+exports.newFeedback = onDocumentCreated({ document: "/feedback/{id}", secrets: ["JUKO_BOT"] }, () => {
   const message: string = `Neues Feedback in der Jugendkompass-App vorhanden!`;
-  const bot = new telegraf.Telegram(functions.config().juko.bot, {});
+  const bot = new telegraf.Telegram(defineString("JUKO_BOT").value(), {});
   bot.sendMessage(
     63117481, // Matthias
     message
@@ -59,7 +68,7 @@ exports.newFeedback = functions.firestore.document("/feedback/{id}").onCreate(()
   );
 });
 
-exports.sendVdt = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.sendVdt = onSchedule({ schedule: '0 8 * * *', timeZone: "Europe/Berlin" }, async (): Promise<any> => {
   const res: any = await db
     .collection("vdt")
     .orderBy('date', 'desc')
@@ -76,10 +85,12 @@ exports.sendVdt = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin
         title: "Vers des Tages",
         body: `${data.content.replace(/<[^>]+>/g, '')} (${data.title})`.replace(/(\r\n|\n|\r)/gm, "").replace(/\&nbsp;/g, ' ').replace(/ /g, ' '),
       },
-      // data: data.data
     };
 
-    admin.messaging().sendToTopic('vdt', payload);
+    admin.messaging().send({
+      topic: 'vdt',
+      notification: payload.notification,
+    });
 
     success = true;
   });
@@ -91,7 +102,7 @@ exports.sendVdt = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin
   }
 });
 
-exports.sendImpulse = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.sendImpulse = onSchedule({ schedule: '0 8 * * *', timeZone: "Europe/Berlin" }, async (): Promise<any> => {
   const res: any = await db
     .collection("impulses")
     .where('date', '>=', dayjs().subtract(1, 'd').toISOString())
@@ -116,7 +127,10 @@ exports.sendImpulse = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Be
       }
     };
 
-    admin.messaging().sendToTopic('impulse', payload);
+    admin.messaging().send({
+      topic: 'impulse',
+      notification: payload.notification
+    });
 
     success = true;
   });
@@ -128,7 +142,7 @@ exports.sendImpulse = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Be
   }
 });
 
-exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.syncPostsWithWordPress = onSchedule({ schedule: '0 * * * *', timeZone: "Europe/Berlin" }, async (): Promise<any> => {
   let posts: any[] = [];
   let page: number = 1;
 
@@ -191,7 +205,7 @@ exports.syncPostsWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone
   return "Successfully updated posts";
 });
 
-exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.syncCategoriesWithWordPress = onSchedule({ schedule: '0 * * * *', timeZone: "Europe/Berlin" }, async (): Promise<any> => {
   let categories: any[];
 
   try {
@@ -225,7 +239,7 @@ exports.syncCategoriesWithWordPress = functions.pubsub.schedule('0 * * * *').tim
   return "Successfully updated categories";
 });
 
-exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+exports.syncPagesWithWP = onSchedule({ schedule: '0 1 * * *', timeZone: "Europe/Berlin" }, async (): Promise<any> => {
   let pages: any[];
 
   try {
@@ -264,76 +278,76 @@ exports.syncPagesWithWP = functions.pubsub.schedule('0 1 * * *').timeZone("Europ
   return "Successfully updated pages";
 });
 
-exports.getNewPlayers = functions.pubsub.schedule('0 14 * * 1').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  const supabase: SupabaseClient = createClient(functions.config().supabase.url, functions.config().supabase.key);
-  const response = await supabase
-    .from<any>('player')
-    .select('*')
-    .gt("joined", dayjs().subtract(1, "month").toISOString())
-    .order("instrument")
-    .order("lastName");
+// exports.getNewPlayers = functions.pubsub.schedule('0 14 * * 1').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+//   const supabase: SupabaseClient = createClient(functions.config().supabase.url, functions.config().supabase.key);
+//   const response = await supabase
+//     .from<any>('player')
+//     .select('*')
+//     .gt("joined", dayjs().subtract(1, "month").toISOString())
+//     .order("instrument")
+//     .order("lastName");
 
-  if (response.data && response.data.length) {
-    let message: string = `Neue Spieler:\n`;
+//   if (response.data && response.data.length) {
+//     let message: string = `Neue Spieler:\n`;
 
-    for (const player of response.data) {
-      message += `${player.firstName} ${player.lastName}${dayjs(player.joined).startOf("week").isAfter(dayjs().subtract(3, "week")) ? " (Mit Eltern sprechen)" : ""}\n`;
-    }
+//     for (const player of response.data) {
+//       message += `${player.firstName} ${player.lastName}${dayjs(player.joined).startOf("week").isAfter(dayjs().subtract(3, "week")) ? " (Mit Eltern sprechen)" : ""}\n`;
+//     }
 
-    const bot = new telegraf.Telegram(functions.config().bot.token, {});
-    bot.sendMessage(
-      functions.config().bot.group,
-      message
-    );
-    return "successfully send";
-  } else {
-    return "no data";
-  }
-});
+//     const bot = new telegraf.Telegram(functions.config().bot.token, {});
+//     bot.sendMessage(
+//       functions.config().bot.group,
+//       message
+//     );
+//     return "successfully send";
+//   } else {
+//     return "no data";
+//   }
+// });
 
-exports.checkBirthdaysForAttendance = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
-  await getBirthdays(createClient(functions.config().supabase.url, functions.config().supabase.key), [63117481], functions.config().bot.token);
-  await getBirthdays(createClient(functions.config().supabasesos.url, functions.config().supabasesos.key), [60965786, 590859681], functions.config().supabasesos.bot);
-});
+// exports.checkBirthdaysForAttendance = functions.pubsub.schedule('0 8 * * *').timeZone("Europe/Berlin").onRun(async (): Promise<any> => {
+//   await getBirthdays(createClient(functions.config().supabase.url, functions.config().supabase.key), [63117481], functions.config().bot.token);
+//   await getBirthdays(createClient(functions.config().supabasesos.url, functions.config().supabasesos.key), [60965786, 590859681], functions.config().supabasesos.bot);
+// });
 
-const getBirthdays = async (supabase: SupabaseClient, userIds: number[], botToken: string) => {
-  const { data } = await supabase
-    .from<any>('player')
-    .select('*')
-    .is("left", null)
-    .order("instrument")
-    .order("lastName");
-  const getBirthdayString = (birthdays: any[]) => {
-    let bString: string = "";
-    birthdays.map((p: any, index: number) => {
-      if (birthdays.length === (index + 1)) {
-        bString += `${p.firstName} ${p.lastName} Geburtstag.`;
-      } else {
-        bString += `${p.firstName} ${p.lastName} und `;
-      }
-    });
+// const getBirthdays = async (supabase: SupabaseClient, userIds: number[], botToken: string) => {
+//   const { data } = await supabase
+//     .from<any>('player')
+//     .select('*')
+//     .is("left", null)
+//     .order("instrument")
+//     .order("lastName");
+//   const getBirthdayString = (birthdays: any[]) => {
+//     let bString: string = "";
+//     birthdays.map((p: any, index: number) => {
+//       if (birthdays.length === (index + 1)) {
+//         bString += `${p.firstName} ${p.lastName} Geburtstag.`;
+//       } else {
+//         bString += `${p.firstName} ${p.lastName} und `;
+//       }
+//     });
 
-    return bString;
-  };
+//     return bString;
+//   };
 
-  if (data?.length) {
-    const birthdays: any[] = data?.filter((p: any) => {
-      return dayjs(p.birthday).date() === dayjs().date() && dayjs(p.birthday).month() === dayjs().month();
-    });
+//   if (data?.length) {
+//     const birthdays: any[] = data?.filter((p: any) => {
+//       return dayjs(p.birthday).date() === dayjs().date() && dayjs(p.birthday).month() === dayjs().month();
+//     });
 
-    if (birthdays?.length) {
-      let message: string =
-        birthdays.length === 1
-          ? `Heute hat ${birthdays[0].firstName} ${birthdays[0].lastName} Geburtstag.`
-          : `Heute haben ${getBirthdayString(birthdays)}`;
-      const bot = new telegraf.Telegram(botToken, {});
+//     if (birthdays?.length) {
+//       let message: string =
+//         birthdays.length === 1
+//           ? `Heute hat ${birthdays[0].firstName} ${birthdays[0].lastName} Geburtstag.`
+//           : `Heute haben ${getBirthdayString(birthdays)}`;
+//       const bot = new telegraf.Telegram(botToken, {});
 
-      for (const userId of userIds) {
-        bot.sendMessage(
-          userId,
-          message
-        );
-      }
-    }
-  }
-};
+//       for (const userId of userIds) {
+//         bot.sendMessage(
+//           userId,
+//           message
+//         );
+//       }
+//     }
+//   }
+// };
