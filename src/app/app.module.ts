@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -26,13 +26,10 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.module';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-@NgModule({
-    declarations: [AppComponent],
-    imports: [
-        BrowserModule,
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         IonicModule.forRoot(),
         AppRoutingModule,
-        HttpClientModule,
         FilterModalPageModule,
         FeedbackModalPageModule,
         AnswersModalPageModule,
@@ -43,15 +40,12 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
         IonicStorageModule.forRoot(),
         ChartsModule,
         FileUploadModule,
-        AngularFireFunctionsModule,
-    ],
-    providers: [
+        AngularFireFunctionsModule], providers: [
         PhotoViewer,
         StatusBar,
         SplashScreen,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         FileOpener,
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
