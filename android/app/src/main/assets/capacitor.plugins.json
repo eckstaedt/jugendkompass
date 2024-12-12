@@ -4,8 +4,12 @@
 		"classpath": "com.getcapacitor.community.fcm.FCMPlugin"
 	},
 	{
-		"pkg": "@capacitor-community/http",
-		"classpath": "com.getcapacitor.plugin.http.Http"
+		"pkg": "@capacitor-community/file-opener",
+		"classpath": "com.ryltsov.alex.plugins.file.opener.FileOpenerPlugin"
+	},
+	{
+		"pkg": "@capacitor-community/photoviewer",
+		"classpath": "com.getcapacitor.community.media.photoviewer.PhotoViewerPlugin"
 	},
 	{
 		"pkg": "@capacitor/app",

@@ -5,8 +5,11 @@ project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/
 include ':capacitor-community-fcm'
 project(':capacitor-community-fcm').projectDir = new File('../node_modules/@capacitor-community/fcm/android')
 
-include ':capacitor-community-http'
-project(':capacitor-community-http').projectDir = new File('../node_modules/@capacitor-community/http/android')
+include ':capacitor-community-file-opener'
+project(':capacitor-community-file-opener').projectDir = new File('../node_modules/@capacitor-community/file-opener/android')
+
+include ':capacitor-community-photoviewer'
+project(':capacitor-community-photoviewer').projectDir = new File('../node_modules/@capacitor-community/photoviewer/android')
 
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/@capacitor/app/android')

@@ -15,5 +15,21 @@
 			"splashImmersive": false
 		}
 	},
-	"cordova": {}
+	"cordova": {},
+	"packageClassList": [
+		"FCMPlugin",
+		"FileOpenerPlugin",
+		"PhotoViewerPlugin",
+		"AppPlugin",
+		"FilesystemPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"CAPNetworkPlugin",
+		"PushNotificationsPlugin",
+		"SharePlugin",
+		"SplashScreenPlugin",
+		"StatusBarPlugin",
+		"BlobWriter",
+		"CapacitorVideoPlayerPlugin"
+	]
 }
