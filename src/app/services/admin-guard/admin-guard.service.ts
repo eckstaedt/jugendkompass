@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AdminGuardService implements CanLoad {
+export class AdminGuardService  {
   constructor(
     private firebaseService: FirebaseService,
     private router: Router,

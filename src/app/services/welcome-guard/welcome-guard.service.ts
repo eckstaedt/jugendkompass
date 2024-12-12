@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WelcomeGuardService implements CanActivate {
+export class WelcomeGuardService  {
   constructor(private router: Router, private storage: Storage, private plt: Platform) {}
 
   canActivate() {
