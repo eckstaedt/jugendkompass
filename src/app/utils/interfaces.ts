@@ -1,10 +1,10 @@
-import * as firebase from 'firebase/app';
+import { Timestamp } from "@angular/fire/firestore";
 
 export interface CalendarDate {
   name: string;
-  start: firebase.firestore.Timestamp;
+  start: Timestamp;
   startUnix: number;
-  end: firebase.firestore.Timestamp;
+  end: Timestamp;
   endUnix: number;
   location?: string;
   lat?: number;
@@ -19,7 +19,7 @@ export interface FirebasePost {
   content: string;
   categories: number[];
   date: string;
-  fbDate: firebase.firestore.Timestamp;
+  fbDate: Timestamp;
   excerpt: string;
   id: string;
   link: string;

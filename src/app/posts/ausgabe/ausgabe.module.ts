@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,9 +9,9 @@ import { AusgabePageRoutingModule } from './ausgabe-routing.module';
 import { AusgabePage } from './ausgabe.page';
 import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
 import { FileUploadModule } from 'ng2-file-upload';
-import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
     FormsModule,
@@ -19,7 +19,6 @@ import { SwiperModule } from 'swiper/angular';
     SharedDirectivesModule,
     AusgabePageRoutingModule,
     FileUploadModule,
-    SwiperModule,
   ],
   declarations: [AusgabePage],
 })

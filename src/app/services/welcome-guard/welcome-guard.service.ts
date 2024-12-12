@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
+import { StorageService } from '../storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WelcomeGuardService  {
-  constructor(private router: Router, private storage: Storage, private plt: Platform) {}
+  constructor(private router: Router, private storage: StorageService, private plt: Platform) {}
 
   canActivate() {
     return new Promise<boolean>((resolve: any) => {

@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { Ausgabe } from 'src/app/utils/interfaces';
-import { Storage } from '@ionic/storage';
+import { FileOpener } from '@capacitor-community/file-opener';
 
-import { FilesystemDirectory } from '@capacitor/filesystem';
+import { Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import { CapacitorVideoPlayer } from 'capacitor-video-player';
 import {
@@ -16,13 +16,17 @@ import {
 } from '@ionic/angular';
 import * as PluginsLibrary from 'capacitor-video-player';
 import { HttpEventType } from '@angular/common/http';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
 import writeFile from 'capacitor-blob-writer';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { AudioService } from 'src/app/services/audio/audio.service';
 import { Utils } from 'src/app/utils/utils';
-import SwiperCore, { Pagination } from 'swiper';
+import SwiperCore from 'swiper';
+import { Pagination } from 'swiper/modules';
+import { register } from 'swiper/element/bundle';
+import { StorageService } from 'src/app/services/storage.service';
+
+register();
 
 @Component({
   selector: 'app-ausgabe',
@@ -37,21 +41,15 @@ export class AusgabePage implements OnInit {
   public isApp: boolean = true;
   private file: FileLikeObject;
   private file2: FileLikeObject;
-  public fileUploader: FileUploader = new FileUploader({});
+  public fileUploader: FileUploader = new FileUploader({ url: "" });
   private uploadItem: string;
   public editMode: boolean = false;
-  public slideOpts: any = {
-    pagination: {
-      dynamicBullets: true
-    },
-  };
 
   constructor(
     private platform: Platform,
-    private storage: Storage,
+    private storage: StorageService,
     private activatedRoute: ActivatedRoute,
     private firebaseService: FirebaseService,
-    private fileOpener: FileOpener,
     private loadingController: LoadingController,
     private actionSheetController: ActionSheetController,
     private alertController: AlertController,
@@ -126,7 +124,7 @@ export class AusgabePage implements OnInit {
           } else if (event.type === HttpEventType.Response) {
             const uri = await writeFile({
               path: this.ausgabe.name.replace('.', '-') + '.pdf',
-              directory: FilesystemDirectory.Data,
+              directory: Directory.Data,
               blob: event.body,
               recursive: true,
             });
@@ -141,7 +139,10 @@ export class AusgabePage implements OnInit {
               },
             );
 
-            this.fileOpener.open(uri, 'application/pdf').then(() => {
+            FileOpener.open({
+              filePath: uri,
+              contentType: 'application/pdf',
+            }).then(() => {
               console.log("success");
             }).catch((e) => {
               console.log(e);

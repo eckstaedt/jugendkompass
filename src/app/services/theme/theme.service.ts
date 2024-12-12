@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
+import { StorageService } from '../storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,7 @@ import { Platform } from '@ionic/angular';
 export class ThemeService {
   private readonly THEME_KEY = 'theme';
 
-  constructor(private storage: Storage, private plt: Platform) {}
+  constructor(private storage: StorageService, private plt: Platform) {}
 
   public static isThemeDark(): boolean {
     if (document.body.classList.value === 'dark') {

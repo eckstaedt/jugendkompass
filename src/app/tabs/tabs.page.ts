@@ -74,7 +74,7 @@ export class TabsPage {
 
   updateProgress() {
     if (this.playing && !this.movingSlider) {
-      if (!isNaN(this.audioService.getSeek())) {
+      if (!isNaN(this.audioService.getSeek()) && this.range) {
         const newValue: number = +this.range.value;
         const endTime: number = this.audioService.getDuration();
         if (

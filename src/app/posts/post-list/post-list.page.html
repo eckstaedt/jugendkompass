@@ -53,22 +53,24 @@
     *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'"
     >Alle Ausgaben</ion-list-header
   >
-  <ion-slides
-    [options]="slideOpts"
+  <swiper-container
+    slides-per-view="2"
+    space-between="10"
+    free-mode="true"
     *ngIf="ausgaben && ausgaben.length && !isSearching && currentAusgabe === 'all' && currentRubrik === 'all'"
   >
-    <ion-slide
+    <swiper-slide
       [routerLink]="['/', 'tabs', 'posts', 'ausgabe', ausgabe.id]"
       (click)="openAusgabe(ausgabe)"
       *ngFor="let ausgabe of ausgaben"
     >
       <img [src]="ausgabe.imageUrl" />
-    </ion-slide>
-  </ion-slides>
+    </swiper-slide>
+  </swiper-container>
 
   <div *ngIf="posts.length"
   appSwipe
-  (swipeLeft)="onSwipeLeft($event)" 
+  (swipeLeft)="onSwipeLeft($event)"
   (swipeRight)="onSwipeRight($event)">
     <ion-list-header *ngIf="!showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Alle Artikel</ion-list-header>
     <ion-list-header *ngIf="showOnlyUnread && !isSearching && currentRubrik === 'all'" mode="ios">Ungelesene Artikel</ion-list-header>
@@ -136,7 +138,7 @@
 
   <div *ngIf="!posts.length && !allPosts.length && online"
   appSwipe
-  (swipeLeft)="onSwipeLeft($event)" 
+  (swipeLeft)="onSwipeLeft($event)"
   (swipeRight)="onSwipeRight($event)">
     <ion-list-header mode="ios">
       <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebasePost } from 'src/app/utils/interfaces';
 import { ActivatedRoute } from '@angular/router';
-import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
-import { Network, NetworkStatus } from '@capacitor/network';
+import { ConnectionStatus, Network } from '@capacitor/network';
 import { Share } from '@capacitor/share';
 import { AnalyticsField } from 'src/app/utils/constants';
-import { Storage } from '@ionic/storage';
 import { Utils } from 'src/app/utils/utils';
+import { PhotoViewer } from '@capacitor-community/photoviewer';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-impulse',
@@ -26,8 +26,7 @@ export class ImpulsePage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private photoViewer: PhotoViewer,
-    private storage: Storage,
+    private storage: StorageService,
     private firebaseService: FirebaseService,
     private utils: Utils,
   ) {}
@@ -35,7 +34,7 @@ export class ImpulsePage implements OnInit {
   ngOnInit() {
     this.isApp = this.utils.isApp();
     if (this.isApp) {
-      Network.addListener('networkStatusChange', (status: NetworkStatus) => {
+      Network.addListener('networkStatusChange', (status: ConnectionStatus) => {
         this.online = status.connected;
       });
     }
@@ -87,7 +86,7 @@ export class ImpulsePage implements OnInit {
         document.querySelectorAll('img'),
       )) {
         (image as any).onclick = () => {
-          this.photoViewer.show((image as any).src);
+          PhotoViewer.show((image as any).src);
         };
       }
     }, 200);

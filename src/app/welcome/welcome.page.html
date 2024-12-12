@@ -1,6 +1,6 @@
 <ion-content fullscreen class="ion-padding" scroll-y="false">
-  <ion-slides pager="true">
-    <ion-slide>
+  <swiper-container pager="true">
+    <swiper-slide>
       <div class="surround">
         <ion-img src="../../../assets/App_Anleitung.png"></ion-img>
       </div>
@@ -10,8 +10,8 @@
         Ausgabe der Zeitschrift herausgegeben wird, erfährst du hier davon und
         kannst eine Auswahl an Artikeln direkt in der App lesen.
       </p>
-    </ion-slide>
-    <ion-slide>
+    </swiper-slide>
+    <swiper-slide>
       <div class="surround">
         <ion-img src="../../../assets/FavOff.png"></ion-img>
       </div>
@@ -21,8 +21,8 @@
         gespeichert: dann kannst du sie auch ohne Internetverbindung lesen und
         anhören.
       </p>
-    </ion-slide>
-    <ion-slide>
+    </swiper-slide>
+    <swiper-slide>
       <div class="surround">
         <ion-img
           [src]="isDark ? '../../../assets/light_welcome.png' : '../../../assets/dark_welcome.png'"
@@ -44,8 +44,8 @@
           <ion-radio slot="start" value="dark"></ion-radio>
         </ion-item>
       </ion-radio-group>
-    </ion-slide>
-    <ion-slide>
+    </swiper-slide>
+    <swiper-slide>
       <div class="surround">
         <ion-img src="../../../assets/App Anleitung2.png"></ion-img>
       </div>
@@ -58,6 +58,6 @@
       <ion-button (click)="toHome()" fill="clear"
         >Los geht´s <ion-icon name="arrow-forward"></ion-icon
       ></ion-button>
-    </ion-slide>
-  </ion-slides>
+    </swiper-slide>
+  </swiper-container>
 </ion-content>

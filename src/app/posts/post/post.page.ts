@@ -1,23 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AudioService } from 'src/app/services/audio/audio.service';
-import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import {
   IonBackButton,
   ToastController,
   AlertController,
   LoadingController,
 } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
 import { Network, NetworkStatus } from '@capacitor/network';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
-import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { Utils } from 'src/app/utils/utils';
 import { Share } from '@capacitor/share';
+import { PhotoViewer } from '@capacitor-community/photoviewer';
+import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-post',
@@ -35,7 +35,7 @@ export class PostPage implements OnInit {
   defaultHref: string = '';
   public textSize = 15;
   public isAdmin: boolean = false;
-  public fileUploader: FileUploader = new FileUploader({});
+  public fileUploader: FileUploader = new FileUploader({ url: "" });
   public isPlaying: boolean = false;
   public online: boolean = true;
   private counter: number = 0;
@@ -46,8 +46,7 @@ export class PostPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private audioService: AudioService,
-    private photoViewer: PhotoViewer,
-    private storage: Storage,
+    private storage: StorageService,
     private routerService: RouterService,
     private firebaseService: FirebaseService,
     private toastController: ToastController,
@@ -159,7 +158,7 @@ export class PostPage implements OnInit {
         document.querySelectorAll('.postContent img'),
       )) {
         (image as any).onclick = () => {
-          this.photoViewer.show((image as any).src);
+          PhotoViewer.show((image as any).src);
         };
       }
     }, 200);

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 import { Plugins } from '@capacitor/core';
 import { ThemeService } from '../services/theme/theme.service';
 import { AnalyticsField, PushType } from '../utils/constants';
 import { FirebaseService } from '../services/firebase/firebase.service';
+import { StorageService } from '../services/storage.service';
 
 const { PushNotifications } = Plugins;
 
@@ -20,7 +20,7 @@ export class WelcomePage implements OnInit {
 
   constructor(
     private router: Router,
-    private storage: Storage,
+    private storage: StorageService,
     private themeService: ThemeService,
     private firebaseService: FirebaseService,
   ) { }

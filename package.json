@@ -43,7 +43,7 @@
     "@capacitor/push-notifications": "^6.0.0",
     "@capacitor/share": "^6.0.0",
     "@capacitor/splash-screen": "^6.0.0",
-    "@capacitor/status-bar": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.2",
     "@ionic/angular": "^7.8.6",
     "@ionic/storage-angular": "^4.0.0",
     "capacitor-blob-writer": "^1.1.17",
@@ -57,7 +57,7 @@
     "jetifier": "^1.6.8",
     "ng2-charts": "~7.0.0",
     "ng2-file-upload": "^7.0.1",
-    "rxjs": "~7.5.0",
+    "rxjs": "7.8.1",
     "swiper": "^11.1.15",
     "tslib": "^2.0.0",
     "zone.js": "~0.14.10"
@@ -79,9 +79,7 @@
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "prettier": "2.2.1",
-    "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
-    "tslint": "~6.1.0",
     "typescript": "~5.4.5"
   },
   "description": "Jugend Blog"

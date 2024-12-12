@@ -9,12 +9,12 @@ ion-toolbar {
   }
 }
 
-ion-slides {
+swiper-container {
   margin: 0.6rem 0 0.4rem 0;
   padding-left: 0.9rem;
   padding-right: 0.9rem;
 
-  ion-slide {
+  swiper-slide {
     border: 2px solid var(--ion-color-light);
 
     &:focus {

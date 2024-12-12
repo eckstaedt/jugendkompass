@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, docData, Firestore, getDoc, limit, orderBy, query, setDoc, Timestamp, updateDoc } from '@angular/fire/firestore';
 import { Observable, Subscriber } from 'rxjs';
-import { take, first, finalize } from 'rxjs/operators';
+import { take, first } from 'rxjs/operators';
 import {
   Category,
   FirebasePost,
@@ -11,15 +11,12 @@ import {
 import { Utils } from '../../utils/utils';
 import { HttpClient } from '@angular/common/http';
 import { FCM } from '@capacitor-community/fcm';
-import { firestore } from 'firebase/app';
-import * as firebase from 'firebase/app';
 import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Storage } from '@ionic/storage';
-import * as dayjs from 'dayjs';
+import { Functions, HttpsCallable, httpsCallable } from '@angular/fire/functions';
+import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Storage, getDownloadURL, ref, uploadBytes, uploadString } from '@angular/fire/storage';
+import { arrayUnion, increment } from "firebase/firestore";
 
 @Injectable({
   providedIn: 'root',
@@ -30,18 +27,16 @@ export class FirebaseService {
   ausgaben: Ausgabe[];
   posts: FirebasePost[];
   impulses: FirebasePost[];
-  vdt: FirebasePost;
   categories: Category[];
   legalPages: any[];
 
   constructor(
-    private storage: Storage,
-    private db: AngularFirestore,
-    private fireStorage: AngularFireStorage,
+    private firestore: Firestore,
+    private fireStorage: Storage,
     private utils: Utils,
     private httpClient: HttpClient,
-    private fns: AngularFireFunctions,
-    private afAuth: AngularFireAuth,
+    private fns: Functions,
+    private afAuth: Auth,
   ) {
     this.init();
   }
@@ -51,85 +46,69 @@ export class FirebaseService {
   }
 
   async sendTestPush(notification, data) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+    const callable: HttpsCallable<any, unknown> = httpsCallable(
+      this.fns,
       'sendTestPush',
     );
     await callable({
       data: data,
       notification: notification,
-    }).toPromise();
+    });
   }
 
   async sendPush(notification: any, data: any, topic: PushType) {
-    const callable: (res: any) => Observable<any> = this.fns.httpsCallable(
+    const callable: HttpsCallable<any, unknown> = httpsCallable(
+      this.fns,
       'sendPush',
     );
     await callable({
       data,
       notification,
       topic,
-    }).toPromise();
+    });
   }
 
   incrementAnalyticsField(field: AnalyticsField, data: any = {}) {
     const now: Date = new Date();
-    const increment = firestore.FieldValue.increment(1);
-    const analyticsData: any = firestore.FieldValue.arrayUnion({
+    const analyticsData: any = arrayUnion({
       ...data,
-      timestamp: firebase.firestore.Timestamp.fromDate(now),
+      timestamp: Timestamp.fromDate(now),
       platform: this.utils.getPlatform(),
     });
 
-    this.db.doc('analytics/overall').set(
+    setDoc(doc(this.firestore, 'analytics/overall'),
       {
-        [`${field}Count`]: increment,
+        [`${field}Count`]: increment(1),
         [`${field}Data`]: analyticsData,
       },
       { merge: true },
     );
   }
 
-  getKeys() {
-    return this.db
-      .collection('oneTimeKeyCollection', (ref: any) => ref.orderBy('value'))
-      .valueChanges();
-  }
-
-  addKey(key: any) {
-    return this.db.doc(`oneTimeKeyCollection/${key.value}`).set(key);
-  }
-
-  updateKey(key: any) {
-    return this.db.doc(`oneTimeKeyCollection/${key.value}`).update({
-      remainingKeyCount: key.count,
-    });
-  }
-
   getFeedback() {
-    return this.db.collection('feedback', (ref: any) => ref.orderBy("time", "desc")).valueChanges();
+    return collectionData(query(collection(this.firestore, 'feedback'), orderBy("time", "desc")));
   }
 
   submitFeedback(feedback: any[]) {
-    return this.db.collection('feedback').add({
+    return addDoc(collection(this.firestore, "feedback"), {
       feedback: feedback,
-      time: firebase.firestore.Timestamp.now(),
+      time: Timestamp.now(),
       platform: this.utils.getPlatform(),
     });
   }
 
   getAnalyticsOverview() {
-    return this.db.doc('analytics/overall').valueChanges();
+    return docData(doc(this.firestore, 'analytics/overall'));
   }
 
   async loadCategories() {
     if (this.ausgaben && this.rubrics) {
       return Promise.resolve();
     } else {
-      const categories: any = await this.db
-        .collection<Category[]>('categories')
-        .valueChanges()
-        .pipe(take(1))
-        .toPromise();
+      const categories: any = await
+        collectionData(collection(this.firestore, 'categories'))
+          .pipe(take(1))
+          .toPromise();
       const ausgabenCategory = categories.find(
         (cat: any) => cat.name === 'Ausgaben',
       );
@@ -139,13 +118,13 @@ export class FirebaseService {
       this.ausgaben = categories
         .filter(
           (cat: Category) =>
-            cat.parent.toString() === ausgabenCategory.id && cat.count !== 0,
+            cat.parent?.toString() === ausgabenCategory?.id && cat.count !== 0,
         )
         .sort((a: Category, b: Category) => {
-          if (a.name < b.name) {
+          if (a.id < b.id) {
             return -1;
           }
-          if (a.name > b.name) {
+          if (a.id > b.id) {
             return 1;
           }
           return 0;
@@ -154,7 +133,7 @@ export class FirebaseService {
       this.rubrics = categories
         .filter(
           (cat: Category) =>
-            cat.parent.toString() === rubrikenCategory.id && cat.count !== 0,
+            cat.parent?.toString() === rubrikenCategory?.id && cat.count !== 0,
         )
         .sort((a: Category, b: Category) => a.id - b.id);
     }
@@ -191,29 +170,27 @@ export class FirebaseService {
   }
 
   updateAusgabe(id: string, data: any) {
-    return this.db.doc(`categories/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `categories/${id}`), data);
   }
 
   updateImpulse(id: string, data: any) {
-    return this.db.doc(`impulses/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `impulses/${id}`), data);
   }
 
   updatePost(id: string, data: any) {
-    return this.db.doc(`posts/${id}`).update(data);
+    return updateDoc(doc(this.firestore, `posts/${id}`), data);
   }
 
   getPosts() {
     return new Observable(observer => {
-      this.db
-        .collection('posts')
-        .valueChanges()
+      collectionData(collection(this.firestore, 'posts'))
         .subscribe((posts: FirebasePost[]) => {
           this.posts = this.getEditedPosts(posts)
             .sort((a: FirebasePost, b: FirebasePost) => {
               if (a.ausgabe && b.ausgabe) {
-                if (a.ausgabe.name > b.ausgabe.name) {
+                if (a.ausgabe.id > b.ausgabe.id) {
                   return 1;
-                } else if (a.ausgabe.name < b.ausgabe.name) {
+                } else if (a.ausgabe.id < b.ausgabe.id) {
                   return -1;
                 }
               } else if (a.ausgabe && !b.ausgabe) {
@@ -222,10 +199,16 @@ export class FirebaseService {
                 return -1;
               }
 
-              if (a.title > b.title) {
-                return -1;
-              } else if (a.title < b.title) {
+              if (a.rubrik && b.rubrik) {
+                if (a.rubrik.id < b.rubrik.id) {
+                  return 1;
+                } else if (a.rubrik.id > b.rubrik.id) {
+                  return -1;
+                }
+              } else if (a.rubrik && !b.rubrik) {
                 return 1;
+              } else if (!a.rubrik && b.rubrik) {
+                return -1;
               }
 
               return 0;
@@ -235,12 +218,9 @@ export class FirebaseService {
         });
     });
   }
-
-  async getMyPosts(): Promise<FirebasePost[]> {
+  async getMyPosts(readArticlesString?: string): Promise<FirebasePost[]> {
+    await this.loadCategories();
     await this.getPosts().pipe(take(1)).toPromise();
-    const readArticlesString: string | undefined = await this.storage.get(
-      'readArticles',
-    );
 
     if (!readArticlesString) {
       return this.posts.slice(0, 14);
@@ -289,46 +269,47 @@ export class FirebaseService {
 
   getImpulses() {
     return new Observable(observer => {
-      this.db
-        .collection('impulses', (ref: any) => ref.orderBy('date', 'desc'))
-        .valueChanges()
-        .subscribe((impulses: FirebasePost[]) => {
-          this.impulses = impulses;
-          observer.next(this.impulses);
-        });
+      collectionData(
+        query(
+          collection(this.firestore, 'impulses'),
+          orderBy("date", "desc"),
+          limit(1)
+        )
+      ).subscribe((impulses: FirebasePost[]) => {
+        observer.next(impulses);
+      });
     });
   }
 
   getVdt() {
     return new Observable(observer => {
-      this.db
-        .collection('vdt', (ref: any) => ref.orderBy('date', 'desc').limit(1))
-        .valueChanges()
-        .subscribe((vdt: FirebasePost[]) => {
-          this.vdt = vdt[0];
-          observer.next(this.vdt);
-        });
+      collectionData(
+        query(
+          collection(this.firestore, "vdt"),
+          orderBy('date', 'desc'),
+          limit(1),
+        )
+      ).subscribe((vdt: any[]) => {
+        observer.next(vdt[0]);
+      });
     });
   }
 
   incrementPostViews(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`posts/${id}`).update({
-      views: increment,
+    updateDoc(doc(this.firestore, `posts/${id}`), {
+      views: increment(1),
     });
   }
 
   incrementImpulseViews(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`impulses/${id}`).update({
-      views: increment,
+    updateDoc(doc(this.firestore, `impulses/${id}`), {
+      views: increment(1),
     });
   }
 
   incrementAudioPlays(id: string) {
-    const increment = firestore.FieldValue.increment(1);
-    this.db.doc(`posts/${id}`).update({
-      audioPlays: increment,
+    updateDoc(doc(this.firestore, `posts/${id}`), {
+      audioPlays: increment(1),
     });
   }
 
@@ -351,11 +332,10 @@ export class FirebaseService {
     if (this.legalPages) {
       return;
     }
-    this.legalPages = await this.db
-      .collection<any[]>('pages')
-      .valueChanges()
-      .pipe(take(1))
-      .toPromise();
+    this.legalPages = await
+      collectionData(collection(this.firestore, "pages"))
+        .pipe(take(1))
+        .toPromise();
   }
 
   async getImprint() {
@@ -370,8 +350,7 @@ export class FirebaseService {
 
   login(email: string, password: string) {
     return new Promise((resolve: any) => {
-      this.afAuth
-        .signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(this.afAuth, email, password)
         .then(() => {
           FCM.subscribeTo({ topic: 'admin' });
           if (this.subscriber) {
@@ -387,7 +366,7 @@ export class FirebaseService {
   }
 
   async isAdmin(): Promise<boolean> {
-    const user: any = await this.afAuth.authState.pipe(first()).toPromise();
+    const user: any = await authState(this.afAuth).pipe(first()).toPromise();
     if (this.subscriber) {
       this.subscriber.next(Boolean(user));
     }
@@ -443,87 +422,55 @@ export class FirebaseService {
   }
 
   uploadAudio(file: FileLikeObject, post: FirebasePost) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/audios/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const r = ref(this.fireStorage, path);
+      await uploadString(r, String(file.rawFile));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-              name: file.name,
-            });
-          }),
-        )
-        .subscribe();
+      resolve({
+        url: getDownloadURL(r),
+        path,
+        name: file.name,
+      });
     });
   }
 
   uploadPdf(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/pdfs/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const r = ref(this.fireStorage, path);
+      await uploadString(r, String(file.rawFile));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      resolve({
+        url: getDownloadURL(r),
+        path,
+      });
     });
   }
 
   uploadVideoFile(file: FileLikeObject) {
     return new Promise((resolve: any) => {
       const path = `/videos/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const r = ref(this.fireStorage, path);
+      const task = uploadString(r, String(file.rawFile));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      resolve({
+        url: getDownloadURL(r),
+        path,
+      });
     });
   }
 
   uploadImageFile(file: FileLikeObject) {
     return new Promise((resolve: any) => {
       const path = `/other/${Date.now()}_${file.name}`;
-      const ref = this.fireStorage.ref(path);
-      const task = this.fireStorage.upload(path, file.rawFile);
+      const r = ref(this.fireStorage, path);
+      const task = uploadString(r, String(file.rawFile));
 
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(async () => {
-            const url = await ref.getDownloadURL().toPromise();
-            resolve({
-              url,
-              path,
-            });
-          }),
-        )
-        .subscribe();
+      resolve({
+        url: getDownloadURL(r),
+        path,
+      });
     });
   }
 }

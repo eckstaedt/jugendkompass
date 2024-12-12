@@ -4,8 +4,6 @@ import {
   AlertController,
   ModalController,
 } from '@ionic/angular';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 import {
   PushNotifications,
@@ -21,8 +19,14 @@ import { FirebaseService } from './services/firebase/firebase.service';
 import { FeedbackModalPage } from './settings/feedback-modal/feedback-modal.page';
 import { ThemeService } from './services/theme/theme.service';
 import { Utils } from './utils/utils';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
-const version = "1.2.5";
+import { register } from 'swiper/element/bundle';
+import { StorageService } from './services/storage.service';
+
+register();
+
+const version = "1.3.0";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -34,8 +38,7 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private statusBar: StatusBar,
-    private storage: Storage,
+    private storageService: StorageService,
     private alertController: AlertController,
     private router: Router,
     private modalController: ModalController,
@@ -49,6 +52,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(async () => {
+      this.storageService.init();
       if (this.utils.isApp()) {
         this.handleSessionCount();
       } else if (this.platform.is("desktop")) {
@@ -56,15 +60,13 @@ export class AppComponent {
       }
       if (this.utils.isApp()) {
         this.firebaseService.incrementAnalyticsField(AnalyticsField.APP_SESSIONS);
+        StatusBar.setStyle({
+          style: Style.Default,
+        });
       } else {
-        const registration = await navigator.serviceWorker.getRegistration();
-        console.log(registration);
-        const permission = await Notification.requestPermission();
-        console.log(permission);
-
         this.firebaseService.incrementAnalyticsField(AnalyticsField.WEBSITE_SESSIONS);
       }
-      this.statusBar.styleDefault();
+
       SplashScreen.hide();
       this.themeService.setAppTheme();
       if (this.utils.isApp()) {
@@ -78,11 +80,11 @@ export class AppComponent {
   }
 
   async handleSessionCount() {
-    let count = await this.storage.get('sessions');
-    await this.storage.set('sessions', count ? count + 1 : 1);
+    let count = await this.storageService.get('sessions');
+    await this.storageService.set('sessions', count ? count + 1 : 1);
 
     if (count === SESSION_FEEDBACK_THRESHOLD) {
-      const hasFeedbackSend: boolean = await this.storage.get(
+      const hasFeedbackSend: boolean = await this.storageService.get(
         'hasFeedbackSend',
       );
       if (!hasFeedbackSend) {
@@ -228,41 +230,41 @@ export class AppComponent {
         },
       );
 
-      this.storage.get('oldUser').then((oldUser: boolean): void => {
+      this.storageService.get('oldUser').then((oldUser: boolean): void => {
         if (oldUser) {
           PushNotifications.requestPermissions().then((res: any) => {
             if (res.granted) {
               PushNotifications.register()
                 .then(() => {
-                  this.storage.get('pushGeneral').then((isOn: boolean) => {
+                  this.storageService.get('pushGeneral').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
                         .subscribeTo({ topic: PushType.GENERAL })
-                        .then(() => this.storage.set('pushGeneral', true))
+                        .then(() => this.storageService.set('pushGeneral', true))
                         .catch(err => console.log(err));
                     }
                   });
-                  this.storage.get('pushAusgabe').then((isOn: boolean) => {
+                  this.storageService.get('pushAusgabe').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
                         .subscribeTo({ topic: PushType.AUSGABE })
-                        .then(() => this.storage.set('pushAusgabe', true))
+                        .then(() => this.storageService.set('pushAusgabe', true))
                         .catch(err => console.log(err));
                     }
                   });
-                  this.storage.get('pushImpulse').then((isOn: boolean) => {
+                  this.storageService.get('pushImpulse').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
                         .subscribeTo({ topic: PushType.IMPULSE })
-                        .then(() => this.storage.set('pushImpulse', true))
+                        .then(() => this.storageService.set('pushImpulse', true))
                         .catch(err => console.log(err));
                     }
                   });
-                  this.storage.get('pushVdt').then((isOn: boolean) => {
+                  this.storageService.get('pushVdt').then((isOn: boolean) => {
                     if (isOn !== false) {
                       FCM
                         .subscribeTo({ topic: PushType.VDT })
-                        .then(() => this.storage.set('pushVdt', false))
+                        .then(() => this.storageService.set('pushVdt', false))
                         .catch(err => console.log(err));
                     }
                   });
@@ -349,10 +351,10 @@ export class AppComponent {
   }
 
   async addUpdateAnalytic() {
-    const oldVersion: string | undefined = await this.storage.get('version');
+    const oldVersion: string | undefined = await this.storageService.get('version');
 
     if (!oldVersion) {
-      await this.storage.set('version', version);
+      await this.storageService.set('version', version);
       return;
     }
 
@@ -361,7 +363,7 @@ export class AppComponent {
         AnalyticsField.APP_UPDATED,
         { version }
       );
-      await this.storage.set('version', version);
+      await this.storageService.set('version', version);
     }
   }
 }

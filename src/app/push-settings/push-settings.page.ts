@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { FCM } from '@capacitor-community/fcm';
 import { PushType } from '../utils/constants';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-push-settings',
@@ -16,7 +16,7 @@ export class PushSettingsPage implements OnInit {
   public vdt: boolean;
 
   constructor(
-    private storage: Storage
+    private storage: StorageService
   ) { }
 
   async ngOnInit() {

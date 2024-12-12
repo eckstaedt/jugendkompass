@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
-import { Plugins } from '@capacitor/core';
 import {
   Platform,
   ActionSheetController,
@@ -10,9 +8,10 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { FeedbackModalPage } from '../feedback-modal/feedback-modal.page';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { Utils } from 'src/app/utils/utils';
-const { Share } = Plugins;
+import { Share } from '@capacitor/share';
+import { StorageService } from 'src/app/services/storage.service';
 
-const version = "1.2.5";
+const version = "1.3.0";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -26,7 +25,7 @@ export class SettingsPage implements OnInit {
   public feedbackProvided: boolean = false;
 
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private plt: Platform,
     private actionSheetController: ActionSheetController,
     private firebaseService: FirebaseService,

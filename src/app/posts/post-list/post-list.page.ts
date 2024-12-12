@@ -6,7 +6,6 @@ import {
   ToastController,
   IonContent,
 } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { Category, FirebasePost } from 'src/app/utils/interfaces';
 import { RouterService } from 'src/app/services/router/router.service';
 import { FilterModalPage } from '../filter-modal/filter-modal.page';
@@ -15,11 +14,10 @@ import {
   modalLeaveAnimation,
 } from 'src/app/modal-animation';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
-
-import { Plugins } from '@capacitor/core';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Utils } from 'src/app/utils/utils';
-const { Network } = Plugins;
+import { Network } from '@capacitor/network';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-post-list',
@@ -48,9 +46,7 @@ export class PostListPage implements OnInit {
   online: boolean = true;
   isSearching: boolean = false;
   slideOpts = {
-    slidesPerView: 2.4,
-    spaceBetween: 10,
-    freeMode: true,
+    // TODO
     breakpoints: {
       320: {
         slidesPerView: 2.2,
@@ -72,7 +68,7 @@ export class PostListPage implements OnInit {
   };
 
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private domCtrl: DomController,
     private routerService: RouterService,
     private modalController: ModalController,
@@ -294,8 +290,6 @@ export class PostListPage implements OnInit {
     const modal: HTMLIonModalElement = await this.modalController.create({
       component: FilterModalPage,
       cssClass: 'transparent-modal',
-      enterAnimation: modalEnterAnimation,
-      leaveAnimation: modalLeaveAnimation,
       componentProps: {
         showOnlyUnread: this.showOnlyUnread,
         ausgabe: this.currentAusgabe,

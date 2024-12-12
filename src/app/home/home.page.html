@@ -20,10 +20,12 @@
       <ion-card-title>Artikel, die dir gefallen könnten</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-slides
-        [options]="slideOpts"
+      <swiper-container
+        slides-per-view="2.4"
+        space-between="10"
+        free-mode="true"
       >
-        <ion-slide
+        <swiper-slide
           (click)="openPost(post.id)"
           *ngFor="let post of myPosts"
         >
@@ -32,8 +34,8 @@
             <p class="cat">{{ post.ausgabe.name}} | {{post.rubrik.name }}</p>
             <p>{{ post.title }}</p>
           </div>
-        </ion-slide>
-    </ion-slides>
+        </swiper-slide>
+      </swiper-container>
     </ion-card-content>
   </ion-card>
 </ion-content>

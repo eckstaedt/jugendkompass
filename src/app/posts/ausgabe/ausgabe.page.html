@@ -73,8 +73,8 @@
     </ion-textarea>
   </ion-item>
   <h2 class="text" *ngIf="ausgabe?.videos && ausgabe.videos.length">Videos</h2>
-  <swiper [config]="slideOpts" *ngIf="ausgabe?.videos && ausgabe.videos.length">
-    <ng-template swiperSlide *ngFor="let video of ausgabe.videos">
+  <swiper-container dynamicBullets="true" *ngIf="ausgabe?.videos && ausgabe.videos.length">
+    <swiper-slide *ngFor="let video of ausgabe.videos">
       <ion-card (click)="playVideo(video)">
         <img [src]="video.image" />
         <div id="fullscreen" slot="fixed"></div>
@@ -82,6 +82,6 @@
           <ion-icon size="medium" name="play"></ion-icon>
         </ion-fab-button>
       </ion-card>
-    </ng-template>
-  </swiper>
+    </swiper-slide>
+  </swiper-container>
 </ion-content>

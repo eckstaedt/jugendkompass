@@ -21,7 +21,7 @@ export class PushPage implements OnInit {
   public impulse: FirebasePost;
   public type: PushType = PushType.GENERAL;
   public file: FileLikeObject;
-  public fileUploader: FileUploader = new FileUploader({});
+  public fileUploader: FileUploader = new FileUploader({ url: '' });
 
   constructor(
     private firebaseService: FirebaseService,

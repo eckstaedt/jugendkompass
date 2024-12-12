@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseService } from '../services/firebase/firebase.service';
 import { FirebasePost } from '../utils/interfaces';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -12,9 +13,7 @@ export class HomePage implements OnInit {
   vdt: FirebasePost;
   myPosts: FirebasePost[] = [];
   slideOpts = {
-    slidesPerView: 2.4,
-    spaceBetween: 10,
-    freeMode: true,
+    // TODO
     breakpoints: {
       320: {
         slidesPerView: 1.9,
@@ -38,6 +37,7 @@ export class HomePage implements OnInit {
   constructor(
     private service: FirebaseService,
     private router: Router,
+    private storage: StorageService,
   ) { }
 
   ngOnInit() {
@@ -48,7 +48,10 @@ export class HomePage implements OnInit {
   }
 
   async loadMyPosts() {
-    this.myPosts = await this.service.getMyPosts();
+    const readArticlesString: string | undefined = await this.storage.get(
+      'readArticles',
+    );
+    this.myPosts = await this.service.getMyPosts(readArticlesString);
   }
 
   openPost(postId: string): void {

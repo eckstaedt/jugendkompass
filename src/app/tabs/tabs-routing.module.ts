@@ -75,12 +75,6 @@ const routes: Routes = [
         canLoad: [AdminGuardService],
       },
       {
-        path: 'settings/keys',
-        loadChildren: () =>
-          import('./../admin/keys/keys.module').then(m => m.KeysPageModule),
-        canLoad: [AdminGuardService],
-      },
-      {
         path: 'favorites',
         loadChildren: () =>
           import('../favorites/favorites.module').then(

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-text-size',
@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage';
 export class TextSizePage implements OnInit {
   public textSize = 15;
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: StorageService) {}
 
   ngOnInit() {
     this.storage

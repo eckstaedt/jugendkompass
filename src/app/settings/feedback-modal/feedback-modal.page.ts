@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
-import { Storage } from '@ionic/storage';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-feedback-modal',
@@ -80,7 +80,7 @@ export class FeedbackModalPage implements OnInit {
   constructor(
     private modalController: ModalController,
     private firebaseService: FirebaseService,
-    private storage: Storage,
+    private storage: StorageService,
     private toastController: ToastController,
   ) {}
 
