@@ -27,32 +27,31 @@ import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.m
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    HttpClientModule,
-    FilterModalPageModule,
-    FeedbackModalPageModule,
-    AnswersModalPageModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-    AngularFireAuthModule,
-    IonicStorageModule.forRoot(),
-    ChartsModule,
-    FileUploadModule,
-    AngularFireFunctionsModule,
-  ],
-  providers: [
-    PhotoViewer,
-    StatusBar,
-    SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FileOpener,
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        HttpClientModule,
+        FilterModalPageModule,
+        FeedbackModalPageModule,
+        AnswersModalPageModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule,
+        AngularFireStorageModule,
+        AngularFireAuthModule,
+        IonicStorageModule.forRoot(),
+        ChartsModule,
+        FileUploadModule,
+        AngularFireFunctionsModule,
+    ],
+    providers: [
+        PhotoViewer,
+        StatusBar,
+        SplashScreen,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        FileOpener,
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
