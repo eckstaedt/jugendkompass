@@ -1,6 +1,6 @@
 {
   "name": "jugendkompass",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "author": "FECG Jugend Speyer",
   "homepage": "https://jugend-speyer.org/",
   "prettier": "@ionic/prettier-config",
@@ -8,6 +8,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "appflow:build": "node server.js; ng build -c production",
     "openIosProd": "ng build --configuration production && npx cap copy && npx cap sync && npx cap open ios",
     "openIos": "ng build && npx cap copy && npx cap sync && npx cap open ios",
     "openAndProd": "ng build --configuration production && npx cap copy && npx cap sync && npx cap open android",

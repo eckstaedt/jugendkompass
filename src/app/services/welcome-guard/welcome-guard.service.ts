@@ -11,7 +11,7 @@ export class WelcomeGuardService  {
 
   canActivate() {
     return new Promise<boolean>((resolve: any) => {
-      if (!this.plt.is("capacitor")) {
+      if (this.plt.is("capacitor")) {
         this.router.navigateByUrl('/tabs');
         resolve(false);
       }

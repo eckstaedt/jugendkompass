@@ -19,6 +19,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AnswersModalPageModule } from './settings/answers-modal/answers-modal.module';
 import { getAuth, indexedDBLocalPersistence, initializeAuth, provideAuth } from '@angular/fire/auth';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
 import { Capacitor } from '@capacitor/core';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
@@ -51,6 +52,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
         provideAuth(() => getAuth()),
         provideFunctions(() => getFunctions()),
         provideStorage(() => getStorage()),
+        provideAnalytics(() => getAnalytics()),
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         provideHttpClient(withInterceptorsFromDi()),
     ]

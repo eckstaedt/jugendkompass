@@ -11,7 +11,7 @@ import { Utils } from 'src/app/utils/utils';
 import { Share } from '@capacitor/share';
 import { StorageService } from 'src/app/services/storage.service';
 
-const version = "1.3.0";
+const version = "1.3.1";
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',

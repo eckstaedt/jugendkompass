@@ -15,7 +15,7 @@ import { AnalyticsField } from 'src/app/utils/constants';
 import { Howl } from 'howler';
 import { Utils } from 'src/app/utils/utils';
 import { Share } from '@capacitor/share';
-import { PhotoViewer } from '@capacitor-community/photoviewer';
+// import { PhotoViewer } from '@capacitor-community/photoviewer';
 import { FileUploader, FileLikeObject } from 'ng2-file-upload';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -153,15 +153,20 @@ export class PostPage implements OnInit {
       }
     }
 
-    setTimeout(() => {
-      for (const image of Array.from(
-        document.querySelectorAll('.postContent img'),
-      )) {
-        (image as any).onclick = () => {
-          PhotoViewer.show((image as any).src);
-        };
-      }
-    }, 200);
+    // setTimeout(() => {
+    //   for (const image of Array.from(
+    //     document.querySelectorAll('.postContent img'),
+    //   )) {
+    //     (image as any).onclick = () => {
+    //       PhotoViewer.show({
+    //         images: [{
+    //           url: (image as any).src,
+    //           title: this.post.title,
+    //         }],
+    //       });
+    //     };
+    //   }
+    // }, 200);
   }
 
   async share() {

@@ -7,7 +7,7 @@ import { ConnectionStatus, Network } from '@capacitor/network';
 import { Share } from '@capacitor/share';
 import { AnalyticsField } from 'src/app/utils/constants';
 import { Utils } from 'src/app/utils/utils';
-import { PhotoViewer } from '@capacitor-community/photoviewer';
+// import { PhotoViewer } from '@capacitor-community/photoviewer';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -81,15 +81,20 @@ export class ImpulsePage implements OnInit {
 
     this.impulse = await this.firebaseService.getImpulse(id);
 
-    setTimeout(() => {
-      for (const image of Array.from(
-        document.querySelectorAll('img'),
-      )) {
-        (image as any).onclick = () => {
-          PhotoViewer.show((image as any).src);
-        };
-      }
-    }, 200);
+    // setTimeout(() => {
+    //   for (const image of Array.from(
+    //     document.querySelectorAll('img'),
+    //   )) {
+    //     (image as any).onclick = () => {
+    //       PhotoViewer.show({
+    //         images: [{
+    //           url: (image as any).src,
+    //           title: this.impulse.title,
+    //         }],
+    //       });
+    //     };
+    //   }
+    // }, 200);
   }
 
   async share() {

@@ -26,7 +26,7 @@ import { StorageService } from './services/storage.service';
 
 register();
 
-const version = "1.3.0";
+const version = "1.3.1";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

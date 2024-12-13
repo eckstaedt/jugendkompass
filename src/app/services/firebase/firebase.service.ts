@@ -15,8 +15,9 @@ import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { Functions, HttpsCallable, httpsCallable } from '@angular/fire/functions';
 import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
-import { Storage, getDownloadURL, ref, uploadBytes, uploadString } from '@angular/fire/storage';
+import { Storage, getDownloadURL, ref, uploadString } from '@angular/fire/storage';
 import { arrayUnion, increment } from "firebase/firestore";
+import { Analytics, logEvent } from "@angular/fire/analytics";
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,7 @@ export class FirebaseService {
   constructor(
     private firestore: Firestore,
     private fireStorage: Storage,
+    private analytics: Analytics,
     private utils: Utils,
     private httpClient: HttpClient,
     private fns: Functions,
@@ -75,6 +77,7 @@ export class FirebaseService {
       timestamp: Timestamp.fromDate(now),
       platform: this.utils.getPlatform(),
     });
+    this.logAnalyticsEvent(field, { ...data, platform: this.utils.getPlatform() });
 
     setDoc(doc(this.firestore, 'analytics/overall'),
       {
@@ -83,6 +86,10 @@ export class FirebaseService {
       },
       { merge: true },
     );
+  }
+
+  async logAnalyticsEvent(event: string, data: any = {}) {
+    logEvent(this.analytics, event, data);
   }
 
   getFeedback() {
@@ -276,6 +283,7 @@ export class FirebaseService {
           limit(1)
         )
       ).subscribe((impulses: FirebasePost[]) => {
+        this.impulses = impulses;
         observer.next(impulses);
       });
     });
