@@ -279,8 +279,7 @@ export class FirebaseService {
       collectionData(
         query(
           collection(this.firestore, 'impulses'),
-          orderBy("date", "desc"),
-          limit(1)
+          orderBy("date", "desc")
         )
       ).subscribe((impulses: FirebasePost[]) => {
         this.impulses = impulses;
