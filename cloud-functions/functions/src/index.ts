@@ -214,6 +214,8 @@ exports.syncCategoriesWithWordPress = onSchedule({ schedule: '0 * * * *', timeZo
     };
     const res: any = await axios.get(options);
     categories = JSON.parse(res);
+    console.log(categories);
+    console.log(res);
   } catch (error) {
     return `Could not load categories from Wordpress (${url}) ${error}`;
   }

@@ -15,7 +15,7 @@ import { AnalyticsField, PushType } from '../../utils/constants';
 import { FileLikeObject } from 'ng2-file-upload';
 import { Functions, HttpsCallable, httpsCallable } from '@angular/fire/functions';
 import { Auth, authState, signInWithEmailAndPassword } from '@angular/fire/auth';
-import { Storage, getDownloadURL, ref, uploadString } from '@angular/fire/storage';
+import { Storage, getDownloadURL, ref, uploadBytes, uploadString } from '@angular/fire/storage';
 import { arrayUnion, increment } from "firebase/firestore";
 import { Analytics, logEvent } from "@angular/fire/analytics";
 
@@ -432,10 +432,10 @@ export class FirebaseService {
     return new Promise(async (resolve: any) => {
       const path = `/audios/${Date.now()}_${file.name}`;
       const r = ref(this.fireStorage, path);
-      await uploadString(r, String(file.rawFile));
+      await uploadBytes(r, file.rawFile as File);
 
       resolve({
-        url: getDownloadURL(r),
+        url: await getDownloadURL(r),
         path,
         name: file.name,
       });
@@ -446,36 +446,36 @@ export class FirebaseService {
     return new Promise(async (resolve: any) => {
       const path = `/pdfs/${Date.now()}_${file.name}`;
       const r = ref(this.fireStorage, path);
-      await uploadString(r, String(file.rawFile));
+      await uploadBytes(r, file.rawFile as File);
 
       resolve({
-        url: getDownloadURL(r),
+        url: await getDownloadURL(r),
         path,
       });
     });
   }
 
   uploadVideoFile(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/videos/${Date.now()}_${file.name}`;
       const r = ref(this.fireStorage, path);
-      const task = uploadString(r, String(file.rawFile));
+      const task = uploadBytes(r, file.rawFile as File);
 
       resolve({
-        url: getDownloadURL(r),
+        url: await getDownloadURL(r),
         path,
       });
     });
   }
 
   uploadImageFile(file: FileLikeObject) {
-    return new Promise((resolve: any) => {
+    return new Promise(async (resolve: any) => {
       const path = `/other/${Date.now()}_${file.name}`;
       const r = ref(this.fireStorage, path);
-      const task = uploadString(r, String(file.rawFile));
+      const task = uploadBytes(r, file.rawFile as File);
 
       resolve({
-        url: getDownloadURL(r),
+        url: await getDownloadURL(r),
         path,
       });
     });
